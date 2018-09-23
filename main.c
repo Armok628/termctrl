@@ -7,12 +7,16 @@ int main(int argc,char **argv)
 	int x=80,y=24;
 	set_canon(false);
 	set_cursor_visible(false);
-	move_cursor(80,24);
-	putchar('@');
-	char input=fgetc(stdin);
-	while (input!='q'&&input!=4) {
+	char input='\0';
+	while (input!=4) {
+		move_cursor(x,y);
+		putchar('@');
+		input=fgetc(stdin);
 		move_cursor(x,y);
 		putchar(' ');
+		move_cursor(0,25);
+		clear_line();
+		printf("%d",input);
 		switch (input) {
 		case 'h':
 			x--;
@@ -26,12 +30,9 @@ int main(int argc,char **argv)
 		case 'l':
 			x++;
 		}
-		move_cursor(x,y);
-		putchar('@');
-		input=fgetc(stdin);
 	}
 	set_canon(true);
 	set_cursor_visible(true);
-	move_cursor(0,25);
+	move_cursor(0,26);
 	return 0;
 }
