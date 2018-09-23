@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <termios.h>
-enum {
+enum gr { // "graphics rendition"
 	RESET,BOLD,FAINT,ITALIC,UNDERLINE,
 	REVERSE=7,CONCEAL,STRIKETHROUGH,
 	NO_BOLD=21,NORMAL,NO_ITALIC,NO_UNDERLINE,NO_BLINK,NO_REVERSE,NO_CONCEAL,
@@ -21,7 +21,7 @@ enum {
 	AIX_BG_WHITE,AIX_BG_DEFAULT,
 };
 
-void sgr(int);
+void sgr(int); // "set graphics rendition"
 void move_cursor(int,int);
 void clear_screen();
 void clear_line();
