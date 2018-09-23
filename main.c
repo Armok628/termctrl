@@ -3,6 +3,8 @@
 #include "src/terminal.h"
 int main(int argc,char **argv)
 {
+	gr_t p={AIX_FG_GREEN,BG_GREEN,ITALIC,BOLD,STRIKETHROUGH,UNDERLINE,0};
+	gr_t n={BOLD,FG_YELLOW,BG_BLUE,0};
 	clear_screen();
 	int x=80,y=24;
 	set_canon(false);
@@ -10,12 +12,15 @@ int main(int argc,char **argv)
 	char input='\0';
 	while (input!=4) {
 		move_cursor(x,y);
+		mode(p);
 		putchar('@');
 		input=fgetc(stdin);
 		move_cursor(x,y);
+		sgr(RESET);
 		putchar(' ');
 		move_cursor(0,25);
 		clear_line();
+		mode(n);
 		printf("%d",input);
 		switch (input) {
 		case 'h':
@@ -34,5 +39,6 @@ int main(int argc,char **argv)
 	set_canon(true);
 	set_cursor_visible(true);
 	move_cursor(0,26);
+	sgr(RESET);
 	return 0;
 }

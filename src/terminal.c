@@ -3,6 +3,11 @@ void sgr(int r)
 {
 	printf("\033[%dm",r);
 }
+void mode(gr_t g)
+{
+	while (*g)
+		sgr(*(g++));
+}
 void move_cursor(int x,int y)
 {
 	printf("\033[%d;%dH",y+1,x+1);
