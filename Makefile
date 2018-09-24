@@ -1,2 +1,5 @@
+CFLAGS=-Wall -Wextra -Wpedantic -std=gnu99
+CC=clang
+
 test:
-	cc *.c src/*.c
+	$(CC) $(CFLAGS) *.c src/*.c
