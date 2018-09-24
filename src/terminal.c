@@ -3,10 +3,17 @@ void sgr(int r)
 {
 	printf("\033[%dm",r);
 }
+void grcpy(gr_t to,gr_t from)
+{
+	do
+		*(to++)=*(from++);
+	while (*from);
+}
 void mode(gr_t g)
 {
-	while (*g)
+	do
 		sgr(*(g++));
+	while (*g);
 }
 void move_cursor(int x,int y)
 {
