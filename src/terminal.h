@@ -20,12 +20,8 @@ enum gr { // "graphics rendition"
 	AIX_BG_BLUE,AIX_BG_MAGENTA,AIX_BG_CYAN,AIX_BG_GRAY,
 	AIX_BG_WHITE,AIX_BG_DEFAULT,
 }; // All codes < 255, so safe to store as char
-typedef struct {
-	char fg,bg,b;
-} gr_t;
 
 void sgr(int); // "set graphics rendition"
-void mode(gr_t);
 void move_cursor(int,int);
 void clear_screen();
 void clear_line();

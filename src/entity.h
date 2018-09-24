@@ -5,14 +5,14 @@
 struct entitytype {
 	char *name;
 	char sym;
-	gr_t mode;
+	char mode;
 	range_t hp,res,agi,wis,str;
 };
 struct entity {
 	struct entitytype *type;
 	char *name;
 	char sym;
-	gr_t mode;
+	char mode;
 	short hp,maxhp,res,agi,wis,str;
 };
 

@@ -16,11 +16,6 @@ void draw_zone(struct tile *z)
 		draw_tile(&z[i]);
 	}
 }
-gr_t grass_modes[]={
-	{.fg=FG_GREEN,.bg=BG_BLACK,.b=true},
-	{.fg=FG_GREEN,.bg=BG_BLACK,.b=false},
-};
-int n_grass_modes=sizeof(grass_modes)/sizeof(grass_modes[0]);
 char grass_syms[]="\"';:.,`";
 int n_grass_syms=sizeof(grass_syms)/sizeof(grass_syms[0])-1;
 int main(int argc,char **argv)
@@ -29,7 +24,7 @@ int main(int argc,char **argv)
 	for (int i=0;i<argc;i++)
 		printf("%s ",argv[i]);
 	for (int i=0;i<AREA;i++) {
-		zone[i].bg_mode=grass_modes[rand()%n_grass_modes];
+		zone[i].bg_mode=rand()%2?FG_GREEN:AIX_FG_GREEN;
 		zone[i].bg_sym=grass_syms[rand()%n_grass_syms];
 	}
 	clear_screen();
