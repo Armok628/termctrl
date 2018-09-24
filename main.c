@@ -35,13 +35,13 @@ void draw_zone(struct tile *z)
 		draw_tile(&z[i]);
 	}
 }
-gr_t grass_modes[2]={{FG_GREEN,BG_BLACK},{FG_GREEN,BG_BLACK,BOLD}};
+gr_t grass_modes[2]={{.fg=FG_GREEN,.bg=BG_BLACK,.b=true},{.fg=FG_GREEN,.bg=BG_BLACK,.b=false}};
 char grass_syms[8]="\"';:.,`";
 int main(int argc,char **argv)
 {
 	gr_t grass_mode={FG_GREEN,BG_BLACK,0};
 	for (int i=0;i<AREA;i++) {
-		grcpy(zone[i].bg_mode,grass_modes[rand()%2]);
+		zone[i].bg_mode=grass_modes[rand()%2];
 		zone[i].bg_sym=grass_syms[rand()%7];
 	}
 	clear_screen();
