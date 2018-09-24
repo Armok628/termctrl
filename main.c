@@ -1,33 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "src/terminal.h"
-struct entity {
-	char sym;
-	gr_t mode;
-};
-struct tile {
-	struct entity *e;
-	char fg_sym,bg_sym;
-	gr_t fg_mode,bg_mode;
-};
+#include "src/range.h"
+#include "src/entity.h"
+#include "src/tile.h"
 #define WIDTH 80
 #define HEIGHT 24
 #define AREA (WIDTH*HEIGHT)
 struct tile zone[AREA];
-void draw_tile(struct tile *t)
-{
-	sgr(RESET);
-	if (t->e) {
-		mode(t->e->mode);
-		putchar(t->e->sym);
-	} else if (t->fg_sym) {
-		mode(t->fg_mode);
-		putchar(t->fg_sym);
-	} else if (t->bg_sym) {
-		mode(t->bg_mode);
-		putchar(t->bg_sym);
-	}
-}
 void draw_zone(struct tile *z)
 {
 	for (int i=0;i<AREA;i++) {
@@ -48,5 +28,9 @@ int main(int argc,char **argv)
 	draw_zone(zone);
 	sgr(RESET);
 	putchar('\n');
+#define PUT_SIZEOF(type) printf("sizeof("#type"): %lu\n",sizeof(type))
+	PUT_SIZEOF(struct entitytype);
+	PUT_SIZEOF(struct entity);
+	PUT_SIZEOF(struct tile);
 	return 0;
 }
