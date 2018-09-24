@@ -3,8 +3,8 @@
 #include "src/terminal.h"
 int main(int argc,char **argv)
 {
-	gr_t p={AIX_FG_GREEN,BG_GREEN,ITALIC,BOLD,STRIKETHROUGH,UNDERLINE,0};
-	gr_t n={BOLD,FG_YELLOW,BG_BLUE,0};
+	gr_t p={FG_GREEN,BG_GREEN,ITALIC,BOLD,STRIKETHROUGH,UNDERLINE};
+	gr_t n={BOLD,FG_YELLOW,BG_BLUE};
 	clear_screen();
 	int x=80,y=24;
 	set_canon(false);
