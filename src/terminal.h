@@ -23,6 +23,7 @@ enum gr { // "graphics rendition"
 typedef char gr_t[8];
 
 void sgr(int); // "set graphics rendition"
+void grcpy(gr_t,gr_t);
 void mode(gr_t);
 void move_cursor(int,int);
 void clear_screen();
