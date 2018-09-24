@@ -40,7 +40,7 @@ void set_blocking(bool b)
 {
 	struct termios term;
 	tcgetattr(0,&term);
-	term.c_cc[VMIN]=!!b;
+	term.c_cc[VMIN]=b;
 	tcsetattr(0,TCSANOW,&term);
 }
 int get_cursor_pos(int xf,int yf)
