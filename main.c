@@ -24,8 +24,8 @@ int main(int argc,char **argv)
 	for (int i=0;i<argc;i++)
 		printf("%s ",argv[i]);
 	for (int i=0;i<AREA;i++) {
-		zone[i].bg_mode[0]=FG_GREEN;
-		zone[i].bg_mode[1]=rand()%2?BOLD:NO_BOLD;
+		zone[i].bg_gr[0]=FG_GREEN;
+		zone[i].bg_gr[1]=rand()%2?BOLD:NO_BOLD;
 		zone[i].bg_sym=grass_syms[rand()%n_grass_syms];
 	}
 	clear_screen();
