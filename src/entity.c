@@ -4,7 +4,8 @@ struct entity *spawn(struct entitytype *t)
 	struct entity *e=malloc(sizeof(struct entity));
 	e->sym=t->sym;
 	e->name=t->name;
-	e->mode=t->mode;
+	e->mode[0]=t->mode[0];
+	e->mode[1]=t->mode[1];
 	e->maxhp=rrand(t->hp);
 	e->hp=e->maxhp;
 	e->res=rrand(t->res);
