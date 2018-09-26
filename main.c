@@ -20,8 +20,6 @@ void draw_pos(struct tile *z,int pos)
 	move_cursor(pos%WIDTH,pos/WIDTH);
 	draw_tile(&z[pos]);
 }
-char grass_syms[]="\"';:.,`";
-int n_grass_syms=sizeof(grass_syms)/sizeof(grass_syms[0])-1;
 bool legal_move(int from,int to)
 {
 	int dx=to%WIDTH-from%WIDTH;
@@ -50,19 +48,21 @@ int handle_move(struct tile *z,int from,char input)
 	move_entity(z,from,to);
 	return to;
 }
+char grass_syms[]="\"';:.,`";
+int n_grass_syms=sizeof(grass_syms)/sizeof(grass_syms[0])-1;
 ////////////////////////////////////////////////////////////////
 struct tile zone[AREA];
-int player_coords=50;
-struct entity player={.name="Player",.gr={FG_BLUE,BOLD},.sym='@'};
+int player_coords=(HEIGHT/2)*WIDTH+WIDTH/2;
+struct entity player={.name="Player",.gr={FG_BLUE,true},.sym='@'};
 int main(int argc,char **argv)
 {
-	zone[50].e=&player;
+	zone[player_coords].e=&player;
 	srand(time(NULL));
 	for (int i=0;i<argc;i++)
 		printf("%s ",argv[i]);
 	for (int i=0;i<AREA;i++) {
 		zone[i].bg_gr[0]=FG_GREEN;
-		zone[i].bg_gr[1]=rand()%2?BOLD:NO_BOLD;
+		zone[i].bg_gr[1]=rand()%2;
 		zone[i].bg_sym=grass_syms[rand()%n_grass_syms];
 	}
 	clear_screen();

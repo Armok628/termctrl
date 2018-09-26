@@ -1,19 +1,22 @@
 #include "tile.h"
+static inline void sgr2(char *arr)
+{
+	sgr(arr[0]);
+	if (arr[1])
+		sgr(arr[1]);
+}
 void draw_tile(struct tile *t)
 {
 	sgr(RESET);
 	sgr(BG_BLACK);
 	if (t->e) {
-		sgr(t->e->gr[0]);
-		sgr(t->e->gr[1]);
+		sgr2(t->e->gr);
 		putchar(t->e->sym);
 	} else if (t->fg_sym) {
-		sgr(t->fg_gr[0]);
-		sgr(t->fg_gr[1]);
+		sgr2(t->fg_gr);
 		putchar(t->fg_sym);
 	} else if (t->bg_sym) {
-		sgr(t->bg_gr[0]);
-		sgr(t->bg_gr[1]);
+		sgr2(t->bg_gr);
 		putchar(t->bg_sym);
 	}
 }
