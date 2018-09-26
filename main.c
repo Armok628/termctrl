@@ -23,8 +23,7 @@ void draw_pos(struct tile *z,int pos)
 bool legal_move(int from,int to)
 {
 	int dx=to%WIDTH-from%WIDTH;
-	int y=to/WIDTH;
-	return -1<=dx&&dx<=1&&0<=y&&y<HEIGHT;
+	return -1<=dx&&dx<=1&&0<=to&&to<AREA;
 }
 void move_entity(struct tile *z,int from,int to)
 {
