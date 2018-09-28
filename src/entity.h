@@ -17,4 +17,5 @@ struct entity {
 };
 
 struct entity *spawn(struct entitytype *);
+void draw_entity(struct entity *);
 #endif

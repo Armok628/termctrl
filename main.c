@@ -52,7 +52,7 @@ int n_grass_syms=sizeof(grass_syms)/sizeof(grass_syms[0])-1;
 ////////////////////////////////////////////////////////////////
 struct tile zone[AREA];
 int player_coords=(HEIGHT/2)*WIDTH+WIDTH/2;
-struct entity player={.name="Player",.gr={FG_BLUE,true},.sym='@'};
+struct entity player={.name="Player",.gr={FG_BLUE,true},.sym='@',.hp=1};
 bool exit_req=false;
 char key(void)
 {
@@ -94,6 +94,7 @@ int main(int argc,char **argv)
 			zone[i].e->gr[0]=FG_BLACK;
 			zone[i].e->gr[1]=BOLD;
 			zone[i].e->sym='&';
+			zone[i].e->hp=1;
 		}
 	}
 	clear_screen();
@@ -102,8 +103,13 @@ int main(int argc,char **argv)
 	putchar('\n');
 	set_canon(false);
 	set_cursor_visible(false);
-	while (!exit_req)
+	while (!exit_req) {
+		move_cursor(0,HEIGHT);
+		clear_line();
+		printf("%s ",zone[player_coords].e->name);
+		draw_entity(zone[player_coords].e);
 		advance(zone);
+	}
 	set_canon(true);
 	set_cursor_visible(true);
 	move_cursor(0,HEIGHT);

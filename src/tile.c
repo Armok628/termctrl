@@ -10,8 +10,7 @@ void draw_tile(struct tile *t)
 	sgr(RESET);
 	sgr(BG_BLACK);
 	if (t->e) {
-		sgr2(t->e->gr);
-		putchar(t->e->sym);
+		draw_entity(t->e);
 	} else if (t->fg_sym) {
 		sgr2(t->fg_gr);
 		putchar(t->fg_sym);

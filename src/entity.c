@@ -16,3 +16,11 @@ struct entity *spawn(struct entitytype *t)
 	}
 	return e;
 }
+void draw_entity(struct entity *e)
+{
+	sgr(RESET);
+	sgr(e->hp>0?BG_BLACK:BG_RED);
+	sgr(e->gr[0]);
+	sgr(e->gr[1]);
+	putchar(e->sym);
+}
