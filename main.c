@@ -42,7 +42,7 @@ int handle_move(struct tile *z,int from,char input)
 	int to=from;
 	if ('0'<=input&&input<='9')
 		to=from+offsets[input-'0'];
-	if (!legal_move(from,to))
+	if (!legal_move(from,to)||z[to].fg_sym)
 		to=from;
 	move_entity(z,from,to);
 	return to;
@@ -95,6 +95,10 @@ int main(int argc,char **argv)
 			zone[i].e->gr[1]=BOLD;
 			zone[i].e->sym='&';
 			zone[i].e->hp=1;
+		} else if (!(rand()%500)) {
+			zone[i].fg_sym='#';
+			zone[i].fg_gr[0]=FG_GRAY;
+			zone[i].fg_gr[1]=NO_BOLD;
 		}
 	}
 	clear_screen();
