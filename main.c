@@ -53,6 +53,31 @@ int n_grass_syms=sizeof(grass_syms)/sizeof(grass_syms[0])-1;
 struct tile zone[AREA];
 int player_coords=(HEIGHT/2)*WIDTH+WIDTH/2;
 struct entity player={.name="Player",.gr={FG_BLUE,true},.sym='@'};
+bool exit_req=false;
+char key(void)
+{
+	char c=fgetc(stdin);
+	exit_req=c==4;
+	return c;
+}
+void take_turn(struct tile *z,int pos)
+{
+	if (!z[pos].e)
+		return;
+	if (pos==player_coords) {
+		player_coords=handle_move(z,pos,key());
+	} else
+		handle_move(z,pos,'0'+rand()%('9'-'0'-1));
+}
+void advance(struct tile *z)
+{
+	struct entity *e[AREA];
+	for (int i=0;i<AREA;i++)
+		e[i]=z[i].e;
+	for (int i=0;i<AREA;i++)
+		if (z[i].e==e[i])
+			take_turn(z,i);
+}
 int main(int argc,char **argv)
 {
 	zone[player_coords].e=&player;
@@ -63,18 +88,22 @@ int main(int argc,char **argv)
 		zone[i].bg_gr[0]=FG_GREEN;
 		zone[i].bg_gr[1]=rand()%2;
 		zone[i].bg_sym=grass_syms[rand()%n_grass_syms];
+		if (!(rand()%1000)) {
+			zone[i].e=spawn(NULL);
+			zone[i].e->name="Test";
+			zone[i].e->gr[0]=FG_BLACK;
+			zone[i].e->gr[1]=BOLD;
+			zone[i].e->sym='&';
+		}
 	}
 	clear_screen();
 	draw_zone(zone);
 	sgr(RESET);
 	putchar('\n');
-	char input='\0';
 	set_canon(false);
 	set_cursor_visible(false);
-	while (input!=4) {
-		input=fgetc(stdin);
-		player_coords=handle_move(zone,player_coords,input);
-	}
+	while (!exit_req)
+		advance(zone);
 	set_canon(true);
 	set_cursor_visible(true);
 	move_cursor(0,HEIGHT);
