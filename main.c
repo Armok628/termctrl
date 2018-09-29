@@ -47,12 +47,8 @@ int handle_move(struct tile *z,int from,char input)
 	move_entity(z,from,to);
 	return to;
 }
-char grass_syms[]="\"';:.,`";
-int n_grass_syms=sizeof(grass_syms)/sizeof(grass_syms[0])-1;
-////////////////////////////////////////////////////////////////
-struct tile zone[AREA];
-int player_coords=(HEIGHT/2)*WIDTH+WIDTH/2;
-struct entity player={.name="Player",.gr={FG_BLUE,true},.sym='@',.hp=1};
+const char *grass_syms="\"';:.,`";
+const int n_grass_syms=sizeof(grass_syms)/sizeof(grass_syms[0])-1;
 bool exit_req=false;
 char key(void)
 {
@@ -60,6 +56,7 @@ char key(void)
 	exit_req=c==4;
 	return c;
 }
+int player_coords;
 void take_turn(struct tile *z,int pos)
 {
 	if (!z[pos].e)
@@ -78,33 +75,60 @@ void advance(struct tile *z)
 		if (z[i].e==e[i])
 			take_turn(z,i);
 }
-int main(int argc,char **argv)
+struct entitytype monstertest={
+	.name="Monster",
+	.sym='&',
+	.gr={FG_BLACK,BOLD},
+	.hp={100,100},
+	.res={10,10},
+	.agi={10,10},
+	.wis={10,10},
+	.str={10,10},
+};
+struct entitytype playertest={
+	.name="Player",
+	.sym='@',
+	.gr={FG_BLUE,BOLD},
+	.hp={100,100},
+	.res={10,10},
+	.agi={10,10},
+	.wis={10,10},
+	.str={10,10},
+};
+struct tile *new_zone(struct tile *z)
 {
-	zone[player_coords].e=&player;
-	srand(time(NULL));
-	for (int i=0;i<argc;i++)
-		printf("%s ",argv[i]);
+	if (!z)
+		z=calloc(AREA,sizeof(struct tile));
 	for (int i=0;i<AREA;i++) {
-		zone[i].bg_gr[0]=FG_GREEN;
-		zone[i].bg_gr[1]=rand()%2;
-		zone[i].bg_sym=grass_syms[rand()%n_grass_syms];
+		z[i].bg_gr[0]=FG_GREEN;
+		z[i].bg_gr[1]=rand()%2;
+		z[i].bg_sym=grass_syms[rand()%n_grass_syms];
 		if (!(rand()%1000)) {
-			zone[i].e=spawn(NULL);
-			zone[i].e->name="Test";
-			zone[i].e->gr[0]=FG_BLACK;
-			zone[i].e->gr[1]=BOLD;
-			zone[i].e->sym='&';
-			zone[i].e->hp=1;
+			z[i].e=spawn(&monstertest);
 		} else if (!(rand()%500)) {
-			zone[i].fg_sym='#';
-			zone[i].fg_gr[0]=FG_GRAY;
-			zone[i].fg_gr[1]=NO_BOLD;
+			z[i].fg_sym='#';
+			z[i].fg_gr[0]=FG_GRAY;
+			z[i].fg_gr[1]=NO_BOLD;
 		}
 	}
+	return z;
+}
+void free_zone(struct tile *z)
+{
+	for (int i=0;i<AREA;i++)
+		if (z[i].e)
+			free(z[i].e);
+	free(z);
+}
+int main(/*int argc,char **argv*/)
+{
+	srand(time(NULL));
+	struct tile *zone=new_zone(NULL);
+	player_coords=rand()%AREA;
+	zone[player_coords].e=spawn(&playertest);
 	clear_screen();
 	draw_zone(zone);
 	sgr(RESET);
-	putchar('\n');
 	set_canon(false);
 	set_cursor_visible(false);
 	while (!exit_req) {
@@ -122,5 +146,6 @@ int main(int argc,char **argv)
 	PUT_SIZEOF(struct entitytype);
 	PUT_SIZEOF(struct entity);
 	PUT_SIZEOF(struct tile);
+	free_zone(zone);
 	return 0;
 }

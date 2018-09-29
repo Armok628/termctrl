@@ -1,4 +1,4 @@
-CFLAGS=-Wall -Wextra -Wpedantic -std=gnu99
+CFLAGS=-Wall -Wextra -Wpedantic -std=gnu99 -g
 CC=clang
 
 test:
