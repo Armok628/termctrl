@@ -5,11 +5,8 @@
 #include "src/range.h"
 #include "src/entity.h"
 #include "src/tile.h"
-bool legal_move(int from,int to)
-{
-	int dx=to%WIDTH-from%WIDTH;
-	return -1<=dx&&dx<=1&&0<=to&&to<AREA;
-}
+#include "src/input.h"
+#include "src/room.h"
 void move_entity(struct tile *z,int from,int to)
 {
 	if (from==to)
@@ -22,26 +19,13 @@ void move_entity(struct tile *z,int from,int to)
 	z[to].e=e;
 	draw_pos(z,to);
 }
-int handle_move(struct tile *z,int from,char input)
+int handle_move(struct tile *z,int from,char c)
 {
-	static int offsets[10]={0,
-		WIDTH-1,WIDTH,WIDTH+1,
-		-1,0,1,
-		-WIDTH-1,-WIDTH,-WIDTH+1};
-	int to=from;
-	if ('0'<=input&&input<='9')
-		to=from+offsets[input-'0'];
+	int to=from+input_offset(c);
 	if (!legal_move(from,to)||z[to].fg_sym)
 		to=from;
 	move_entity(z,from,to);
 	return to;
-}
-bool exit_req=false;
-char key(void)
-{
-	char c=fgetc(stdin);
-	exit_req=c==4;
-	return c;
 }
 int player_coords;
 void take_turn(struct tile *z,int pos)
@@ -66,6 +50,14 @@ int main(/*int argc,char **argv*/)
 {
 	srand(time(NULL));
 	struct tile *zone=new_zone(NULL);
+	/**/
+	for (int i=0;i<AREA/192;i++)
+		random_room(zone);
+	for (int i=0;i<AREA/192;i++)
+		fix_rooms(zone);
+	//for (int i=0;i<AREA/384;i++)
+	//	random_path(zone);
+	/**/
 	player_coords=rand()%AREA;
 	zone[player_coords].e=spawn(&playertest);
 	clear_screen();

@@ -16,4 +16,5 @@ struct tile *new_zone(struct tile *);
 void free_zone(struct tile *);
 void draw_pos(struct tile *,int);
 void draw_zone(struct tile *);
+bool legal_move(int,int);
 #endif

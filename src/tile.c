@@ -29,13 +29,11 @@ struct tile *new_zone(struct tile *z)
 		z[i].bg_gr[0]=FG_GREEN;
 		z[i].bg_gr[1]=rand()%2;
 		z[i].bg_sym=grass_syms[rand()%n_grass_syms];
+		/**/
 		if (!(rand()%1000)) {
 			z[i].e=spawn(&monstertest);
-		} else if (!(rand()%500)) {
-			z[i].fg_sym='#';
-			z[i].fg_gr[0]=FG_GRAY;
-			z[i].fg_gr[1]=NO_BOLD;
 		}
+		/**/
 	}
 	return z;
 }
@@ -55,4 +53,9 @@ void draw_zone(struct tile *z)
 {
 	for (int i=0;i<AREA;i++)
 		draw_pos(z,i);
+}
+bool legal_move(int from,int to)
+{
+	int dx=to%WIDTH-from%WIDTH;
+	return -1<=dx&&dx<=1&&0<=to&&to<AREA;
 }
