@@ -15,7 +15,10 @@ struct entity {
 	char gr[2];
 	short hp,maxhp,res,agi,wis,str;
 };
+extern struct entitytype playertest;
+extern struct entitytype monstertest;
 
 struct entity *spawn(struct entitytype *);
+void free_entity(struct entity *);
 void draw_entity(struct entity *);
 #endif

@@ -1,4 +1,24 @@
 #include "entity.h"
+struct entitytype monstertest={
+	.name="Monster",
+	.sym='&',
+	.gr={FG_BLACK,BOLD},
+	.hp={100,100},
+	.res={10,10},
+	.agi={10,10},
+	.wis={10,10},
+	.str={10,10},
+};
+struct entitytype playertest={
+	.name="Player",
+	.sym='@',
+	.gr={FG_BLUE,BOLD},
+	.hp={100,100},
+	.res={10,10},
+	.agi={10,10},
+	.wis={10,10},
+	.str={10,10},
+};
 struct entity *spawn(struct entitytype *t)
 {
 	struct entity *e=malloc(sizeof(struct entity));
@@ -15,6 +35,10 @@ struct entity *spawn(struct entitytype *t)
 		e->str=rrand(t->str);
 	}
 	return e;
+}
+void free_entity(struct entity *e)
+{
+	free(e);
 }
 void draw_entity(struct entity *e)
 {

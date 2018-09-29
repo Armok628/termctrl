@@ -5,21 +5,6 @@
 #include "src/range.h"
 #include "src/entity.h"
 #include "src/tile.h"
-#define WIDTH 80
-#define HEIGHT 24
-#define AREA (WIDTH*HEIGHT)
-void draw_zone(struct tile *z)
-{
-	for (int i=0;i<AREA;i++) {
-		move_cursor(i%WIDTH,i/WIDTH);
-		draw_tile(&z[i]);
-	}
-}
-void draw_pos(struct tile *z,int pos)
-{
-	move_cursor(pos%WIDTH,pos/WIDTH);
-	draw_tile(&z[pos]);
-}
 bool legal_move(int from,int to)
 {
 	int dx=to%WIDTH-from%WIDTH;
@@ -27,7 +12,11 @@ bool legal_move(int from,int to)
 }
 void move_entity(struct tile *z,int from,int to)
 {
+	if (from==to)
+		return;
 	struct entity *e=z[from].e;
+	if (z[to].e)
+		free_entity(z[to].e);
 	z[from].e=NULL;
 	draw_pos(z,from);
 	z[to].e=e;
@@ -47,8 +36,6 @@ int handle_move(struct tile *z,int from,char input)
 	move_entity(z,from,to);
 	return to;
 }
-const char *grass_syms="\"';:.,`";
-const int n_grass_syms=sizeof(grass_syms)/sizeof(grass_syms[0])-1;
 bool exit_req=false;
 char key(void)
 {
@@ -74,51 +61,6 @@ void advance(struct tile *z)
 	for (int i=0;i<AREA;i++)
 		if (z[i].e==e[i])
 			take_turn(z,i);
-}
-struct entitytype monstertest={
-	.name="Monster",
-	.sym='&',
-	.gr={FG_BLACK,BOLD},
-	.hp={100,100},
-	.res={10,10},
-	.agi={10,10},
-	.wis={10,10},
-	.str={10,10},
-};
-struct entitytype playertest={
-	.name="Player",
-	.sym='@',
-	.gr={FG_BLUE,BOLD},
-	.hp={100,100},
-	.res={10,10},
-	.agi={10,10},
-	.wis={10,10},
-	.str={10,10},
-};
-struct tile *new_zone(struct tile *z)
-{
-	if (!z)
-		z=calloc(AREA,sizeof(struct tile));
-	for (int i=0;i<AREA;i++) {
-		z[i].bg_gr[0]=FG_GREEN;
-		z[i].bg_gr[1]=rand()%2;
-		z[i].bg_sym=grass_syms[rand()%n_grass_syms];
-		if (!(rand()%1000)) {
-			z[i].e=spawn(&monstertest);
-		} else if (!(rand()%500)) {
-			z[i].fg_sym='#';
-			z[i].fg_gr[0]=FG_GRAY;
-			z[i].fg_gr[1]=NO_BOLD;
-		}
-	}
-	return z;
-}
-void free_zone(struct tile *z)
-{
-	for (int i=0;i<AREA;i++)
-		if (z[i].e)
-			free(z[i].e);
-	free(z);
 }
 int main(/*int argc,char **argv*/)
 {
