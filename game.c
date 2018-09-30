@@ -6,13 +6,16 @@
 #include "src/entity.h"
 #include "src/tile.h"
 #include "src/input.h"
+#include "src/world.h"
 void move_entity(struct tile *z,int from,int to)
 {
 	if (from==to)
 		return;
 	struct entity *e=z[from].e;
-	if (z[to].e)
-		free_entity(z[to].e);
+	if (z[to].e) {
+		z[to].c=z[to].e;
+		/**/z[to].c->hp=0;
+	}
 	z[from].e=NULL;
 	draw_pos(z,from);
 	z[to].e=e;
@@ -71,6 +74,7 @@ int main(/*int argc,char **argv*/)
 	PUT_SIZEOF(struct entitytype);
 	PUT_SIZEOF(struct entity);
 	PUT_SIZEOF(struct tile);
+	PUT_SIZEOF(struct worldtile);
 	free_zone(zone);
 	return 0;
 }

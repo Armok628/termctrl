@@ -11,9 +11,11 @@ void draw_tile(struct tile *t)
 {
 	sgr(RESET);
 	sgr(BG_BLACK);
-	if (t->e) {
+	if (t->e)
 		draw_entity(t->e);
-	} else if (t->fg_sym) {
+	else if (t->c)
+		draw_entity(t->c);
+	else if (t->fg_sym) {
 		sgr2(t->fg_gr);
 		putchar(t->fg_sym);
 	} else if (t->bg_sym) {
@@ -39,9 +41,12 @@ struct tile *new_zone(struct tile *z)
 }
 void free_zone(struct tile *z)
 {
-	for (int i=0;i<AREA;i++)
+	for (int i=0;i<AREA;i++) {
 		if (z[i].e)
 			free_entity(z[i].e);
+		if (z[i].c)
+			free_entity(z[i].c);
+	}
 	free(z);
 }
 void draw_pos(struct tile *z,int pos)
