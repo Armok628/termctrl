@@ -6,7 +6,6 @@
 #include "src/entity.h"
 #include "src/tile.h"
 #include "src/input.h"
-#include "src/room.h"
 void move_entity(struct tile *z,int from,int to)
 {
 	if (from==to)
@@ -50,14 +49,6 @@ int main(/*int argc,char **argv*/)
 {
 	srand(time(NULL));
 	struct tile *zone=new_zone(NULL);
-	/**/
-	for (int i=0;i<AREA/192;i++)
-		random_room(zone);
-	for (int i=0;i<AREA/192;i++)
-		fix_rooms(zone);
-	//for (int i=0;i<AREA/384;i++)
-	//	random_path(zone);
-	/**/
 	player_coords=rand()%AREA;
 	zone[player_coords].e=spawn(&playertest);
 	clear_screen();
