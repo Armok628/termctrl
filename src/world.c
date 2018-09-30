@@ -25,16 +25,16 @@ void erode(struct worldtile *w)
 			w[i].elev=avg_elev(elevs,i);
 		}
 }
-struct worldtile *worldgen(void)
+struct worldtile *worldgen(int erosion,int offset)
 {
 	struct worldtile *w=calloc(AREA,sizeof(struct worldtile));
 	for (int x=1;x<WIDTH-1;x++)
 		for (int y=1;y<HEIGHT-1;y++) {
 			int i=x+y*WIDTH;
-			w[i].elev=rand()%1000;
+			w[i].elev=offset+rand()%1000;
 			w[i].temp=rand()%1000;
 		}
-	for (int i=0;i<5;i++)
+	for (int i=0;i<erosion;i++)
 		erode(w);
 	return w;
 }
