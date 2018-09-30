@@ -8,7 +8,7 @@ struct worldtile {
 
 short avg_elev(short *,int);
 void erode(struct worldtile *);
-struct worldtile *worldgen(int,int);
+struct worldtile *worldgen(int,int,int);
 void draw_worldtile(struct worldtile);
 void draw_world(struct worldtile *);
 #endif

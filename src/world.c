@@ -14,34 +14,49 @@ short avg_elev(short *elevs,int pos)
 void erode(struct worldtile *w)
 {
 	short elevs[AREA];
+	short temps[AREA];
 	for (int x=0;x<WIDTH;x++)
 		for (int y=0;y<HEIGHT;y++) {
 			int i=x+y*WIDTH;
 			elevs[i]=w[i].elev;
+			temps[i]=w[i].temp;
 		}
 	for (int x=1;x<WIDTH-1;x++)
 		for (int y=1;y<HEIGHT-1;y++) {
 			int i=x+y*WIDTH;
 			w[i].elev=avg_elev(elevs,i);
+			w[i].temp=avg_elev(temps,i);
 		}
 }
-struct worldtile *worldgen(int erosion,int offset)
+struct worldtile *worldgen(int age,int e_o,int t_o)
 {
 	struct worldtile *w=calloc(AREA,sizeof(struct worldtile));
+	for (int y=HEIGHT/5+2;y<HEIGHT*4/5;y++) {
+		w[y*WIDTH].temp=500;
+		w[(y+1)*WIDTH-1].temp=500;
+	}
 	for (int x=1;x<WIDTH-1;x++)
 		for (int y=1;y<HEIGHT-1;y++) {
+			// Generate values
+			int e=e_o+rand()%1000;
+			int t=y-HEIGHT/2;
+			t=t<0?t:-t;
+			t*=1000/HEIGHT;
+			t+=450+rand()%450;
+			t+=t_o;
+			// Insert values
 			int i=x+y*WIDTH;
-			w[i].elev=offset+rand()%1000;
-			w[i].temp=rand()%1000;
+			w[i].elev=e;
+			w[i].temp=t;
 		}
-	for (int i=0;i<erosion;i++)
+	for (int i=0;i<age;i++)
 		erode(w);
 	return w;
 }
 void draw_worldtile(struct worldtile t)
 {
 	short elev=t.elev;
-	//short temp=t.temp;
+	short temp=t.temp;
 	sgr(RESET);
 	sgr(BG_BLACK);
 	char sym=' ';
@@ -68,17 +83,19 @@ void draw_worldtile(struct worldtile t)
 			sgr(BOLD);
 			sym='-';
 		} else if (elev<640) { // High Mountains
-			sgr(FG_WHITE);
+			sgr(FG_DEFAULT);
 			sym='=';
 		} else { // Summits
 			if (elev>700)
 				sgr(FG_RED);
 			else
-				sgr(FG_WHITE);
+				sgr(FG_DEFAULT);
 			sgr(BOLD);
 			sym='^';
 		}
 	}
+	if (temp<400)
+		sgr(BG_GRAY);
 	putchar(sym);
 }
 void draw_world(struct worldtile *w)

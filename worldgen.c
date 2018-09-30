@@ -5,16 +5,17 @@
 #include "src/terminal.h"
 int main(int argc,char **argv)
 {
-	int erosion=4,offset=10;
+	int age=4,e_o=10,t_o=0;
 	unsigned long seed=time(NULL);
 	for (int i=1;i<argc;i++) {
-		sscanf(argv[i],"erosion=%d",&erosion);
-		sscanf(argv[i],"offset=%d",&offset);
+		sscanf(argv[i],"age=%d",&age);
+		sscanf(argv[i],"e_o=%d",&e_o);
+		sscanf(argv[i],"t_o=%d",&t_o);
 		sscanf(argv[i],"seed=%lu",&seed);
 	}
 	srand(seed);
 	clear_screen();
-	struct worldtile *world=worldgen(erosion,offset);
+	struct worldtile *world=worldgen(age,e_o,t_o);
 	draw_world(world);
 	free(world);
 	sgr(RESET);
