@@ -6,16 +6,19 @@
 int main(int argc,char **argv)
 {
 	int erosion=4,offset=10;
-	if (argc>1)
-		sscanf(argv[1],"%d",&erosion);
-	if (argc>2)
-		sscanf(argv[2],"%d",&offset);
-	srand(time(NULL));
+	unsigned long seed=time(NULL);
+	for (int i=1;i<argc;i++) {
+		sscanf(argv[i],"erosion=%d",&erosion);
+		sscanf(argv[i],"offset=%d",&offset);
+		sscanf(argv[i],"seed=%lu",&seed);
+	}
+	srand(seed);
 	clear_screen();
 	struct worldtile *world=worldgen(erosion,offset);
 	draw_world(world);
 	free(world);
 	sgr(RESET);
 	putchar('\n');
+	printf("seed=%lu\n",seed);
 	return 0;
 }

@@ -71,7 +71,10 @@ void draw_worldtile(struct worldtile t)
 			sgr(FG_WHITE);
 			sym='=';
 		} else { // Summits
-			sgr(FG_WHITE);
+			if (elev>700)
+				sgr(FG_RED);
+			else
+				sgr(FG_WHITE);
 			sgr(BOLD);
 			sym='^';
 		}
