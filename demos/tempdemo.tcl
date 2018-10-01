@@ -1,0 +1,7 @@
+#!/usr/bin/tclsh
+set seed [expr {int(rand()*10000000000)}]
+for {set i 500} {$i>=-500} {incr i -50} {
+	exec ./a.out seed=$seed {*}$argv t_o=$i >&@ stdout
+	if {$i==0} {after 2000}
+	after 500
+}
