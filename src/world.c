@@ -189,9 +189,6 @@ void draw_terrain(enum terrain t)
 	case COLD_HIGH_MOUNTAIN:
 	case HIGH_MOUNTAIN:
 		sgr(BOLD);
-		sgr(FG_GRAY);
-		putchar('=');
-		break;
 	case HOT_HIGH_MOUNTAIN:
 		sgr(FG_GRAY);
 		putchar('=');
@@ -200,9 +197,6 @@ void draw_terrain(enum terrain t)
 	case COLD_SUMMIT:
 	case SUMMIT:
 		sgr(BOLD);
-		sgr(FG_GRAY);
-		putchar('^');
-		break;
 	case HOT_SUMMIT:
 		sgr(FG_GRAY);
 		putchar('^');
