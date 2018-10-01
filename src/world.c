@@ -1,4 +1,5 @@
 #include "world.h"
+bool show_climates=false;
 short avg_elev(short *elevs,int pos)
 {
 	int sum=0;
@@ -54,7 +55,7 @@ struct worldtile *worldgen(int age,int e_o,int t_o)
 	return w;
 }
 void draw_worldtile(struct worldtile t)
-{
+{ // TODO: Replace with climate enum and function to determine value
 	short elev=t.elev;
 	short temp=t.temp;
 	sgr(RESET);
@@ -94,12 +95,22 @@ void draw_worldtile(struct worldtile t)
 			sym='^';
 		}
 	}
-	if (temp<400) {
-		if (elev<500) {
+	if (temp<400) { // Cold
+		if (show_climates)
+			sgr(BG_BLUE);
+		if (elev<500) { // Sea
 			sgr(FG_CYAN);
 			sgr(BOLD);
-		} else
+		} else // Land
 			sgr(FG_WHITE);
+	} else if (temp>625) { // Hot
+		if (show_climates)
+			sgr(BG_RED);
+		if (elev>=590) { // Above Lowlands
+			sgr(FG_GRAY);
+			sgr(NO_BOLD);
+		} else if (elev>=500) // Above Sea
+			sgr(FG_YELLOW);
 	}
 	putchar(sym);
 }

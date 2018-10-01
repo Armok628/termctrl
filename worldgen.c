@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 #include "src/world.h"
 #include "src/terminal.h"
 int main(int argc,char **argv)
@@ -8,6 +9,8 @@ int main(int argc,char **argv)
 	int age=4,e_o=10,t_o=0;
 	unsigned long seed=time(NULL);
 	for (int i=1;i<argc;i++) {
+		if (!strcmp(argv[i],"show_climates"))
+			show_climates=true;
 		sscanf(argv[i],"age=%d",&age);
 		sscanf(argv[i],"e_o=%d",&e_o);
 		sscanf(argv[i],"t_o=%d",&t_o);

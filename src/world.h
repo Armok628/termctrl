@@ -1,6 +1,7 @@
 #ifndef WORLD_H
 #define WORLD_H
-#include "tile.h"
+#include <stdlib.h>
+#include <stdbool.h>
 #include "terminal.h"
 #define W_WIDTH 100
 #define W_HEIGHT 40
@@ -8,6 +9,7 @@
 struct worldtile {
 	short elev,temp;
 };
+extern bool show_climates;
 
 short avg_elev(short *,int);
 void erode(struct worldtile *);
