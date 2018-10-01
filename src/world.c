@@ -1,6 +1,6 @@
 #include "world.h"
 bool show_climates=false;
-short avg_elev(short *elevs,int pos)
+short avg_around(short *elevs,int pos)
 {
 	int sum=0;
 	for (int dx=-1;dx<=1;dx++)
@@ -25,8 +25,8 @@ void erode(struct worldtile *w)
 	for (int x=1;x<W_WIDTH-1;x++)
 		for (int y=1;y<W_HEIGHT-1;y++) {
 			int i=x+y*W_WIDTH;
-			w[i].elev=avg_elev(elevs,i);
-			w[i].temp=avg_elev(temps,i);
+			w[i].elev=avg_around(elevs,i);
+			w[i].temp=avg_around(temps,i);
 		}
 }
 struct worldtile *worldgen(int age,int e_o,int t_o)
@@ -54,69 +54,178 @@ struct worldtile *worldgen(int age,int e_o,int t_o)
 		erode(w);
 	return w;
 }
-void draw_worldtile(struct worldtile t)
-{ // TODO: Replace with climate enum and function to determine value
-	short elev=t.elev;
-	short temp=t.temp;
+#define TERRAIN(type) COLD_##type, type, HOT_##type
+enum terrain {
+	TERRAIN(VOID),
+	TERRAIN(DEEP_SEA),
+	TERRAIN(SHALLOW_SEA),
+	TERRAIN(BEACH),
+	TERRAIN(MEADOW),
+	TERRAIN(FIELD),
+	TERRAIN(FOREST),
+	TERRAIN(LOW_MOUNTAIN),
+	TERRAIN(HIGH_MOUNTAIN),
+	TERRAIN(SUMMIT),
+};
+enum terrain terrain_type(struct worldtile tile)
+{
+	short elev=tile.elev;
+	short temp=tile.temp;
+	enum terrain t=VOID;
 	sgr(RESET);
 	sgr(BG_BLACK);
 	char sym=' ';
 	if (elev<200) { // Void
-		sgr(FG_BLACK);
+		t=VOID;
 	} else if (elev<500) { // Sea
-		sym='_';
-		sgr(FG_BLUE);
-		if (elev>475)
-			sgr(BOLD);
+		t=elev>475?SHALLOW_SEA:DEEP_SEA;
 	} else if (elev<590) { // Lowlands
 		sym='~';
-		if (elev<520) // Sand
-			sgr(FG_YELLOW);
-		else // Grass
-			sgr(FG_GREEN);
-		if (elev<550) // Meadows/Beaches
-			sgr(BOLD);
-		else if (570<=elev&&elev<=580) // Forests
-			sym='%';
+		if (elev<520)
+			t=BEACH;
+		else if (elev<550)
+			t=MEADOW;
+		else
+			t=FIELD;
+		if (570<=elev&&elev<=580) // Forests
+			t=FOREST;
 	} else { // Highlands
-		sgr(BOLD);
-		if (elev<610) { // Low Mountains
-			sgr(FG_BLACK);
-			sym='-';
-		} else if (elev<640) { // High Mountains
-			sgr(FG_GRAY);
-			sym='=';
-		} else { // Summits
-			if (elev>700)
-				sgr(FG_RED);
-			else
-				sgr(FG_GRAY);
-			sym='^';
+		if (elev<610)
+			t=LOW_MOUNTAIN;
+		else if (elev<640)
+			t=HIGH_MOUNTAIN;
+		else
+			t=SUMMIT;
+	}
+	if (temp<400) // Cold
+		t--;
+	else if (temp>625) // Hot
+		t++;
+	return t;
+}
+void draw_terrain(enum terrain t)
+{ // TODO: Replace with climate enum and function to determine value
+	sgr(RESET);
+	sgr(BG_BLACK);
+	if (show_climates) {
+		switch (t%3) {
+		case 2:
+			sgr(BG_RED);
+			break;
+		case 0:
+			sgr(BG_BLUE);
 		}
 	}
-	if (temp<400) { // Cold
-		if (elev<500) { // Sea
-			sgr(FG_CYAN);
-		} else // Land
-			sgr(FG_GRAY);
-		if (show_climates)
-			sgr(BG_BLUE);
-	} else if (temp>625) { // Hot
-		if (elev>=590) { // Above Lowlands
-			sgr(RESET);
-			sgr(BG_BLACK);
-			sgr(FG_GRAY);
-		} else if (elev>=500) // Above Sea
-			sgr(FG_YELLOW);
-		if (show_climates)
-			sgr(BG_RED);
+	switch (t) {
+	// Nothing
+	case COLD_VOID:
+	case VOID:
+	case HOT_VOID:
+		putchar(' ');
+		break;
+	// Sea
+	case COLD_SHALLOW_SEA:
+		sgr(BOLD);
+	case COLD_DEEP_SEA:
+		sgr(FG_CYAN);
+		putchar('_');
+		break;
+	case SHALLOW_SEA:
+	case HOT_SHALLOW_SEA:
+		sgr(BOLD);
+	case DEEP_SEA:
+	case HOT_DEEP_SEA:
+		sgr(FG_BLUE);
+		putchar('_');
+		break;
+	// Sand
+	case COLD_BEACH:
+		sgr(BOLD);
+		sgr(FG_GRAY);
+		putchar('~');
+		break;
+	case BEACH:
+	case HOT_BEACH:
+		sgr(BOLD);
+		sgr(FG_YELLOW);
+		putchar('~');
+		break;
+	// Meadows / Fields
+	case COLD_MEADOW:
+		sgr(BOLD);
+	case COLD_FIELD:
+		sgr(FG_GRAY);
+		putchar('~');
+		break;
+	case MEADOW:
+		sgr(BOLD);
+	case FIELD:
+		sgr(FG_GREEN);
+		putchar('~');
+		break;
+	case HOT_MEADOW:
+		sgr(BOLD);
+	case HOT_FIELD:
+		sgr(FG_YELLOW);
+		putchar('~');
+		break;
+	// Forest
+	case COLD_FOREST:
+		sgr(BOLD);
+		sgr(FG_GRAY);
+		putchar('%');
+		break;
+	case FOREST:
+		sgr(FG_GREEN);
+		putchar('%');
+		break;
+	case HOT_FOREST:
+		sgr(FG_YELLOW);
+		putchar('%');
+		break;
+	// Low Mountain
+	case COLD_LOW_MOUNTAIN:
+		sgr(BOLD);
+		sgr(FG_GRAY);
+		putchar('-');
+		break;
+	case LOW_MOUNTAIN:
+		sgr(BOLD);
+		sgr(FG_BLACK);
+		putchar('-');
+		break;
+	case HOT_LOW_MOUNTAIN:
+		sgr(FG_GRAY);
+		putchar('-');
+		break;
+	// High Mountain
+	case COLD_HIGH_MOUNTAIN:
+	case HIGH_MOUNTAIN:
+		sgr(BOLD);
+		sgr(FG_GRAY);
+		putchar('=');
+		break;
+	case HOT_HIGH_MOUNTAIN:
+		sgr(FG_GRAY);
+		putchar('=');
+		break;
+	// Summit
+	case COLD_SUMMIT:
+	case SUMMIT:
+		sgr(BOLD);
+		sgr(FG_GRAY);
+		putchar('^');
+		break;
+	case HOT_SUMMIT:
+		sgr(FG_GRAY);
+		putchar('^');
+		break;
 	}
-	putchar(sym);
 }
 void draw_world(struct worldtile *w)
 {
 	for (int i=0;i<W_AREA;i++) {
 		move_cursor(i%W_WIDTH,i/W_WIDTH);
-		draw_worldtile(w[i]);
+		draw_terrain(terrain_type(w[i]));
 	}
 }
