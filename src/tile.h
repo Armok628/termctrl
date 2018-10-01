@@ -2,8 +2,12 @@
 #define TILE_H
 #include "terminal.h"
 #include "entity.h"
+#ifndef WIDTH
 #define WIDTH 80
+#endif
+#ifndef HEIGHT
 #define HEIGHT 24
+#endif
 #define AREA (WIDTH*HEIGHT)
 struct tile {
 	struct entity *e,*c;
