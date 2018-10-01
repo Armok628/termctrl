@@ -10,14 +10,26 @@
 #define W_HEIGHT 24
 #endif
 #define W_AREA (W_WIDTH*W_HEIGHT)
+#define TERRAIN(type) COLD_##type, type, HOT_##type
+enum terrain {
+	TERRAIN(VOID),
+	TERRAIN(DEEP_SEA),
+	TERRAIN(SHALLOW_SEA),
+	TERRAIN(BEACH),
+	TERRAIN(MEADOW),
+	TERRAIN(FIELD),
+	TERRAIN(FOREST),
+	TERRAIN(LOW_MOUNTAIN),
+	TERRAIN(HIGH_MOUNTAIN),
+	TERRAIN(SUMMIT),
+};
 struct worldtile {
 	short elev,temp;
 };
 extern bool show_climates;
 
-short avg_elev(short *,int);
-void erode(struct worldtile *);
 struct worldtile *worldgen(int,int,int);
-void draw_worldtile(struct worldtile);
+enum terrain terrain_type(struct worldtile);
+void draw_terrain(enum terrain);
 void draw_world(struct worldtile *);
 #endif

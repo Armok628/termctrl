@@ -54,19 +54,6 @@ struct worldtile *worldgen(int age,int e_o,int t_o)
 		erode(w);
 	return w;
 }
-#define TERRAIN(type) COLD_##type, type, HOT_##type
-enum terrain {
-	TERRAIN(VOID),
-	TERRAIN(DEEP_SEA),
-	TERRAIN(SHALLOW_SEA),
-	TERRAIN(BEACH),
-	TERRAIN(MEADOW),
-	TERRAIN(FIELD),
-	TERRAIN(FOREST),
-	TERRAIN(LOW_MOUNTAIN),
-	TERRAIN(HIGH_MOUNTAIN),
-	TERRAIN(SUMMIT),
-};
 enum terrain terrain_type(struct worldtile tile)
 {
 	short elev=tile.elev;
