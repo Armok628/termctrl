@@ -79,19 +79,18 @@ void draw_worldtile(struct worldtile t)
 		else if (570<=elev&&elev<=580) // Forests
 			sym='%';
 	} else { // Highlands
+		sgr(BOLD);
 		if (elev<610) { // Low Mountains
 			sgr(FG_BLACK);
-			sgr(BOLD);
 			sym='-';
 		} else if (elev<640) { // High Mountains
-			sgr(FG_DEFAULT);
+			sgr(FG_GRAY);
 			sym='=';
 		} else { // Summits
 			if (elev>700)
 				sgr(FG_RED);
 			else
-				sgr(FG_DEFAULT);
-			sgr(BOLD);
+				sgr(FG_GRAY);
 			sym='^';
 		}
 	}
@@ -100,15 +99,15 @@ void draw_worldtile(struct worldtile t)
 			sgr(BG_BLUE);
 		if (elev<500) { // Sea
 			sgr(FG_CYAN);
-			sgr(BOLD);
 		} else // Land
-			sgr(FG_WHITE);
+			sgr(FG_GRAY);
 	} else if (temp>625) { // Hot
 		if (show_climates)
 			sgr(BG_RED);
 		if (elev>=590) { // Above Lowlands
+			sgr(RESET);
+			sgr(BG_BLACK);
 			sgr(FG_GRAY);
-			sgr(NO_BOLD);
 		} else if (elev>=500) // Above Sea
 			sgr(FG_YELLOW);
 	}
