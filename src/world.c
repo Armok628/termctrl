@@ -95,21 +95,21 @@ void draw_worldtile(struct worldtile t)
 		}
 	}
 	if (temp<400) { // Cold
-		if (show_climates)
-			sgr(BG_BLUE);
 		if (elev<500) { // Sea
 			sgr(FG_CYAN);
 		} else // Land
 			sgr(FG_GRAY);
-	} else if (temp>625) { // Hot
 		if (show_climates)
-			sgr(BG_RED);
+			sgr(BG_BLUE);
+	} else if (temp>625) { // Hot
 		if (elev>=590) { // Above Lowlands
 			sgr(RESET);
 			sgr(BG_BLACK);
 			sgr(FG_GRAY);
 		} else if (elev>=500) // Above Sea
 			sgr(FG_YELLOW);
+		if (show_climates)
+			sgr(BG_RED);
 	}
 	putchar(sym);
 }
