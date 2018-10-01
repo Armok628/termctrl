@@ -94,8 +94,13 @@ void draw_worldtile(struct worldtile t)
 			sym='^';
 		}
 	}
-	if (temp<400)
-		sgr(BG_GRAY);
+	if (temp<400) {
+		if (elev<500) {
+			sgr(FG_CYAN);
+			sgr(BOLD);
+		} else
+			sgr(FG_WHITE);
+	}
 	putchar(sym);
 }
 void draw_world(struct worldtile *w)
