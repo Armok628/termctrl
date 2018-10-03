@@ -14,23 +14,22 @@ int main(/*int argc,char **argv*/)
 	struct tile *zone=new_zone(NULL);
 	player_coords=rand()%AREA;
 	zone[player_coords].e=spawn(&playertest);
+	current_zone=zone;
 	clear_screen();
 	draw_zone(zone);
 	sgr(RESET);
 	set_canon(false);
 	set_cursor_visible(false);
-	while (!exit_req) {
-		move_cursor(0,HEIGHT);
-		clear_line();
-		printf("%s ",zone[player_coords].e->name);
-		draw_entity(zone[player_coords].e);
+	report_height=HEIGHT;
+	while (!exit_req)
 		advance(zone);
-	}
 	clear_reports();
 	set_canon(true);
 	set_cursor_visible(true);
-	move_cursor(0,HEIGHT);
+	move_cursor(0,report_height);
 	sgr(RESET);
+	clear_screen();
+	move_cursor(0,0);
 #define PUT_SIZEOF(type) printf("sizeof("#type"): %lu\n",sizeof(type))
 	PUT_SIZEOF(struct entitytype);
 	PUT_SIZEOF(struct entity);

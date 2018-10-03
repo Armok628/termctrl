@@ -5,6 +5,7 @@
 #include "input.h"
 #include "report.h"
 extern int player_coords;
+extern struct tile *current_zone;
 
 void move_entity(struct tile *,int,int);
 void take_turn(struct tile *,int);

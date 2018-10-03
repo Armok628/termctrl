@@ -61,13 +61,11 @@ enum terrain terrain_type(struct worldtile tile)
 	enum terrain t=VOID;
 	sgr(RESET);
 	sgr(BG_BLACK);
-	char sym=' ';
 	if (elev<200) { // Void
 		t=VOID;
 	} else if (elev<500) { // Sea
 		t=elev>475?SHALLOW_SEA:DEEP_SEA;
 	} else if (elev<590) { // Lowlands
-		sym='~';
 		if (elev<520)
 			t=BEACH;
 		else if (elev<550)

@@ -1,5 +1,6 @@
 #include "advance.h"
-int player_coords;
+int player_coords=-1;
+struct tile *current_zone=NULL;
 void kill(struct tile *z,int pos)
 {
 	z[pos].e->hp=0;
@@ -31,10 +32,12 @@ int handle_move(struct tile *z,int from,char c)
 }
 void take_turn(struct tile *z,int pos)
 {
-	if (!z[pos].e)
-		return;
-	if (pos==player_coords) {
-		player_coords=handle_move(z,pos,key());
+	if (z==current_zone&&pos==player_coords) {
+		update_stats(z[player_coords].e);
+		char c=key();
+		clear_reports();
+		player_coords=handle_move(z,pos,c);
+		update_stats(z[player_coords].e);
 	} else
 		handle_move(z,pos,'0'+rand()%('9'-'0'-1));
 }
@@ -44,6 +47,6 @@ void advance(struct tile *z)
 	for (int i=0;i<AREA;i++)
 		e[i]=z[i].e;
 	for (int i=0;i<AREA;i++)
-		if (z[i].e==e[i])
+		if (e[i]&&z[i].e==e[i])
 			take_turn(z,i);
 }

@@ -5,7 +5,9 @@
 #include "tile.h"
 #include "entity.h"
 #include "terminal.h"
+extern int report_height;
 
 void report(char *,...);
 void clear_reports(void);
+void update_stats(struct entity *);
 #endif
