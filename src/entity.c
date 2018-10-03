@@ -8,6 +8,7 @@ struct entitytype monstertest={
 	.agi={10,10},
 	.wis={10,10},
 	.str={10,10},
+	.flags=NONE,
 };
 struct entitytype playertest={
 	.name="Player",
@@ -18,13 +19,20 @@ struct entitytype playertest={
 	.agi={10,10},
 	.wis={10,10},
 	.str={10,10},
+	.flags=NAMED,
 };
 struct entity *spawn(struct entitytype *t)
 {
 	struct entity *e=malloc(sizeof(struct entity));
 	if (t) {
 		e->sym=t->sym;
-		e->name=t->name;
+		e->type=t;
+		e->flags=t->flags;
+		if (e->flags&NAMED) {
+			e->name=random_word(4+rand()%4);
+			e->name[0]+='A'-'a';
+		} else
+			e->name=t->name;
 		e->gr[0]=t->gr[0];
 		e->gr[1]=t->gr[1];
 		e->maxhp=rrand(t->hp);
@@ -38,6 +46,8 @@ struct entity *spawn(struct entitytype *t)
 }
 void free_entity(struct entity *e)
 {
+	if (e->flags&NAMED)
+		free(e->name);
 	free(e);
 }
 void draw_entity(struct entity *e)

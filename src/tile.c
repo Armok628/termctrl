@@ -32,7 +32,7 @@ struct tile *new_zone(struct tile *z)
 		z[i].bg_gr[1]=rand()%2;
 		z[i].bg_sym=grass_syms[rand()%n_grass_syms];
 		/**/
-		if (!(rand()%1000)) {
+		if (!(rand()%500)) {
 			z[i].e=spawn(&monstertest);
 		}
 		/**/

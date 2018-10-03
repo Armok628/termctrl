@@ -2,10 +2,16 @@
 #define ENTITY_H
 #include "terminal.h"
 #include "range.h"
+#include "randword.h"
+enum entityflags {
+	NONE=0,
+	NAMED=1,
+};
 struct entitytype {
 	char *name;
 	char sym;
 	char gr[2];
+	char flags;
 	range_t hp,res,agi,wis,str;
 };
 struct entity {
@@ -13,6 +19,7 @@ struct entity {
 	char *name;
 	char sym;
 	char gr[2];
+	char flags;
 	short hp,maxhp,res,agi,wis,str;
 };
 extern struct entitytype playertest;

@@ -18,6 +18,18 @@ void vreport(char *fmt,va_list args)
 			break;
 		case 'e':
 			e=va_arg(args,struct entity *);
+			if (e->name!=e->type->name) {
+				printf("%s (",e->name);
+				draw_entity(e);
+				sgr(RESET);
+				putchar(')');
+			} else {
+				draw_entity(e);
+				sgr(RESET);
+			}
+			break;
+		case 'n': // Name
+			e=va_arg(args,struct entity *);
 			printf("%s (",e->name);
 			draw_entity(e);
 			sgr(RESET);
@@ -61,7 +73,7 @@ void update_stats(struct entity *e)
 {
 	move_cursor(0,report_height);
 	clear_line();
-	report_here("e s d/d s d s d s d s d",e,
+	report_here("n s d/d s d s d s d s d",e,
 			"HP:",e->hp,e->maxhp,
 			"RES:",e->res,
 			"AGI:",e->agi,
