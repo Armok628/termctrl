@@ -1,17 +1,24 @@
 #include "advance.h"
 int player_coords;
+void kill(struct tile *z,int pos)
+{
+	z[pos].e->hp=0;
+	if (z[pos].c)
+		free_entity(z[pos].c);
+	z[pos].c=z[pos].e;
+	z[pos].e=NULL;
+}
 void move_entity(struct tile *z,int from,int to)
 {
-	if (from==to)
+	if (to==from)
 		return;
-	struct entity *e=z[from].e;
 	if (z[to].e) {
-		z[to].c=z[to].e;
-		/**/z[to].c->hp=0;
+		report("e s e",z[from].e,"kills",z[to].e);
+		kill(z,to);
 	}
+	z[to].e=z[from].e;
 	z[from].e=NULL;
 	draw_pos(z,from);
-	z[to].e=e;
 	draw_pos(z,to);
 }
 int handle_move(struct tile *z,int from,char c)

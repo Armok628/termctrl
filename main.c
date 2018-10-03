@@ -26,6 +26,7 @@ int main(/*int argc,char **argv*/)
 		draw_entity(zone[player_coords].e);
 		advance(zone);
 	}
+	clear_reports();
 	set_canon(true);
 	set_cursor_visible(true);
 	move_cursor(0,HEIGHT);
