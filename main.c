@@ -23,10 +23,9 @@ int main(/*int argc,char **argv*/)
 	report_height=HEIGHT;
 	while (!exit_req)
 		advance(zone);
-	clear_reports();
+	free_zone(zone);
 	set_canon(true);
 	set_cursor_visible(true);
-	move_cursor(0,report_height);
 	sgr(RESET);
 	clear_screen();
 	move_cursor(0,0);
@@ -35,6 +34,5 @@ int main(/*int argc,char **argv*/)
 	PUT_SIZEOF(struct entity);
 	PUT_SIZEOF(struct tile);
 	PUT_SIZEOF(struct worldtile);
-	free_zone(zone);
 	return 0;
 }
