@@ -8,11 +8,32 @@ char key(void)
 }
 int input_offset(char c)
 {
-	static int offsets[10]={0,
-		WIDTH-1,WIDTH,WIDTH+1,
-		-1,0,1,
-		-WIDTH-1,-WIDTH,-WIDTH+1};
-	if ('0'<=c&&c<='9')
-		return offsets[c-'0'];
-	return 0;
+	switch (c) {
+	case '1':
+	case 'b':
+		return WIDTH-1;
+	case '2':
+	case 'j':
+		return WIDTH;
+	case '3':
+	case 'n':
+		return WIDTH+1;
+	case '4':
+	case 'h':
+		return -1;
+	case '6':
+	case 'l':
+		return 1;
+	case '7':
+	case 'y':
+		return -WIDTH-1;
+	case '8':
+	case 'k':
+		return -WIDTH;
+	case '9':
+	case 'u':
+		return -WIDTH+1;
+	default:
+		return 0;
+	}
 }

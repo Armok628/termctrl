@@ -18,7 +18,7 @@ void vreport(char *fmt,va_list args)
 			break;
 		case 'e':
 			e=va_arg(args,struct entity *);
-			if (e->name!=e->type->name) {
+			if (e->flags&NAMED) {
 				printf("%s (",e->name);
 				draw_entity(e);
 				sgr(RESET);
