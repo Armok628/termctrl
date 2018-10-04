@@ -23,10 +23,19 @@ void move_entity(struct tile *z,int from,int to)
 	draw_pos(z,to);
 }
 int handle_move(struct tile *z,int from,char c)
-{
+{ // Returns entity's new position
 	int to=from+input_offset(c);
-	if (!legal_move(from,to)||z[to].fg_sym)
-		to=from;
+	if (!legal_move(from,to))
+		return from;
+	if (z[to].fg_sym) {
+		if (~z[from].e->flags&OPENS_DOORS)
+			return from;
+		if (z[to].fg_sym=='+'&&z[to].bg_sym=='-') {
+			z[to].fg_sym='\0';
+			draw_pos(z,to);
+		}
+		return from;
+	}
 	move_entity(z,from,to);
 	return to;
 }

@@ -5,7 +5,8 @@
 #include "randword.h"
 enum entityflags {
 	NONE=0,
-	NAMED=1,
+	NAMED=1<<0,
+	OPENS_DOORS=1<<1,
 };
 struct entitytype {
 	char *name;
