@@ -8,13 +8,17 @@
 #include "src/input.h"
 #include "src/world.h"
 #include "src/advance.h"
+#include "src/room.h"
 int main(/*int argc,char **argv*/)
 {
 	srand(time(NULL));
 	struct tile *zone=new_zone(NULL);
+	current_zone=zone;
+	/**/
+	room(zone,5,5,5,5);
+	/**/
 	player_coords=rand()%AREA;
 	zone[player_coords].e=spawn(&playertest);
-	current_zone=zone;
 	clear_screen();
 	draw_zone(zone);
 	sgr(RESET);

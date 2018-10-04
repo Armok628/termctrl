@@ -3,23 +3,23 @@ struct entitytype monstertest={
 	.name="Monster",
 	.sym='&',
 	.gr={FG_BLACK,BOLD},
-	.hp={100,100},
-	.res={10,10},
-	.agi={10,10},
-	.wis={10,10},
-	.str={10,10},
 	.flags=NONE,
+	.hp={50,150},
+	.res={5,15},
+	.agi={5,15},
+	.wis={5,15},
+	.str={5,15},
 };
 struct entitytype playertest={
 	.name="Player",
 	.sym='@',
 	.gr={FG_BLUE,BOLD},
-	.hp={100,100},
-	.res={10,10},
-	.agi={10,10},
-	.wis={10,10},
-	.str={10,10},
 	.flags=NAMED,
+	.hp={50,150},
+	.res={5,15},
+	.agi={5,15},
+	.wis={5,15},
+	.str={5,15},
 };
 struct entity *spawn(struct entitytype *t)
 {
