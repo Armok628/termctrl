@@ -2,7 +2,7 @@
 int player_coords=-1;
 struct tile *current_zone=NULL;
 void kill(struct tile *z,int pos)
-{
+{ // Assumes valid target
 	z[pos].e->hp=0;
 	if (z[pos].c)
 		free_entity(z[pos].c);
@@ -10,13 +10,9 @@ void kill(struct tile *z,int pos)
 	z[pos].e=NULL;
 }
 void move_entity(struct tile *z,int from,int to)
-{
+{ // Assumes valid targets
 	if (to==from)
 		return;
-	if (z[to].e) {
-		report("e s e",z[from].e,"kills",z[to].e);
-		kill(z,to);
-	}
 	z[to].e=z[from].e;
 	z[from].e=NULL;
 	draw_pos(z,from);
@@ -25,7 +21,7 @@ void move_entity(struct tile *z,int from,int to)
 int handle_move(struct tile *z,int from,char c)
 { // Returns entity's new position
 	int to=from+input_offset(c);
-	if (!legal_move(from,to))
+	if (!legal_move(from,to)||to==from)
 		return from;
 	if (z[to].fg_sym) {
 		if (~z[from].e->flags&OPENS_DOORS)
@@ -35,6 +31,10 @@ int handle_move(struct tile *z,int from,char c)
 			draw_pos(z,to);
 		}
 		return from;
+	}
+	if (z[to].e) {
+		report("e s e",z[from].e,"kills",z[to].e);
+		kill(z,to);
 	}
 	move_entity(z,from,to);
 	return to;
