@@ -89,7 +89,7 @@ enum terrain terrain_type(struct worldtile tile)
 	return t;
 }
 void draw_terrain(enum terrain t)
-{ // TODO: Replace with climate enum and function to determine value
+{
 	sgr(RESET);
 	sgr(BG_BLACK);
 	if (show_climates) {
