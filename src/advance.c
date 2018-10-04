@@ -2,7 +2,7 @@
 int player_coords=-1;
 struct tile *current_zone=NULL;
 void kill(struct tile *z,int pos)
-{ // Assumes valid target
+{
 	z[pos].e->hp=0;
 	if (z[pos].c)
 		free_entity(z[pos].c);
@@ -10,7 +10,7 @@ void kill(struct tile *z,int pos)
 	z[pos].e=NULL;
 }
 void move_entity(struct tile *z,int from,int to)
-{ // Assumes valid targets
+{
 	if (to==from)
 		return;
 	z[to].e=z[from].e;

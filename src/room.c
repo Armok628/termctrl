@@ -24,7 +24,7 @@ void make_door(struct tile *t)
 	t->bg_gr[0]=FG_YELLOW;
 	t->bg_gr[1]=RESET;
 }
-void room(struct tile *z,int x,int y,int w,int h)
+void room(struct tile *z,int x,int y,int w,int h,int dir)
 {
 	for (int i=x;i<x+w;i++)
 		for (int j=y;j<y+h;j++) {
@@ -38,7 +38,7 @@ void room(struct tile *z,int x,int y,int w,int h)
 		make_wall(&z[x+j*WIDTH]);
 		make_wall(&z[x+w-1+j*WIDTH]);
 	}
-	switch (rand()%4) {
+	switch (dir) {
 	case 0: // North
 		make_door(&z[x+w/2+y*WIDTH]);
 		break;
@@ -52,4 +52,16 @@ void room(struct tile *z,int x,int y,int w,int h)
 		make_door(&z[x+(y+h/2)*WIDTH]);
 		break;
 	}
+}
+void rand_room(struct tile *z)
+{
+	int x=1+rand()%(WIDTH-2);
+	int y=1+rand()%(HEIGHT-2);
+	int w=3+rand()%(WIDTH/4);
+	int h=3+rand()%(HEIGHT/4);
+	if (x+w>WIDTH-1)
+		x-=w;
+	if (y+h>HEIGHT-1)
+		y-=h;
+	room(z,x,y,w,h,rand()%4);
 }
