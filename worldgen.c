@@ -6,7 +6,7 @@
 #include "src/terminal.h"
 int main(int argc,char **argv)
 {
-	int age=4,e_o=10,t_o=0;
+	int age=4,e_o=0,t_o=0;
 	float e_f=1.0,t_f=1.0;
 	unsigned long seed=time(NULL);
 	for (int i=1;i<argc;i++) {

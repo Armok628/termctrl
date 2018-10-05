@@ -39,12 +39,11 @@ struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)
 	for (int x=1;x<W_WIDTH-1;x++)
 		for (int y=1;y<W_HEIGHT-1;y++) {
 			// Generate values
-			int e=e_o+rand()%1000;
+			int e=rand()%1000;
 			int t=y-W_HEIGHT/2;
 			t=t<0?t:-t;
 			t*=1000/W_HEIGHT;
 			t+=300+rand()%800;
-			t+=t_o;
 			// Insert values
 			int i=x+y*W_WIDTH;
 			w[i].elev=e;
@@ -58,6 +57,12 @@ struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)
 	if (t_f!=1.0)
 		for (int i=0;i<W_AREA;i++)
 			w[i].temp=500+(w[i].temp-500)*t_f;
+	if (e_o!=0)
+		for (int i=0;i<W_AREA;i++)
+			w[i].elev+=e_o;
+	if (t_o!=0)
+		for (int i=0;i<W_AREA;i++)
+			w[i].temp+=t_o;
 	return w;
 }
 enum terrain terrain_type(struct worldtile tile)
