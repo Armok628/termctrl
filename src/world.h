@@ -28,7 +28,7 @@ struct worldtile {
 };
 extern bool show_climates;
 
-struct worldtile *worldgen(int,int,int,float);
+struct worldtile *worldgen(int,int,int,float,float);
 enum terrain terrain_type(struct worldtile);
 void draw_terrain(enum terrain);
 void draw_world(struct worldtile *);

@@ -29,7 +29,7 @@ void erode(struct worldtile *w)
 			w[i].temp=avg_around(temps,i);
 		}
 }
-struct worldtile *worldgen(int age,int e_o,int t_o,float e_f)
+struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)
 {
 	struct worldtile *w=calloc(W_AREA,sizeof(struct worldtile));
 	for (int y=W_HEIGHT/5+2;y<W_HEIGHT*4/5;y++) {
@@ -55,6 +55,9 @@ struct worldtile *worldgen(int age,int e_o,int t_o,float e_f)
 	if (e_f!=1.0)
 		for (int i=0;i<W_AREA;i++)
 			w[i].elev=500+(w[i].elev-500)*e_f;
+	if (t_f!=1.0)
+		for (int i=0;i<W_AREA;i++)
+			w[i].temp=500+(w[i].temp-500)*t_f;
 	return w;
 }
 enum terrain terrain_type(struct worldtile tile)
