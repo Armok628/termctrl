@@ -26,6 +26,7 @@ struct entity {
 extern struct entitytype playertest;
 extern struct entitytype monstertest;
 
+struct entity *transform(struct entity *,struct entitytype *);
 struct entity *spawn(struct entitytype *);
 void free_entity(struct entity *);
 void draw_entity(struct entity *);

@@ -21,27 +21,34 @@ struct entitytype playertest={
 	.wis={5,15},
 	.str={5,15},
 };
+struct entity *transform(struct entity *e,struct entitytype *t)
+{
+	e->type=t;
+	if (e->flags&NAMED) {
+		free(e->name);
+	}
+	e->flags=t->flags;
+	if (t->flags&NAMED) {
+		e->name=random_word(4+rand()%4);
+		e->name[0]+='A'-'a';
+	} else
+		e->name=t->name;
+	e->sym=t->sym;
+	e->gr[0]=t->gr[0];
+	e->gr[1]=t->gr[1];
+	e->maxhp=rrand(t->hp);
+	e->hp=e->maxhp;
+	e->res=rrand(t->res);
+	e->agi=rrand(t->agi);
+	e->wis=rrand(t->wis);
+	e->str=rrand(t->str);
+	return e;
+}
 struct entity *spawn(struct entitytype *t)
 {
-	struct entity *e=malloc(sizeof(struct entity));
-	if (t) {
-		e->sym=t->sym;
-		e->type=t;
-		e->flags=t->flags;
-		if (e->flags&NAMED) {
-			e->name=random_word(4+rand()%4);
-			e->name[0]+='A'-'a';
-		} else
-			e->name=t->name;
-		e->gr[0]=t->gr[0];
-		e->gr[1]=t->gr[1];
-		e->maxhp=rrand(t->hp);
-		e->hp=e->maxhp;
-		e->res=rrand(t->res);
-		e->agi=rrand(t->agi);
-		e->wis=rrand(t->wis);
-		e->str=rrand(t->str);
-	}
+	struct entity *e=calloc(1,sizeof(struct entity));
+	if (t)
+		transform(e,t);
 	return e;
 }
 void free_entity(struct entity *e)
