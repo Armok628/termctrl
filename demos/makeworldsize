@@ -1,0 +1,2 @@
+#!/bin/sh
+make world "CFLAGS=-DW_WIDTH=$1 -DW_HEIGHT=$2"
