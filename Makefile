@@ -6,3 +6,6 @@ game:
 
 world:
 	$(CC) $(CFLAGS) worldgen.c src/*.c
+
+size:
+	$(CC) $(CFLAGS) termsize.c src/terminal.c

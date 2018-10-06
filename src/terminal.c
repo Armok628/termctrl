@@ -46,7 +46,7 @@ int get_cursor_pos(int xf,int yf)
 	set_blocking(1);
 	int x,y;
 	printf("\033[6n");
-	fscanf(stdin,"\033[%d;%dH",&y,&x);
+	fscanf(stdin,"\033[%d;%dR",&y,&x);
 	tcsetattr(0,TCSANOW,&term);
 	return (x-1)*xf+(y-1)*yf;
 }
