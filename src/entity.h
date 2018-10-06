@@ -3,6 +3,7 @@
 #include "terminal.h"
 #include "range.h"
 #include "randword.h"
+#include "color.h"
 enum entityflags {
 	NONE=0,
 	NAMED=1<<0,
@@ -11,7 +12,7 @@ enum entityflags {
 struct entitytype {
 	char *name;
 	char sym;
-	char gr[2];
+	color_t color;
 	char flags;
 	range_t hp,res,agi,wis,str;
 };
@@ -19,7 +20,7 @@ struct entity {
 	struct entitytype *type;
 	char *name;
 	char sym;
-	char gr[2];
+	color_t color;
 	char flags;
 	short hp,maxhp,res,agi,wis,str;
 };

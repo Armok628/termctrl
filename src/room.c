@@ -1,28 +1,23 @@
 #include "room.h"
 void make_floor(struct tile *t)
 {
-	t->fg_sym='\0';
-	t->bg_sym='#';
-	t->bg_gr[0]=FG_GRAY;
-	t->bg_gr[1]=RESET;
+	t->fg='\0';
+	t->bg='#';
+	t->bg_c=LIGHT_GRAY;
 }
 void make_wall(struct tile *t)
 {
-	t->fg_sym='%';
-	t->fg_gr[0]=FG_BLACK;
-	t->fg_gr[1]=BOLD;
-	t->bg_sym='%';
-	t->bg_gr[0]=FG_BLACK;
-	t->bg_gr[1]=BOLD;
+	t->fg='%';
+	t->fg_c=DARK_GRAY;
+	t->bg='%';
+	t->bg_c=DARK_GRAY;
 }
 void make_door(struct tile *t)
 {
-	t->fg_sym='+';
-	t->fg_gr[0]=FG_YELLOW;
-	t->fg_gr[1]=RESET;
-	t->bg_sym='-';
-	t->bg_gr[0]=FG_YELLOW;
-	t->bg_gr[1]=RESET;
+	t->fg='+';
+	t->fg_c=BROWN;
+	t->bg='-';
+	t->bg_c=BROWN;
 }
 void room(struct tile *z,int x,int y,int w,int h,int dir)
 {

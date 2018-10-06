@@ -1,26 +1,19 @@
 #include "tile.h"
 const char *grass_syms="\"';:.,`";
 const int n_grass_syms=sizeof(grass_syms)/sizeof(grass_syms[0])-1;
-static inline void sgr2(char *arr)
-{
-	sgr(arr[0]);
-	if (arr[1])
-		sgr(arr[1]);
-}
 void draw_tile(struct tile *t)
 {
-	sgr(RESET);
-	sgr(BG_BLACK);
+	set_bg(BLACK);
 	if (t->e)
 		draw_entity(t->e);
 	else if (t->c)
 		draw_entity(t->c);
-	else if (t->fg_sym) {
-		sgr2(t->fg_gr);
-		putchar(t->fg_sym);
-	} else if (t->bg_sym) {
-		sgr2(t->bg_gr);
-		putchar(t->bg_sym);
+	else if (t->fg) {
+		set_fg(t->fg_c);
+		putchar(t->fg);
+	} else if (t->bg) {
+		set_fg(t->bg_c);
+		putchar(t->bg);
 	}
 }
 struct tile *new_zone(struct tile *z)
@@ -28,9 +21,8 @@ struct tile *new_zone(struct tile *z)
 	if (!z)
 		z=calloc(AREA,sizeof(struct tile));
 	for (int i=0;i<AREA;i++) {
-		z[i].bg_gr[0]=FG_GREEN;
-		z[i].bg_gr[1]=rand()%2;
-		z[i].bg_sym=grass_syms[rand()%n_grass_syms];
+		z[i].bg_c=rand()%2?GREEN:LIGHT_GREEN;
+		z[i].bg=grass_syms[rand()%n_grass_syms];
 		/**/
 		if (!(rand()%500)) {
 			z[i].e=spawn(&monstertest);

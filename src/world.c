@@ -70,8 +70,7 @@ enum terrain terrain_type(struct worldtile tile)
 	short elev=tile.elev;
 	short temp=tile.temp;
 	enum terrain t=VOID;
-	sgr(RESET);
-	sgr(BG_BLACK);
+	set_bg(BLACK);
 	if (elev<200) { // Void
 		t=VOID;
 	} else if (elev<500) { // Sea
@@ -99,17 +98,23 @@ enum terrain terrain_type(struct worldtile tile)
 		t++;
 	return t;
 }
+static inline void putcchar(color_t co,char ch)
+{
+	set_fg(co);
+	putchar(ch);
+}
 void draw_terrain(enum terrain t)
 {
-	sgr(RESET);
-	sgr(BG_BLACK);
 	if (show_climates) {
 		switch (t%3) {
 		case 2:
-			sgr(BG_RED);
+			set_bg(RED);
+			break;
+		case 1:
+			set_bg(BLACK);
 			break;
 		case 0:
-			sgr(BG_BLUE);
+			set_bg(BLUE);
 		}
 	}
 	switch (t) {
@@ -117,98 +122,85 @@ void draw_terrain(enum terrain t)
 	case COLD_VOID:
 	case VOID:
 	case HOT_VOID:
-		putchar(' ');
+		putcchar(BLACK,' ');
 		break;
 	// Sea
 	case COLD_SHALLOW_SEA:
-		sgr(BOLD);
+		putcchar(CYAN,'_');
+		break;
 	case COLD_DEEP_SEA:
-		sgr(FG_CYAN);
-		putchar('_');
+		putcchar(TEAL,'_');
 		break;
 	case SHALLOW_SEA:
 	case HOT_SHALLOW_SEA:
-		sgr(BOLD);
+		putcchar(LIGHT_BLUE,'_');
+		break;
 	case DEEP_SEA:
 	case HOT_DEEP_SEA:
-		sgr(FG_BLUE);
-		putchar('_');
+		putcchar(BLUE,'_');
 		break;
 	// Sand
 	case COLD_BEACH:
-		sgr(BOLD);
-		sgr(FG_GRAY);
-		putchar('~');
+		putcchar(WHITE,'~');
 		break;
 	case BEACH:
 	case HOT_BEACH:
-		sgr(BOLD);
-		sgr(FG_YELLOW);
-		putchar('~');
+		putcchar(YELLOW,'~');
 		break;
 	// Meadows / Fields
 	case COLD_MEADOW:
-		sgr(BOLD);
+		putcchar(WHITE,'~');
+		break;
 	case COLD_FIELD:
-		sgr(FG_GRAY);
-		putchar('~');
+		putcchar(LIGHT_GRAY,'~');
 		break;
 	case MEADOW:
-		sgr(BOLD);
+		putcchar(LIGHT_GREEN,'~');
+		break;
 	case FIELD:
-		sgr(FG_GREEN);
-		putchar('~');
+		putcchar(GREEN,'~');
 		break;
 	case HOT_MEADOW:
-		sgr(BOLD);
+		putcchar(YELLOW,'~');
+		break;
 	case HOT_FIELD:
-		sgr(FG_YELLOW);
-		putchar('~');
+		putcchar(BROWN,'~');
 		break;
 	// Forest
 	case COLD_FOREST:
-		sgr(BOLD);
-		sgr(FG_GRAY);
-		putchar('%');
+		putcchar(WHITE,'%');
 		break;
 	case FOREST:
-		sgr(FG_GREEN);
-		putchar('%');
+		putcchar(GREEN,'%');
 		break;
 	case HOT_FOREST:
-		sgr(FG_YELLOW);
-		putchar('%');
+		putcchar(BROWN,'%');
 		break;
 	// Low Mountain
 	case COLD_LOW_MOUNTAIN:
-		sgr(BOLD);
-		sgr(FG_GRAY);
-		putchar('-');
+		putcchar(WHITE,'-');
 		break;
 	case LOW_MOUNTAIN:
-		sgr(BOLD);
-		sgr(FG_BLACK);
-		putchar('-');
+		putcchar(DARK_GRAY,'-');
 		break;
 	case HOT_LOW_MOUNTAIN:
-		sgr(FG_GRAY);
-		putchar('-');
+		putcchar(LIGHT_GRAY,'-');
 		break;
 	// High Mountain
 	case COLD_HIGH_MOUNTAIN:
 	case HIGH_MOUNTAIN:
-		sgr(BOLD);
+		putcchar(WHITE,'=');
+		break;
 	case HOT_HIGH_MOUNTAIN:
-		sgr(FG_GRAY);
-		putchar('=');
+		putcchar(LIGHT_GRAY,'=');
 		break;
 	// Summit
 	case COLD_SUMMIT:
 	case SUMMIT:
-		sgr(BOLD);
+		putcchar(WHITE,'^');
+		break;
 	case HOT_SUMMIT:
-		sgr(FG_GRAY);
-		putchar('^');
+		putcchar(LIGHT_GRAY,'^');
 		break;
 	}
 }

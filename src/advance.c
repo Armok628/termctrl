@@ -23,11 +23,11 @@ int handle_move(struct tile *z,int from,char c)
 	int to=from+input_offset(c);
 	if (!legal_move(from,to)||to==from)
 		return from;
-	if (z[to].fg_sym) {
+	if (z[to].fg) {
 		if (~z[from].e->flags&OPENS_DOORS)
 			return from;
-		if (z[to].fg_sym=='+'&&z[to].bg_sym=='-') {
-			z[to].fg_sym='\0';
+		if (z[to].fg=='+'&&z[to].bg=='-') {
+			z[to].fg='\0';
 			draw_pos(z,to);
 		}
 		return from;

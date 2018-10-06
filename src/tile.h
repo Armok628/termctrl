@@ -11,8 +11,8 @@
 #define AREA (WIDTH*HEIGHT)
 struct tile {
 	struct entity *e,*c;
-	char fg_sym,bg_sym;
-	char fg_gr[2],bg_gr[2];
+	char fg,bg;
+	color_t fg_c,bg_c;
 };
 
 void draw_tile(struct tile *);

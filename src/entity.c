@@ -2,7 +2,7 @@
 struct entitytype monstertest={
 	.name="Monster",
 	.sym='&',
-	.gr={FG_BLACK,BOLD},
+	.color=DARK_GRAY,
 	.flags=NONE,
 	.hp={50,150},
 	.res={5,15},
@@ -13,7 +13,7 @@ struct entitytype monstertest={
 struct entitytype playertest={
 	.name="Player",
 	.sym='@',
-	.gr={FG_BLUE,BOLD},
+	.color=LIGHT_BLUE,
 	.flags=NAMED|OPENS_DOORS,
 	.hp={50,150},
 	.res={5,15},
@@ -34,8 +34,7 @@ struct entity *transform(struct entity *e,struct entitytype *t)
 	} else
 		e->name=t->name;
 	e->sym=t->sym;
-	e->gr[0]=t->gr[0];
-	e->gr[1]=t->gr[1];
+	e->color=t->color;
 	e->maxhp=rrand(t->hp);
 	e->hp=e->maxhp;
 	e->res=rrand(t->res);
@@ -59,9 +58,7 @@ void free_entity(struct entity *e)
 }
 void draw_entity(struct entity *e)
 {
-	sgr(RESET);
-	sgr(e->hp>0?BG_BLACK:BG_RED);
-	sgr(e->gr[0]);
-	sgr(e->gr[1]);
+	set_fg(e->color);
+	set_bg(e->hp>0?BLACK:RED);
 	putchar(e->sym);
 }

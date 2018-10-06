@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "terminal.h"
+#include "color.h"
 #ifndef W_WIDTH
 #define W_WIDTH 80
 #endif
