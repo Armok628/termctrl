@@ -10,6 +10,6 @@ extern struct tile *current_zone;
 
 void kill(struct tile *,int);
 void move_entity(struct tile *,int,int);
-void take_turn(struct tile *,int);
+bool take_turn(struct tile *,int);
 void advance(struct tile *);
 #endif

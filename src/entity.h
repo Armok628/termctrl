@@ -15,6 +15,8 @@ struct entitytype {
 	color_t color;
 	char flags;
 	range_t hp,res,agi,wis,str;
+	struct entitytype *friends[8];
+	struct entitytype *enemies[8];
 };
 struct entity {
 	struct entitytype *type;

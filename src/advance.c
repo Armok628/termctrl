@@ -37,16 +37,22 @@ int handle_move(struct tile *z,int from,char c)
 	move_entity(z,from,to);
 	return to;
 }
-void take_turn(struct tile *z,int pos)
-{
+bool take_turn(struct tile *z,int pos)
+{ // Returns true if turn is finished
 	if (z==current_zone&&pos==player_coords) {
 		update_stats(z[player_coords].e);
 		char c=key();
+		if (c=='R') {
+			clear_screen();
+			draw_zone(z);
+			return false;
+		}
 		clear_reports();
 		player_coords=handle_move(z,pos,c);
 		update_stats(z[player_coords].e);
 	} else
 		handle_move(z,pos,'0'+rand()%('9'-'0'+1));
+	return true;
 }
 void advance(struct tile *z)
 {
@@ -55,5 +61,5 @@ void advance(struct tile *z)
 		e[i]=z[i].e;
 	for (int i=0;i<AREA;i++)
 		if (e[i]&&z[i].e==e[i])
-			take_turn(z,i);
+			while (!take_turn(z,i));
 }

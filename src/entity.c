@@ -9,6 +9,7 @@ struct entitytype monstertest={
 	.agi={5,15},
 	.wis={5,15},
 	.str={5,15},
+	.enemies={&playertest},
 };
 struct entitytype playertest={
 	.name="Player",
@@ -20,6 +21,7 @@ struct entitytype playertest={
 	.agi={5,15},
 	.wis={5,15},
 	.str={5,15},
+	.enemies={&monstertest},
 };
 struct entity *transform(struct entity *e,struct entitytype *t)
 {
