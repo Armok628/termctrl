@@ -51,7 +51,7 @@ bool take_turn(struct tile *z,int pos)
 		player_coords=handle_move(z,pos,c);
 		update_stats(z[player_coords].e);
 	} else
-		handle_move(z,pos,'0'+rand()%('9'-'0'+1));
+		handle_move(z,pos,think(z,pos));
 	return true;
 }
 void advance(struct tile *z)

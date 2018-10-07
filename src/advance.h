@@ -5,6 +5,7 @@
 #include "input.h"
 #include "report.h"
 #include "combat.h"
+#include "think.h"
 extern int player_coords;
 extern struct tile *current_zone;
 
