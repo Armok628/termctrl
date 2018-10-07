@@ -1,11 +1,23 @@
 #include "think.h"
-bool would_attack(struct entity *r,struct entity *e)
+static inline bool member(struct entitytype *s,struct entitytype **arr)
 {
-	/* TODO */
-	return true;
+	for (int i=0;arr[i];i++)
+		if (arr[i]==s)
+			return true;
+	return false;
+}
+bool enemy(struct entity *d,struct entity *a)
+{ // Returns true if d is an enemy of a
+	return member(d->type,a->type->enemies);
+}
+bool friend(struct entity *d,struct entity *a)
+{ // Returns true if d is a friend of a
+	return member(d->type,a->type->friends);
 }
 bool would_flee(struct entity *r,struct entity *e)
 {
+	if (friend(r,e))
+		return false;
 	int r_f=2*r->res+r->str+r->agi;
 	int e_f=2*e->str+2*e->agi;
 	int d=max_damage(e,r);
@@ -58,9 +70,10 @@ char think(struct tile *z,int pos)
 		int to=pos+input_offset(c);
 		if (c=='5'||!legal_move(pos,to))
 			continue;
-		if (z[to].e&&would_flee(e,z[to].e)&&!would_flee(z[to].e,e))
+		struct entity *t=z[to].e;
+		if (t&&!friend(e,t)&&would_flee(e,t)&&!would_flee(t,e))
 			moves[n_m++]=alt_dir(z,pos,reverse_dir(c));
-		else if (z[to].e&&would_attack(e,z[to].e))
+		else if (t&&enemy(t,e))
 			moves[n_m++]=c;
 	}
 	if (n_m)
@@ -69,7 +82,7 @@ char think(struct tile *z,int pos)
 		int to=pos+input_offset(c);
 		if (c=='5'||!legal_move(pos,to))
 			continue;
-		if (occupied(z,to))
+		if (z[to].fg||(z[to].e&&friend(z[to].e,e)))
 			continue;
 		moves[n_m++]=c;
 	}

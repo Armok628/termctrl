@@ -9,6 +9,7 @@ struct entitytype monstertest={
 	.agi={5,15},
 	.wis={5,15},
 	.str={5,15},
+	.friends={&monstertest},
 	.enemies={&playertest},
 };
 struct entitytype playertest={
