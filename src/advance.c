@@ -32,10 +32,8 @@ int handle_move(struct tile *z,int from,char c)
 		}
 		return from;
 	}
-	if (z[to].e) {
-		report("e s e",z[from].e,"kills",z[to].e);
-		kill(z,to);
-	}
+	if (z[to].e&&!attack(z,from,to))
+			return from;
 	move_entity(z,from,to);
 	return to;
 }
