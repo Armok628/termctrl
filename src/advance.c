@@ -42,7 +42,11 @@ bool take_turn(struct tile *z,int pos)
 	if (z==current_zone&&pos==player_coords) {
 		update_stats(z[player_coords].e);
 		char c=key();
-		if (c=='R') {
+		switch (c) {
+		case 0:
+			report("s c","Thought:",think(z,target(z,pos)));
+			return false;
+		case 'R':
 			clear_screen();
 			draw_zone(z);
 			return false;

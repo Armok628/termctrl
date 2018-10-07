@@ -24,14 +24,22 @@ static inline bool occupied(struct tile *z,int pos)
 char alt_dir(struct tile *z,int pos,char c)
 {
 	static char *cw="0412753896",*ccw="0236159478";
-	if (c=='0'||c=='5'||!occupied(z,pos+input_offset(c)))
+	if (c=='0'||c=='5')
+		return c;
+	int to_c=pos+input_offset(c);
+	if (legal_move(pos,to_c)&&!occupied(z,c))
 		return c;
 	char a=c,b=c;
 	for (int i=0;i<5;i++) {
 		a=cw[a-'0'];
 		b=ccw[b-'0'];
-		bool oa=occupied(z,pos+input_offset(a));
-		bool ob=occupied(z,pos+input_offset(b));
+		int to_a=pos+input_offset(a);
+		int to_b=pos+input_offset(b);
+		bool oa=true,ob=true;
+		if (legal_move(pos,to_a))
+			oa=occupied(z,to_a);
+		if (legal_move(pos,to_b))
+			ob=occupied(z,to_b);
 		if (!oa&&!ob)
 			break;
 		else if (!oa)

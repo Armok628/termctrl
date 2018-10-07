@@ -26,7 +26,7 @@ bool attack(struct tile *z,int a,int d)
 		int dmg=rand()%max_damage(atkr,defr);
 		defr->hp-=dmg;
 		report("e s e s d s",atkr,"attacks",defr,"for",dmg,"damage");
-		if (defr->hp<0) {
+		if (defr->hp<=0) {
 			kill(z,d);
 			fputs(", killing it!",stdout);
 			return true;
