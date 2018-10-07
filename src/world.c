@@ -70,7 +70,6 @@ enum terrain terrain_type(struct worldtile tile)
 	short elev=tile.elev;
 	short temp=tile.temp;
 	enum terrain t=VOID;
-	set_bg(BLACK);
 	if (elev<200) { // Void
 		t=VOID;
 	} else if (elev<500) { // Sea
