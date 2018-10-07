@@ -115,7 +115,8 @@ void draw_terrain(enum terrain t)
 		case 0:
 			set_bg(BLUE);
 		}
-	}
+	} else
+		set_bg(BLACK);
 	switch (t) {
 	// Nothing
 	case COLD_VOID:
