@@ -14,6 +14,7 @@ struct tile {
 	char fg,bg;
 	color_t fg_c,bg_c;
 };
+#include "room.h"
 
 void draw_tile(struct tile *);
 struct tile *new_zone(struct tile *);
