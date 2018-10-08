@@ -80,7 +80,7 @@ bool needs_removal(struct tile *z,int pos)
 	if (z[pos].fg=='%') { // Wall
 		if (f+w+d<8)
 			return false;
-		if (w<1||3<w)
+		if (w<1||3<w||hw+vw==1)
 			return true;
 		if (d&&w>1)
 			return true;
@@ -102,16 +102,20 @@ void fix_rooms(struct tile *z)
 }
 void fix_gap(struct tile *z,int pos)
 {
-	int w=0,hw=0,vw=0;
+	int f=0,w=0,hw=0,vw=0;
 	for (int dx=-1;dx<=1;dx++)
 		for (int dy=-1;dy<=1;dy++) {
+			if (z[pos+dx+dy*WIDTH].bg=='#')
+				f++;
 			if ((!dx&&!dy)||z[pos+dx+dy*WIDTH].fg!='%')
 				continue;
 			w++;
 			vw+=!dx;
 			hw+=!dy;
 		}
-	if (w==3&&vw==1&&hw==1)
+	if (f+w<8)
+		make_wall(&z[pos]);
+	else if ((w==3||w==4)&&vw==1&&hw==1)
 		make_wall(&z[pos]);
 	else {
 		make_door(&z[pos]);
