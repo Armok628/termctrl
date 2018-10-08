@@ -1,6 +1,5 @@
 #include "console.h"
 extern int player_coords;
-bool needs_removal(struct tile *,int);
 void command(struct tile *z,int pos)
 {
 	char buf[128],cmd[128];
@@ -45,6 +44,10 @@ void command(struct tile *z,int pos)
 	} else if (!strcmp(cmd,"fix_gaps")) {
 		for (int i=0;i<n;i++)
 			fix_gaps(z);
+		draw_zone(z);
+	} else if (!strcmp(cmd,"rand_path")) {
+		for (int i=0;i<n;i++)
+			rand_path(z);
 		draw_zone(z);
 	}
 }

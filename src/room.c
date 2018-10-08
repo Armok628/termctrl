@@ -77,13 +77,13 @@ bool needs_removal(struct tile *z,int pos)
 			e+=z[i].fg==' ';
 			f+=z[i].bg=='#';
 		}
-	if (f+w+d<8)
-		return false;
 	if (z[pos].fg=='%') { // Wall
+		if (f+w+d<8)
+			return false;
 		if (w<1||3<w)
 			return true;
 	} else { // Door
-		if (d)
+		if (e||d)
 			return true;
 		if ((hw<2&&vw<2)||(vw&&hw))
 			return true;
@@ -107,4 +107,43 @@ void fix_gaps(struct tile *z)
 		if (needs_removal(z,i))
 			make_floor(&z[i]);
 	}
+}
+int wall_dist(struct tile *z,int pos,char dir)
+{
+	int o=input_offset(dir);
+	for (int i=0;legal_move(pos,pos+o);pos+=o,i++)
+		if (z[pos].fg=='%')
+			return i;
+	return 0;
+}
+void path_to(struct tile *z,int pos,char dir)
+{
+	int o=input_offset(dir);
+	for (;z[pos].fg!='%';pos+=o)
+		make_floor(&z[pos]);
+	make_door(&z[pos]);
+}
+bool path(struct tile *z,int pos)
+{
+	if (z[pos].bg=='#'||z[pos].bg=='%')
+		return false;
+	int h=wall_dist(z,pos,'h');
+	int j=wall_dist(z,pos,'j');
+	int k=wall_dist(z,pos,'k');
+	int l=wall_dist(z,pos,'l');
+	if (!h+!j+!k+!l>2)
+		return false;
+	if ((h>=j)+(h>=k)+(h>=l)>=2)
+		path_to(z,pos,'h');
+	if ((j>=h)+(j>=k)+(j>=l)>=2)
+		path_to(z,pos,'j');
+	if ((k>=h)+(k>=j)+(k>=l)>=2)
+		path_to(z,pos,'k');
+	if ((l>=h)+(l>=j)+(l>=k)>=2)
+		path_to(z,pos,'l');
+	return true;
+}
+void rand_path(struct tile *z)
+{
+	while (!path(z,rand()%AREA));
 }
