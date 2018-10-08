@@ -7,6 +7,7 @@
 #include "terminal.h"
 extern int report_height;
 
+void next_report(void);
 void report(char *,...);
 void clear_reports(void);
 void update_stats(struct entity *);

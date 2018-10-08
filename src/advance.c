@@ -44,7 +44,7 @@ bool take_turn(struct tile *z,int pos)
 		char c=key();
 		switch (c) {
 		case 0:
-			report("s c","Thought:",think(z,target(z,pos)));
+			command(z,pos);
 			return false;
 		case 'R':
 			clear_screen();
