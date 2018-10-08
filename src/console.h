@@ -6,6 +6,7 @@
 #include "entity.h"
 #include "report.h"
 #include "think.h"
+#include "room.h"
 
 void command(struct tile *,int);
 #endif

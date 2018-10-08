@@ -54,6 +54,13 @@ bool take_turn(struct tile *z,int pos)
 			clear_screen();
 			draw_zone(z);
 			return false;
+		case 'c':
+			pos+=input_offset(key());
+			if (z[pos].bg=='-'&&z[pos].bg_c==BROWN&&z[pos].fg_c==BROWN) {
+				z[pos].fg='+';
+				draw_pos(z,pos);
+			}
+			return true;
 		}
 		if (z[pos].e)
 			player_coords=handle_move(z,pos,c);

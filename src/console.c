@@ -10,6 +10,7 @@ void command(struct tile *z,int pos)
 	fgets(cmd,128,stdin);
 	set_cursor_visible(false);
 	set_canon(false);
+	int n=0;
 	if (!strcmp(cmd,"think\n")) {
 		report("s c","Thought:",think(z,target(z,pos)));
 	} else if (!strcmp(cmd,"swap\n")) {
@@ -26,8 +27,12 @@ void command(struct tile *z,int pos)
 		if (z[p].c&&!z[p].e) {
 			z[p].e=z[p].c;
 			z[p].c=NULL;
-			z[p].c->hp=z[p].c->maxhp;
+			z[p].e->hp=z[p].e->maxhp;
 		}
 		draw_pos(z,p);
+	} else if (sscanf(cmd,"rooms %d",&n)) {
+		for (int i=0;i<n;i++)
+			rand_room(z);
+		draw_zone(z);
 	}
 }
