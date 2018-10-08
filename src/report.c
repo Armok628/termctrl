@@ -77,12 +77,15 @@ void clear_reports(void)
 	}
 	next_line=1;
 }
-void update_stats(struct entity *e)
+void update_stats(struct tile *z,int pos)
 {
 	move_cursor(0,report_height);
 	clear_line();
+	struct entity *e=z[pos].e;
+	if (!e)
+		e=z[pos].c;
 	if (!e) {
-		report_here("s","NULL");
+		report("s","NULL");
 		return;
 	}
 	report_here("n s d/d s d s d s d s d",e,

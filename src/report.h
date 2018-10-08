@@ -10,5 +10,5 @@ extern int report_height;
 void next_report(void);
 void report(char *,...);
 void clear_reports(void);
-void update_stats(struct entity *);
+void update_stats(struct tile *,int);
 #endif

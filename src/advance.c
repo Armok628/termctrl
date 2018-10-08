@@ -15,8 +15,10 @@ void move_entity(struct tile *z,int from,int to)
 		return;
 	z[to].e=z[from].e;
 	z[from].e=NULL;
-	draw_pos(z,from);
-	draw_pos(z,to);
+	if (z==current_zone) {
+		draw_pos(z,from);
+		draw_pos(z,to);
+	}
 }
 int handle_move(struct tile *z,int from,char c)
 { // Returns entity's new position
@@ -28,7 +30,8 @@ int handle_move(struct tile *z,int from,char c)
 			return from;
 		if (z[to].fg=='+'&&z[to].bg=='-') {
 			z[to].fg='\0';
-			draw_pos(z,to);
+			if (z==current_zone)
+				draw_pos(z,to);
 		}
 		return from;
 	}
@@ -40,8 +43,9 @@ int handle_move(struct tile *z,int from,char c)
 bool take_turn(struct tile *z,int pos)
 { // Returns true if turn is finished
 	if (z==current_zone&&pos==player_coords) {
-		update_stats(z[player_coords].e);
+		update_stats(z,player_coords);
 		char c=key();
+		clear_reports();
 		switch (c) {
 		case 0:
 			command(z,pos);
@@ -51,10 +55,9 @@ bool take_turn(struct tile *z,int pos)
 			draw_zone(z);
 			return false;
 		}
-		clear_reports();
-		player_coords=handle_move(z,pos,c);
-		update_stats(z[player_coords].e);
-	} else
+		if (z[pos].e)
+			player_coords=handle_move(z,pos,c);
+	} else if (z[pos].e)
 		handle_move(z,pos,think(z,pos));
 	return true;
 }
@@ -64,6 +67,6 @@ void advance(struct tile *z)
 	for (int i=0;i<AREA;i++)
 		e[i]=z[i].e;
 	for (int i=0;i<AREA;i++)
-		if (e[i]&&z[i].e==e[i])
+		if (z[i].e==e[i])
 			while (!take_turn(z,i));
 }
