@@ -60,3 +60,51 @@ void rand_room(struct tile *z)
 		y-=h;
 	room(z,x,y,w,h,rand()%4);
 }
+bool needs_removal(struct tile *z,int pos)
+{
+	if (z[pos].fg!='%'&&z[pos].fg!='+')
+		return false;
+	int vw=0,hw=0,w=0,f=0,d=0,e=0;
+	for (int dx=-1;dx<=1;dx++)
+		for (int dy=-1;dy<=1;dy++) {
+			if (!dx&&!dy)
+				continue;
+			int i=pos+dx+dy*WIDTH;
+			vw+=!dx&&z[i].fg=='%';
+			hw+=!dy&&z[i].fg=='%';
+			w+=z[i].fg=='%';
+			d+=z[i].fg=='+';
+			e+=z[i].fg==' ';
+			f+=z[i].bg=='#';
+		}
+	if (f+w+d<8)
+		return false;
+	if (z[pos].fg=='%') { // Wall
+		if (w<1||3<w)
+			return true;
+	} else { // Door
+		if (d)
+			return true;
+		if ((hw<2&&vw<2)||(vw&&hw))
+			return true;
+		if (w>5)
+			return true;
+	}
+	return false;
+}
+void fix_rooms(struct tile *z)
+{
+	for (int i=0;i<AREA;i++)
+		if (needs_removal(z,i))
+			make_floor(&z[i]);
+}
+void fix_gaps(struct tile *z)
+{
+	for (int i=0;i<AREA;i++) {
+		if (z[i].bg!='#')
+			continue;
+		make_door(&z[i]);
+		if (needs_removal(z,i))
+			make_floor(&z[i]);
+	}
+}
