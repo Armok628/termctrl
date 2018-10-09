@@ -1,2 +1,10 @@
-#!/bin/sh
-make world "CFLAGS=-DW_WIDTH=$1 -DW_HEIGHT=$2"
+#!/usr/bin/tclsh
+lassign $argv w h
+if {$w eq "max" || $h eq ""} {
+	exec make size
+	exec ./a.out size >@ stdout
+	lassign [split [read [open size r]] " "] w h
+	file delete size
+	incr h -5 ;# Make room for stats
+}
+exec make world "CFLAGS=-DW_WIDTH=$w -DW_HEIGHT=$h"
