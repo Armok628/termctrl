@@ -29,12 +29,6 @@ struct tile *new_zone(struct tile *z)
 		}
 		/**/
 	}
-	/**/
-	for (int i=0;i<AREA/96;i++)
-		rand_room(z);
-	fix_rooms(z);
-	fix_gaps(z);
-	/**/
 	return z;
 }
 void free_zone(struct tile *z)
