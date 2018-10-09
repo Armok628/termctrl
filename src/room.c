@@ -89,7 +89,7 @@ bool needs_removal(struct tile *z,int pos)
 			return true;
 		if ((hw<2&&vw<2)||(vw&&hw))
 			return true;
-		if (w>5)
+		if (w<2||5<w)
 			return true;
 	}
 	return false;
