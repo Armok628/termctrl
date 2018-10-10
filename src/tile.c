@@ -35,6 +35,7 @@ struct tile *new_zone(struct tile *z)
 	fix_rooms(z);
 	fix_gaps(z);
 	fix_gaps(z);
+	fix_gaps(z);
 	/**/
 	return z;
 }
