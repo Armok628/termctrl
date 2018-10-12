@@ -33,6 +33,8 @@ void command(struct tile *z,int pos)
 			z[p].e->hp=z[p].e->maxhp;
 		}
 		draw_pos(z,p);
+	} else if (!strcmp(cmd,"teleport")) {
+		move_entity(z,pos,target(z,pos));
 	} else if (!strcmp(cmd,"rand_room")) {
 		for (int i=0;i<n;i++)
 			rand_room(z);
