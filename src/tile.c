@@ -1,6 +1,10 @@
 #include "tile.h"
 const char *grass_syms="\"';:.,`";
 const int n_grass_syms=sizeof(grass_syms)/sizeof(grass_syms[0])-1;
+#ifdef SCROLL_ZONE
+int x_offset=0;
+int y_offset=0;
+#endif
 void draw_tile(struct tile *t)
 {
 	set_bg(BLACK);
@@ -51,8 +55,16 @@ void free_zone(struct tile *z)
 }
 void draw_pos(struct tile *z,int pos)
 {
-	move_cursor(pos%Z_WIDTH,pos/Z_WIDTH);
-	draw_tile(&z[pos]);
+	int x=pos%Z_WIDTH,y=pos/Z_WIDTH;
+#ifdef SCROLL_ZONE
+	x+=x_offset;
+	y+=y_offset;
+	if (x>=0&&x<G_WIDTH&&y>=0&&y<G_HEIGHT) // If x,y is on-screen
+#endif
+	{
+		move_cursor(x,y);
+		draw_tile(&z[pos]);
+	}
 }
 void draw_zone(struct tile *z)
 {

@@ -8,6 +8,12 @@
 #ifndef Z_HEIGHT
 #define Z_HEIGHT 24
 #endif
+#ifndef G_WIDTH
+#define G_WIDTH 80
+#endif
+#ifndef G_HEIGHT
+#define G_HEIGHT 24
+#endif
 #define AREA (Z_WIDTH*Z_HEIGHT)
 struct tile {
 	struct entity *e,*c;
@@ -15,6 +21,7 @@ struct tile {
 	color_t fg_c,bg_c;
 };
 #include "room.h"
+extern int x_offset,y_offset;
 
 void draw_tile(struct tile *);
 struct tile *new_zone(struct tile *);

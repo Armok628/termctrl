@@ -16,8 +16,15 @@ void move_entity(struct tile *z,int from,int to)
 	z[to].e=z[from].e;
 	z[from].e=NULL;
 	if (z==current_zone) {
-		if (from==player_pos)
+		if (from==player_pos) {
 			player_pos=to;
+#ifdef SCROLL_ZONE
+			x_offset=Z_WIDTH/2-to%Z_WIDTH;
+			y_offset=Z_HEIGHT/2-to/Z_WIDTH;
+			clear_screen();
+			draw_zone(current_zone);
+#endif
+		}
 		draw_pos(z,from);
 		draw_pos(z,to);
 	}
