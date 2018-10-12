@@ -53,6 +53,13 @@ void free_zone(struct tile *z)
 	}
 	free(z);
 }
+#ifdef SCROLL_ZONE
+void scroll_to(int pos)
+{
+	x_offset=G_WIDTH/2-pos%Z_WIDTH;
+	y_offset=G_HEIGHT/2-pos/Z_WIDTH;
+}
+#endif
 void draw_pos(struct tile *z,int pos)
 {
 	int x=pos%Z_WIDTH,y=pos/Z_WIDTH;

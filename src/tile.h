@@ -26,6 +26,7 @@ extern int x_offset,y_offset;
 void draw_tile(struct tile *);
 struct tile *new_zone(struct tile *);
 void free_zone(struct tile *);
+void scroll_to(int);
 void draw_pos(struct tile *,int);
 void draw_zone(struct tile *);
 bool legal_move(int,int);
