@@ -2,13 +2,13 @@
 #define TILE_H
 #include "terminal.h"
 #include "entity.h"
-#ifndef WIDTH
-#define WIDTH 80
+#ifndef Z_WIDTH
+#define Z_WIDTH 80
 #endif
-#ifndef HEIGHT
-#define HEIGHT 24
+#ifndef Z_HEIGHT
+#define Z_HEIGHT 24
 #endif
-#define AREA (WIDTH*HEIGHT)
+#define AREA (Z_WIDTH*Z_HEIGHT)
 struct tile {
 	struct entity *e,*c;
 	char fg,bg;

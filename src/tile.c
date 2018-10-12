@@ -51,7 +51,7 @@ void free_zone(struct tile *z)
 }
 void draw_pos(struct tile *z,int pos)
 {
-	move_cursor(pos%WIDTH,pos/WIDTH);
+	move_cursor(pos%Z_WIDTH,pos/Z_WIDTH);
 	draw_tile(&z[pos]);
 }
 void draw_zone(struct tile *z)
@@ -61,6 +61,6 @@ void draw_zone(struct tile *z)
 }
 bool legal_move(int from,int to)
 {
-	int dx=to%WIDTH-from%WIDTH;
+	int dx=to%Z_WIDTH-from%Z_WIDTH;
 	return -1<=dx&&dx<=1&&0<=to&&to<AREA;
 }

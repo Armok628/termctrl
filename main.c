@@ -21,7 +21,7 @@ int main(/*int argc,char **argv*/)
 	sgr(RESET);
 	set_canon(false);
 	set_cursor_visible(false);
-	report_height=HEIGHT;
+	report_height=Z_HEIGHT;
 	while (!exit_req)
 		advance(zone);
 	free_zone(zone);

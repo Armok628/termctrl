@@ -23,40 +23,40 @@ void room(struct tile *z,int x,int y,int w,int h,int dir)
 {
 	for (int i=x;i<x+w;i++)
 		for (int j=y;j<y+h;j++) {
-			make_floor(&z[i+j*WIDTH]);
+			make_floor(&z[i+j*Z_WIDTH]);
 		}
 	for (int i=x;i<x+w;i++) {
-		make_wall(&z[i+y*WIDTH]);
-		make_wall(&z[i+(y+h-1)*WIDTH]);
+		make_wall(&z[i+y*Z_WIDTH]);
+		make_wall(&z[i+(y+h-1)*Z_WIDTH]);
 	}
 	for (int j=y;j<y+h;j++) {
-		make_wall(&z[x+j*WIDTH]);
-		make_wall(&z[x+w-1+j*WIDTH]);
+		make_wall(&z[x+j*Z_WIDTH]);
+		make_wall(&z[x+w-1+j*Z_WIDTH]);
 	}
 	switch (dir) {
 	case 0: // North
-		make_door(&z[x+w/2+y*WIDTH]);
+		make_door(&z[x+w/2+y*Z_WIDTH]);
 		break;
 	case 1: // South
-		make_door(&z[x+w/2+(y+h-1)*WIDTH]);
+		make_door(&z[x+w/2+(y+h-1)*Z_WIDTH]);
 		break;
 	case 2: // East
-		make_door(&z[x+w-1+(y+h/2)*WIDTH]);
+		make_door(&z[x+w-1+(y+h/2)*Z_WIDTH]);
 		break;
 	case 3: // West
-		make_door(&z[x+(y+h/2)*WIDTH]);
+		make_door(&z[x+(y+h/2)*Z_WIDTH]);
 		break;
 	}
 }
 void rand_room(struct tile *z)
 {
-	int x=1+rand()%(WIDTH-2);
-	int y=1+rand()%(HEIGHT-2);
-	int w=3+rand()%(WIDTH/4);
-	int h=3+rand()%(HEIGHT/4);
-	if (x+w>WIDTH-1)
+	int x=1+rand()%(Z_WIDTH-2);
+	int y=1+rand()%(Z_HEIGHT-2);
+	int w=3+rand()%(Z_WIDTH/4);
+	int h=3+rand()%(Z_HEIGHT/4);
+	if (x+w>Z_WIDTH-1)
 		x-=w;
-	if (y+h>HEIGHT-1)
+	if (y+h>Z_HEIGHT-1)
 		y-=h;
 	room(z,x,y,w,h,rand()%4);
 }
@@ -69,7 +69,7 @@ bool needs_removal(struct tile *z,int pos)
 		for (int dy=-1;dy<=1;dy++) {
 			if (!dx&&!dy)
 				continue;
-			int i=pos+dx+dy*WIDTH;
+			int i=pos+dx+dy*Z_WIDTH;
 			vw+=!dx&&z[i].fg=='%';
 			hw+=!dy&&z[i].fg=='%';
 			w+=z[i].fg=='%';
@@ -107,7 +107,7 @@ void fix_gap(struct tile *z,int pos)
 		for (int dy=-1;dy<=1;dy++) {
 			if (!dx&&!dy)
 				continue;
-			int i=pos+dx+dy*WIDTH;
+			int i=pos+dx+dy*Z_WIDTH;
 			vw+=!dx&&z[i].fg=='%';
 			hw+=!dy&&z[i].fg=='%';
 			w+=z[i].fg=='%';

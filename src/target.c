@@ -3,7 +3,7 @@ int target(struct tile *z,int pos)
 {
 	char c;
 	for (;;) {
-		move_cursor(pos%WIDTH,pos/WIDTH);
+		move_cursor(pos%Z_WIDTH,pos/Z_WIDTH);
 		set_fg(LIGHT_RED);
 		set_bg(BLACK);
 		putchar('X');
