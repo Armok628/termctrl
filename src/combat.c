@@ -27,7 +27,7 @@ bool attack(struct tile *z,int a,int d)
 		defr->hp-=dmg;
 		report("e s e s d s",atkr,"attacks",defr,"for",dmg,"damage");
 		if (defr->hp<=0) {
-			kill(z,d);
+			kill_entity(z,d);
 			fputs(", killing it!",stdout);
 			return true;
 		}

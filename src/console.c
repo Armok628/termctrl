@@ -23,7 +23,7 @@ void command(struct tile *z,int pos)
 	} else if (!strcmp(cmd,"kill")) {
 		int p=target(z,pos);
 		if (z[p].e)
-			kill(z,p);
+			kill_entity(z,p);
 		draw_pos(z,p);
 	} else if (!strcmp(cmd,"resurrect")) {
 		int p=target(z,pos);

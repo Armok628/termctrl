@@ -11,7 +11,7 @@
 extern int player_pos;
 extern struct tile *current_zone;
 
-void kill(struct tile *,int);
+void kill_entity(struct tile *,int);
 void move_entity(struct tile *,int,int);
 bool take_turn(struct tile *,int);
 void advance(struct tile *);

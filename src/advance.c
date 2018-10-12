@@ -1,7 +1,7 @@
 #include "advance.h"
 int player_pos=-1;
 struct tile *current_zone=NULL;
-void kill(struct tile *z,int pos)
+void kill_entity(struct tile *z,int pos)
 {
 	z[pos].e->hp=0;
 	if (z[pos].c)
