@@ -1,21 +1,35 @@
 #include "target.h"
 int target(struct tile *z,int pos)
 {
+	int p=pos;
 	char c;
 	for (;;) {
-		move_cursor(pos%Z_WIDTH,pos/Z_WIDTH);
+#ifdef SCROLL_ZONE
+		move_cursor(x_offset+p%Z_WIDTH,y_offset+p/Z_WIDTH);
+#else
+		move_cursor(p%Z_WIDTH,p/Z_WIDTH);
+#endif
 		set_fg(LIGHT_RED);
 		set_bg(BLACK);
 		putchar('X');
 		c=fgetc(stdin);
 		if (c=='\n')
 			break;
-		int to=pos+input_offset(c);
-		if (legal_move(pos,to)) {
-			draw_pos(z,pos);
-			pos=to;
+		int to=p+input_offset(c);
+		if (legal_move(p,to)) {
+			draw_pos(z,p);
+			p=to;
 		}
+#ifdef SCROLL_ZONE
+		scroll_to(p);
+		draw_zone(z);
+#endif
 	}
-	draw_pos(z,pos);
-	return pos;
+#ifdef SCROLL_ZONE
+	scroll_to(pos);
+	draw_zone(z);
+#else
+	draw_pos(z,p);
+#endif
+	return p;
 }
