@@ -14,7 +14,7 @@
 #ifndef G_HEIGHT
 #define G_HEIGHT 24
 #endif
-#define AREA (Z_WIDTH*Z_HEIGHT)
+#define Z_AREA (Z_WIDTH*Z_HEIGHT)
 struct tile {
 	struct entity *e,*c;
 	char fg,bg;

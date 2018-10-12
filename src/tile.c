@@ -23,8 +23,8 @@ void draw_tile(struct tile *t)
 struct tile *new_zone(struct tile *z)
 {
 	if (!z)
-		z=calloc(AREA,sizeof(struct tile));
-	for (int i=0;i<AREA;i++) {
+		z=calloc(Z_AREA,sizeof(struct tile));
+	for (int i=0;i<Z_AREA;i++) {
 		z[i].bg_c=rand()%2?GREEN:LIGHT_GREEN;
 		z[i].bg=grass_syms[rand()%n_grass_syms];
 		/**/
@@ -34,7 +34,7 @@ struct tile *new_zone(struct tile *z)
 		/**/
 	}
 	/**/
-	for (int i=0;i<AREA/96;i++)
+	for (int i=0;i<Z_AREA/96;i++)
 		rand_room(z);
 	fix_rooms(z);
 	fix_gaps(z);
@@ -45,7 +45,7 @@ struct tile *new_zone(struct tile *z)
 }
 void free_zone(struct tile *z)
 {
-	for (int i=0;i<AREA;i++) {
+	for (int i=0;i<Z_AREA;i++) {
 		if (z[i].e)
 			free_entity(z[i].e);
 		if (z[i].c)
@@ -75,11 +75,25 @@ void draw_pos(struct tile *z,int pos)
 }
 void draw_zone(struct tile *z)
 {
-	for (int i=0;i<AREA;i++)
+#ifdef SCROLL_ZONE
+	for (int x=0;x<G_WIDTH;x++)
+		for (int y=0;y<G_HEIGHT;y++) {
+			int x2=x-x_offset,y2=y-y_offset;
+			int i=x2+y2*Z_WIDTH;
+			move_cursor(x,y);
+			if (x2<0||x2>=Z_WIDTH||y2<0||y2>=Z_HEIGHT) {
+				sgr(RESET);
+				putchar(' ');
+			} else
+				draw_tile(&z[i]);
+		}
+#else
+	for (int i=0;i<Z_AREA;i++)
 		draw_pos(z,i);
+#endif
 }
 bool legal_move(int from,int to)
 {
 	int dx=to%Z_WIDTH-from%Z_WIDTH;
-	return -1<=dx&&dx<=1&&0<=to&&to<AREA;
+	return -1<=dx&&dx<=1&&0<=to&&to<Z_AREA;
 }

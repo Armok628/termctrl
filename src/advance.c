@@ -20,7 +20,6 @@ void move_entity(struct tile *z,int from,int to)
 			player_pos=to;
 #ifdef SCROLL_ZONE
 			scroll_to(to);
-			clear_screen();
 			draw_zone(current_zone);
 #endif
 		}
@@ -77,10 +76,10 @@ bool take_turn(struct tile *z,int pos)
 }
 void advance(struct tile *z)
 {
-	struct entity *e[AREA];
-	for (int i=0;i<AREA;i++)
+	struct entity *e[Z_AREA];
+	for (int i=0;i<Z_AREA;i++)
 		e[i]=z[i].e;
-	for (int i=0;i<AREA;i++)
+	for (int i=0;i<Z_AREA;i++)
 		if (z[i].e==e[i])
 			while (!take_turn(z,i));
 }

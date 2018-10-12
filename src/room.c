@@ -96,7 +96,7 @@ bool needs_removal(struct tile *z,int pos)
 }
 void fix_rooms(struct tile *z)
 {
-	for (int i=0;i<AREA;i++)
+	for (int i=0;i<Z_AREA;i++)
 		if (needs_removal(z,i))
 			make_floor(&z[i]);
 }
@@ -132,7 +132,7 @@ void fix_gap(struct tile *z,int pos)
 }
 void fix_gaps(struct tile *z)
 {
-	for (int i=0;i<AREA;i++) {
+	for (int i=0;i<Z_AREA;i++) {
 		if (z[i].bg!='#')
 			continue;
 		fix_gap(z,i);
@@ -175,5 +175,5 @@ bool path(struct tile *z,int pos)
 }
 void rand_path(struct tile *z)
 {
-	while (!path(z,rand()%AREA));
+	while (!path(z,rand()%Z_AREA));
 }
