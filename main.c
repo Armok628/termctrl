@@ -14,8 +14,8 @@ int main(/*int argc,char **argv*/)
 	srand(time(NULL));
 	struct tile *zone=new_zone(NULL);
 	current_zone=zone;
-	player_coords=rand()%AREA;
-	zone[player_coords].e=spawn(&playertest);
+	player_pos=rand()%AREA;
+	zone[player_pos].e=spawn(&playertest);
 	clear_screen();
 	draw_zone(zone);
 	sgr(RESET);

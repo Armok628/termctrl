@@ -1,5 +1,5 @@
 #include "console.h"
-extern int player_coords;
+extern int player_pos;
 void command(struct tile *z,int pos)
 {
 	char buf[128],cmd[128];
@@ -19,7 +19,7 @@ void command(struct tile *z,int pos)
 	} else if (!strcmp(cmd,"swap")) {
 		int p=target(z,pos);
 		if (z[p].e)
-			player_coords=p;
+			player_pos=p;
 	} else if (!strcmp(cmd,"kill")) {
 		int p=target(z,pos);
 		if (z[p].e)

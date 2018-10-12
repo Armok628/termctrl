@@ -8,7 +8,7 @@
 #include "think.h"
 #include "target.h"
 #include "console.h"
-extern int player_coords;
+extern int player_pos;
 extern struct tile *current_zone;
 
 void kill(struct tile *,int);
