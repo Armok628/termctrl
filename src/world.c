@@ -88,8 +88,10 @@ enum terrain terrain_type(struct worldtile tile)
 			t=LOW_MOUNTAIN;
 		else if (elev<640)
 			t=HIGH_MOUNTAIN;
-		else
+		else if (elev<700)
 			t=SUMMIT;
+		else
+			t=HIGH_SUMMIT;
 	}
 	if (temp<400) // Cold
 		t--;
@@ -201,6 +203,16 @@ void draw_terrain(enum terrain t)
 		break;
 	case HOT_SUMMIT:
 		putcchar(LIGHT_GRAY,'^');
+		break;
+	// High Summit
+	case COLD_HIGH_SUMMIT:
+		putcchar(CYAN,'^');
+		break;
+	case HIGH_SUMMIT:
+		putcchar(WHITE,'^');
+		break;
+	case HOT_HIGH_SUMMIT:
+		putcchar(LIGHT_RED,'^');
 		break;
 	}
 }

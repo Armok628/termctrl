@@ -23,6 +23,7 @@ enum terrain {
 	TERRAIN(LOW_MOUNTAIN),
 	TERRAIN(HIGH_MOUNTAIN),
 	TERRAIN(SUMMIT),
+	TERRAIN(HIGH_SUMMIT),
 };
 struct worldtile {
 	short elev,temp;
