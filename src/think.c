@@ -82,7 +82,9 @@ char think(struct tile *z,int pos)
 		int to=pos+input_offset(c);
 		if (c=='5'||!legal_move(pos,to))
 			continue;
-		if (z[to].fg||(z[to].e&&friend(z[to].e,e)))
+		if (z[to].fg&&(z[to].fg!='+'||~e->flags&OPENS_DOORS))
+			continue;
+		if (z[to].e&&friend(z[to].e,e))
 			continue;
 		moves[n_m++]=c;
 	}

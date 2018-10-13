@@ -15,7 +15,7 @@ int main(/*int argc,char **argv*/)
 	struct tile *zone=new_zone(NULL);
 	current_zone=zone;
 	player_pos=rand()%Z_AREA;
-#ifdef SCROLL_ZONE
+#ifdef SCROLL
 	scroll_to(player_pos);
 #endif
 	zone[player_pos].e=spawn(&playertest);

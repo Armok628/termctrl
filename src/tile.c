@@ -1,7 +1,7 @@
 #include "tile.h"
 const char *grass_syms="\"';:.,`";
 const int n_grass_syms=sizeof(grass_syms)/sizeof(grass_syms[0])-1;
-#ifdef SCROLL_ZONE
+#ifdef SCROLL
 int x_offset=0;
 int y_offset=0;
 #endif
@@ -53,7 +53,7 @@ void free_zone(struct tile *z)
 	}
 	free(z);
 }
-#ifdef SCROLL_ZONE
+#ifdef SCROLL
 void scroll_to(int pos)
 {
 	x_offset=G_WIDTH/2-pos%Z_WIDTH;
@@ -63,7 +63,7 @@ void scroll_to(int pos)
 void draw_pos(struct tile *z,int pos)
 {
 	int x=pos%Z_WIDTH,y=pos/Z_WIDTH;
-#ifdef SCROLL_ZONE
+#ifdef SCROLL
 	x+=x_offset;
 	y+=y_offset;
 	if (x>=0&&x<G_WIDTH&&y>=0&&y<G_HEIGHT) // If x,y is on-screen
@@ -75,7 +75,7 @@ void draw_pos(struct tile *z,int pos)
 }
 void draw_zone(struct tile *z)
 {
-#ifdef SCROLL_ZONE
+#ifdef SCROLL
 	for (int x=0;x<G_WIDTH;x++)
 		for (int y=0;y<G_HEIGHT;y++) {
 			int x2=x-x_offset,y2=y-y_offset;

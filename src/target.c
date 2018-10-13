@@ -4,7 +4,7 @@ int target(struct tile *z,int pos)
 	int p=pos;
 	char c;
 	for (;;) {
-#ifdef SCROLL_ZONE
+#ifdef SCROLL
 		move_cursor(x_offset+p%Z_WIDTH,y_offset+p/Z_WIDTH);
 #else
 		move_cursor(p%Z_WIDTH,p/Z_WIDTH);
@@ -20,12 +20,12 @@ int target(struct tile *z,int pos)
 			draw_pos(z,p);
 			p=to;
 		}
-#ifdef SCROLL_ZONE
+#ifdef SCROLL
 		scroll_to(p);
 		draw_zone(z);
 #endif
 	}
-#ifdef SCROLL_ZONE
+#ifdef SCROLL
 	scroll_to(pos);
 	draw_zone(z);
 #else
