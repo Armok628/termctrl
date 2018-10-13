@@ -21,7 +21,7 @@ struct entitytype playertest={
 	.res={5,15},
 	.agi={5,15},
 	.wis={5,15},
-	.str={5,15},
+	.str={100,100},
 	.enemies={&monstertest},
 };
 struct entity *transform(struct entity *e,struct entitytype *t)
