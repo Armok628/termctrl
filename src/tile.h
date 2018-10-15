@@ -21,12 +21,12 @@ struct tile {
 	color_t fg_c,bg_c;
 };
 #include "room.h"
-extern int x_offset,y_offset;
+extern int z_offset_x,z_offset_y;
 
 void draw_tile(struct tile *);
 struct tile *new_zone(struct tile *);
 void free_zone(struct tile *);
-void scroll_to(int);
+void scroll_zone(int);
 void draw_pos(struct tile *,int);
 void draw_zone(struct tile *);
 bool legal_move(int,int);

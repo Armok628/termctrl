@@ -16,7 +16,10 @@ int main(/*int argc,char **argv*/)
 	current_zone=zone;
 	player_pos=rand()%Z_AREA;
 #ifdef SCROLL
-	scroll_to(player_pos);
+	report_height=G_HEIGHT;
+	scroll_zone(player_pos);
+#else
+	report_height=Z_HEIGHT;
 #endif
 	zone[player_pos].e=spawn(&playertest);
 	clear_screen();
@@ -24,7 +27,6 @@ int main(/*int argc,char **argv*/)
 	sgr(RESET);
 	set_canon(false);
 	set_cursor_visible(false);
-	report_height=G_HEIGHT;
 	while (!exit_req)
 		advance(zone);
 	free_zone(zone);

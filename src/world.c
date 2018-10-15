@@ -80,10 +80,10 @@ struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)
 			w[i].temp+=t_o;
 	return w;
 }
-enum terrain terrain_type(struct worldtile tile)
+enum terrain terrain_type(struct worldtile *tile)
 {
-	short elev=tile.elev;
-	short temp=tile.temp;
+	short elev=tile->elev;
+	short temp=tile->temp;
 	enum terrain t=VOID;
 	if (elev<200) { // Void
 		t=VOID;
@@ -231,10 +231,14 @@ void draw_terrain(enum terrain t)
 		break;
 	}
 }
-void draw_world(struct worldtile *w)
+void draw_worldtile(struct worldtile *w)
+{
+	draw_terrain(terrain_type(w));
+}
+void draw_whole_world(struct worldtile *w)
 {
 	for (int i=0;i<W_AREA;i++) {
 		move_cursor(i%W_WIDTH,i/W_WIDTH);
-		draw_terrain(terrain_type(w[i]));
+		draw_worldtile(&w[i]);
 	}
 }

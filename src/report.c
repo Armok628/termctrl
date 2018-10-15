@@ -1,5 +1,5 @@
 #include "report.h"
-int report_height=0;
+int report_height=G_HEIGHT;
 static int next_line=1;
 void vreport(char *fmt,va_list args)
 {

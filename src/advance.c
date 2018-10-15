@@ -19,7 +19,7 @@ void move_entity(struct tile *z,int from,int to)
 		if (from==player_pos) {
 			player_pos=to;
 #ifdef SCROLL
-			scroll_to(to);
+			scroll_zone(to);
 			draw_zone(current_zone);
 #endif
 		}

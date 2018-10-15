@@ -27,11 +27,13 @@ enum terrain {
 };
 struct worldtile {
 	short elev,temp;
+	bool town;
+	struct tile *zone;
 };
 extern bool show_climates;
 
 struct worldtile *worldgen(int,int,int,float,float);
-enum terrain terrain_type(struct worldtile);
-void draw_terrain(enum terrain);
-void draw_world(struct worldtile *);
+enum terrain terrain_type(struct worldtile *tile);
+void draw_worldtile(struct worldtile *);
+void draw_whole_world(struct worldtile *);
 #endif

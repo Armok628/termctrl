@@ -2,8 +2,8 @@
 const char *grass_syms="\"';:.,`";
 const int n_grass_syms=sizeof(grass_syms)/sizeof(grass_syms[0])-1;
 #ifdef SCROLL
-int x_offset=0;
-int y_offset=0;
+int z_offset_x=0;
+int z_offset_y=0;
 #endif
 void draw_tile(struct tile *t)
 {
@@ -54,18 +54,18 @@ void free_zone(struct tile *z)
 	free(z);
 }
 #ifdef SCROLL
-void scroll_to(int pos)
+void scroll_zone(int pos)
 {
-	x_offset=G_WIDTH/2-pos%Z_WIDTH;
-	y_offset=G_HEIGHT/2-pos/Z_WIDTH;
+	z_offset_x=G_WIDTH/2-pos%Z_WIDTH;
+	z_offset_y=G_HEIGHT/2-pos/Z_WIDTH;
 }
 #endif
 void draw_pos(struct tile *z,int pos)
 {
 	int x=pos%Z_WIDTH,y=pos/Z_WIDTH;
 #ifdef SCROLL
-	x+=x_offset;
-	y+=y_offset;
+	x+=z_offset_x;
+	y+=z_offset_y;
 	if (x>=0&&x<G_WIDTH&&y>=0&&y<G_HEIGHT) // If x,y is on-screen
 #endif
 	{
@@ -78,7 +78,7 @@ void draw_zone(struct tile *z)
 #ifdef SCROLL
 	for (int x=0;x<G_WIDTH;x++)
 		for (int y=0;y<G_HEIGHT;y++) {
-			int x2=x-x_offset,y2=y-y_offset;
+			int x2=x-z_offset_x,y2=y-z_offset_y;
 			int i=x2+y2*Z_WIDTH;
 			move_cursor(x,y);
 			if (x2<0||x2>=Z_WIDTH||y2<0||y2>=Z_HEIGHT) {
