@@ -26,7 +26,11 @@ int main(int argc,char **argv)
 #ifdef SCROLL
 	scroll_map(world_pos);
 #endif
+	set_canon(false);
+	set_cursor_visible(false);
 	open_map(world);
+	set_canon(true);
+	set_cursor_visible(true);
 	free(world);
 	sgr(RESET);
 	move_cursor(0,report_height);

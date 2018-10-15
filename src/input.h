@@ -5,5 +5,6 @@
 extern bool exit_req;
 
 char key(void);
+int input_offset_width(char,int);
 int input_offset(char);
 #endif

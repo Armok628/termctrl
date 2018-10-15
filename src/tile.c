@@ -4,6 +4,11 @@ const int n_grass_syms=sizeof(grass_syms)/sizeof(grass_syms[0])-1;
 #ifdef SCROLL
 int z_offset_x=0;
 int z_offset_y=0;
+void scroll_zone(int pos)
+{
+	z_offset_x=G_WIDTH/2-pos%Z_WIDTH;
+	z_offset_y=G_HEIGHT/2-pos/Z_WIDTH;
+}
 #endif
 void draw_tile(struct tile *t)
 {
@@ -53,13 +58,6 @@ void free_zone(struct tile *z)
 	}
 	free(z);
 }
-#ifdef SCROLL
-void scroll_zone(int pos)
-{
-	z_offset_x=G_WIDTH/2-pos%Z_WIDTH;
-	z_offset_y=G_HEIGHT/2-pos/Z_WIDTH;
-}
-#endif
 void draw_pos(struct tile *z,int pos)
 {
 	int x=pos%Z_WIDTH,y=pos/Z_WIDTH;
