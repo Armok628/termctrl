@@ -36,14 +36,29 @@ struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)
 		w[y*W_WIDTH].temp=500;
 		w[(y+1)*W_WIDTH-1].temp=500;
 	}
+#ifdef HEMISPHERE
+	for (int y=W_HEIGHT*4/5;y<W_HEIGHT;y++) {
+		w[y*W_WIDTH].temp=1000;
+		w[(y+1)*W_WIDTH-1].temp=1000;
+	}
+	for (int x=0;x<W_WIDTH;x++)
+		w[x+(W_HEIGHT-1)*W_WIDTH].temp=1000;
+#endif
 	for (int x=1;x<W_WIDTH-1;x++)
 		for (int y=1;y<W_HEIGHT-1;y++) {
 			// Generate values
 			int e=rand()%1000;
+#ifdef HEMISPHERE
+			int t=y-W_HEIGHT;
+			t=t<0?-t:t;
+			t*=-500/W_HEIGHT;
+			t+=350+rand()%800;
+#else
 			int t=y-W_HEIGHT/2;
-			t=t<0?t:-t;
-			t*=1000/W_HEIGHT;
+			t=t<0?-t:t;
+			t*=-1000/W_HEIGHT;
 			t+=300+rand()%800;
+#endif
 			// Insert values
 			int i=x+y*W_WIDTH;
 			w[i].elev=e;
