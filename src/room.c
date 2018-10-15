@@ -85,11 +85,11 @@ bool needs_removal(struct tile *z,int pos)
 		if (d&&w>1)
 			return true;
 	} else { // Door
-		if (e||d)
+		if (e||d>1)
 			return true;
 		if ((hw<2&&vw<2)||(vw&&hw))
 			return true;
-		if (w<2||5<w)
+		if (w<2||4<w)
 			return true;
 	}
 	return false;
