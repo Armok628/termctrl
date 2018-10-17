@@ -1,6 +1,4 @@
 #include "tile.h"
-const char *grass_syms="\"';:.,`";
-const int n_grass_syms=sizeof(grass_syms)/sizeof(grass_syms[0])-1;
 #ifdef SCROLL
 int z_offset_x=0;
 int z_offset_y=0;
@@ -24,29 +22,6 @@ void draw_tile(struct tile *t)
 		set_fg(t->bg_c);
 		putchar(t->bg);
 	}
-}
-struct tile *new_zone(struct tile *z)
-{
-	if (!z)
-		z=calloc(Z_AREA,sizeof(struct tile));
-	for (int i=0;i<Z_AREA;i++) {
-		z[i].bg_c=rand()%2?GREEN:LIGHT_GREEN;
-		z[i].bg=grass_syms[rand()%n_grass_syms];
-		/**/
-		if (!(rand()%500)) {
-			z[i].e=spawn(&monstertest);
-		}
-		/**/
-	}
-	/**/
-	for (int i=0;i<Z_AREA/96;i++)
-		rand_room(z);
-	fix_rooms(z);
-	fix_gaps(z);
-	fix_gaps(z);
-	fix_gaps(z);
-	/**/
-	return z;
 }
 void free_zone(struct tile *z)
 {

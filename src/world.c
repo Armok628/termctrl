@@ -84,9 +84,9 @@ enum terrain terrain_type(struct worldtile *tile)
 {
 	short elev=tile->elev;
 	short temp=tile->temp;
-	enum terrain t=VOID;
+	enum terrain t=NO_TERRAIN;
 	if (elev<200) { // Void
-		t=VOID;
+		t=NO_TERRAIN;
 	} else if (elev<500) { // Sea
 		t=elev>475?SHALLOW_SEA:DEEP_SEA;
 	} else if (elev<590) { // Lowlands
@@ -136,9 +136,9 @@ void draw_terrain(enum terrain t)
 		set_bg(BLACK);
 	switch (t) {
 	// Nothing
-	case COLD_VOID:
-	case VOID:
-	case HOT_VOID:
+	case COLD_NO_TERRAIN:
+	case NO_TERRAIN:
+	case HOT_NO_TERRAIN:
 		putcchar(BLACK,' ');
 		break;
 	// Sea

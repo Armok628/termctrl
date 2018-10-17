@@ -13,7 +13,7 @@
 #define W_AREA (W_WIDTH*W_HEIGHT)
 #define TERRAIN(type) COLD_##type, type, HOT_##type
 enum terrain {
-	TERRAIN(VOID),
+	TERRAIN(NO_TERRAIN),
 	TERRAIN(DEEP_SEA),
 	TERRAIN(SHALLOW_SEA),
 	TERRAIN(BEACH),

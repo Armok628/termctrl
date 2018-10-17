@@ -9,10 +9,11 @@
 #include "src/world.h"
 #include "src/advance.h"
 #include "src/room.h"
+#include "src/zone.h"
 int main(/*int argc,char **argv*/)
 {
 	srand(time(NULL));
-	struct tile *zone=new_zone(NULL);
+	struct tile *zone=zonegen(NULL);
 	current_zone=zone;
 	player_pos=rand()%Z_AREA;
 #ifdef SCROLL
@@ -28,7 +29,7 @@ int main(/*int argc,char **argv*/)
 	set_canon(false);
 	set_cursor_visible(false);
 	while (!exit_req)
-		advance(zone);
+		advance(current_zone);
 	free_zone(zone);
 	set_canon(true);
 	set_cursor_visible(true);
