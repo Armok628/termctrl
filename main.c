@@ -13,7 +13,7 @@
 int main(/*int argc,char **argv*/)
 {
 	srand(time(NULL));
-	struct tile *zone=zonegen(NULL,0);
+	struct tile *zone=zonegen(NULL,FIELD+(rand()%3-1));
 	current_zone=zone;
 	player_pos=rand()%Z_AREA;
 #ifdef SCROLL
