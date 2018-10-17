@@ -4,5 +4,5 @@
 #include "world.h"
 #include "entity.h"
 
-struct tile *zonegen(struct tile *);
+struct tile *zonegen(struct tile *,enum terrain);
 #endif
