@@ -19,5 +19,5 @@ color_t dark(color_t c)
 }
 color_t cold(color_t c)
 {
-	return c>>7?BLUE:TEAL;
+	return c>>7?TEAL:BLUE;
 }

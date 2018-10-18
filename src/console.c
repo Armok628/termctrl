@@ -51,5 +51,14 @@ void command(struct tile *z,int pos)
 		for (int i=0;i<n;i++)
 			rand_path(z);
 		draw_zone(z);
+	} else if (!strcmp(cmd,"snow")) {
+		draw_zone(z);
+		weather=&snow;
+	} else if (!strcmp(cmd,"rain")) {
+		draw_zone(z);
+		weather=&rain;
+	} else if (!strcmp(cmd,"clear")) {
+		draw_zone(z);
+		weather=NULL;
 	}
 }

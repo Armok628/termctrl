@@ -7,6 +7,7 @@
 #include "report.h"
 #include "think.h"
 #include "room.h"
+#include "weather.h"
 
 void command(struct tile *,int);
 #endif

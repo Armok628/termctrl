@@ -1,21 +1,6 @@
 #include "input.h"
 bool exit_req=false;
-/**/void rain(void);
-void (*weather)(void)=&rain;
-void rain(void)
-{
-	static int pos=0;
-	static clock_t last=0;
-	clock_t now=clock();
-	if (now-last>10000) {
-		draw_pos(current_zone,pos);
-		last=now;
-		pos=rand()%G_AREA;
-		move_cursor(pos%G_WIDTH,pos/G_WIDTH);
-		set_fg(LIGHT_BLUE);
-		putchar('\'');
-	}
-}
+/**/void snow(void);
 char key(void)
 {
 	char c='\0';
