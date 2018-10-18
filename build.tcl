@@ -33,11 +33,19 @@ ttk::labelframe .o -text "Extra Options"
 
 	ttk::checkbutton .o.hemi -text "Hemisphere mode" -variable hemi -onvalue "-DHEMISPHERE" -offvalue ""
 		set hemi "" 
-	grid .o.hemi -row 1 -column 0 -padx 5 -pady 5
+	grid .o.hemi -row 1 -column 0 -padx 5 -pady 5 -sticky w
 
 	ttk::checkbutton .o.scroll -text "Scrolling screen" -variable scroll -onvalue "-DSCROLL" -offvalue ""
 		set scroll ""
-	grid .o.scroll -row 1 -column 1 -padx 5 -pady 5
+	grid .o.scroll -row 1 -column 1 -padx 5 -pady 5 -sticky w
+
+	ttk::checkbutton .o.no_weather -text "No weather" -variable no_weather -onvalue "-DNO_WEATHER" -offvalue ""
+		set no_weather ""
+	grid .o.no_weather -row 2 -column 0 -padx 5 -pady 5 -sticky w
+
+	ttk::checkbutton .o.no_time -text "No day/night cycle" -variable no_time -onvalue "-DNO_TIME" -offvalue ""
+		set no_time ""
+	grid .o.no_time -row 2 -column 1 -padx 5 -pady 5 -sticky w
 grid .o -row 1 -column 0 -padx 5 -pady 5
 
 ttk::button .gen -text "Generate Command" -command {
@@ -52,6 +60,8 @@ ttk::button .gen -text "Generate Command" -command {
 	if {$g_w ne "" && $g_h ne ""} {append cmd " -DG_WIDTH=$g_w -DG_HEIGHT=$g_h"}
 	if {$hemi ne ""} {append cmd " $hemi"}
 	if {$scroll ne ""} {append cmd " $scroll"}
+	if {$no_weather ne ""} {append cmd " $no_weather"}
+	if {$no_time ne ""} {append cmd " $no_time"}
 	append cmd "'"
 	.out select range 0 end
 	focus .out

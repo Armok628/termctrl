@@ -74,6 +74,7 @@ bool take_turn(struct tile *z,int pos)
 		handle_move(z,pos,think(z,pos));
 	return true;
 }
+#ifndef NO_TIME
 bool update_time(int inc)
 {
 	static int time=1200;
@@ -93,10 +94,13 @@ bool update_time(int inc)
 		colormod=&dark;
 	return colormod!=old_colormod;
 }
+#endif
 void advance(struct tile *z)
 {
+#ifndef NO_TIME
 	if (update_time(10))
 		draw_zone(current_zone);
+#endif
 	struct entity *e[Z_AREA];
 	for (int i=0;i<Z_AREA;i++)
 		e[i]=z[i].e;

@@ -1,8 +1,12 @@
 #include "input.h"
 bool exit_req=false;
-/**/void snow(void);
 char key(void)
 {
+#ifdef NO_WEATHER
+	char c=fgetc(stdin);
+	exit_req=c==4||c=='q';
+	return c;
+#else
 	char c='\0';
 	if (!weather)
 		c=fgetc(stdin);
@@ -16,6 +20,7 @@ char key(void)
 	}
 	exit_req=c==4||c=='q';
 	return c;
+#endif
 }
 int input_offset_width(char c,int w)
 {
