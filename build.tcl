@@ -1,5 +1,7 @@
 #!/usr/bin/wish
-ttk::labelframe .t -text "Build type"
+wm title . "Build Command Generator"
+wm resizable . 0 0
+ttk::labelframe .t -text "Build Type"
 	ttk::radiobutton .t.game -text "Zone" -variable build -value ""
 	grid .t.game -row 0 -column 0 -sticky w -padx 5 -pady 5
 
@@ -8,7 +10,7 @@ ttk::labelframe .t -text "Build type"
 	grid .t.world -row 1 -column 0 -sticky w -padx 5 -pady 5
 grid .t -row 0 -column 0 -padx 5 -pady 5
 
-ttk::labelframe .o -text "Extra options"
+ttk::labelframe .o -text "Extra Options"
 	ttk::frame .o.d
 		ttk::label .o.d.zl -text "Zone dimensions"
 		ttk::entry .o.d.ze -textvariable zdims
@@ -43,14 +45,22 @@ ttk::button .gen -text "Generate Command" -command {
 	lassign [regexp -all -inline {\d+} $zdims] z_w z_h
 	lassign [regexp -all -inline {\d+} $wdims] w_w w_h
 	lassign [regexp -all -inline {\d+} $gdims] g_w g_h
-	# Print command
-	puts -nonewline "make$build 'CFLAGS="
-	if {$z_w ne "" && $z_h ne ""} {puts -nonewline " -DZ_WIDTH=$z_w -DZ_HEIGHT=$z_h"}
-	if {$w_w ne "" && $w_h ne ""} {puts -nonewline " -DW_WIDTH=$w_w -DW_HEIGHT=$w_h"}
-	if {$g_w ne "" && $g_h ne ""} {puts -nonewline " -DG_WIDTH=$g_w -DG_HEIGHT=$g_h"}
-	if {$hemi ne ""} {puts -nonewline " $hemi"}
-	if {$scroll ne ""} {puts -nonewline " $scroll"}
-	puts "'"
-	exit 0
+	# Output command
+	set cmd "make$build 'CFLAGS="
+	if {$z_w ne "" && $z_h ne ""} {append cmd " -DZ_WIDTH=$z_w -DZ_HEIGHT=$z_h"}
+	if {$w_w ne "" && $w_h ne ""} {append cmd " -DW_WIDTH=$w_w -DW_HEIGHT=$w_h"}
+	if {$g_w ne "" && $g_h ne ""} {append cmd " -DG_WIDTH=$g_w -DG_HEIGHT=$g_h"}
+	if {$hemi ne ""} {append cmd " $hemi"}
+	if {$scroll ne ""} {append cmd " $scroll"}
+	append cmd "'"
+	.out select range 0 end
+	focus .out
 }
 grid .gen -row 2 -column 0 -padx 5 -pady 5
+
+ttk::entry .out -textvariable cmd
+grid .out -row 3 -column 0 -padx 5 -pady 5 -sticky we
+bind .out <<Copy>> {
+	clipboard clear
+	clipboard append $cmd
+}
