@@ -53,7 +53,7 @@ bool take_turn(struct tile *z,int pos)
 		char c=key();
 		clear_reports();
 		switch (c) {
-		case 0:
+		case '`':
 			command(z,pos);
 			return false;
 		case 'R':

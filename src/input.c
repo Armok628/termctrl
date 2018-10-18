@@ -1,9 +1,35 @@
 #include "input.h"
 bool exit_req=false;
+/**/void rain(void);
+void (*weather)(void)=&rain;
+void rain(void)
+{
+	static int pos=0;
+	static clock_t last=0;
+	clock_t now=clock();
+	if (now-last>10000) {
+		draw_pos(current_zone,pos);
+		last=now;
+		pos=rand()%G_AREA;
+		move_cursor(pos%G_WIDTH,pos/G_WIDTH);
+		set_fg(LIGHT_BLUE);
+		putchar('\'');
+	}
+}
 char key(void)
 {
-	char c=fgetc(stdin);
-	exit_req=c==4;
+	char c='\0';
+	if (!weather)
+		c=fgetc(stdin);
+	else {
+		set_blocking(false);
+		while (c<1) {
+			c=fgetc(stdin);
+			weather();
+		}
+		set_blocking(true);
+	}
+	exit_req=c==4||c=='q';
 	return c;
 }
 int input_offset_width(char c,int w)
