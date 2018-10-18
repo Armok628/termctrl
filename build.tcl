@@ -78,5 +78,6 @@ bind .out <<Copy>> {
 
 grid [ttk::button .comp -text "Compile" -command {
 	gencmd
-	exec -- make $build CFLAGS=$cflags >&@ stdout
+	update
+	exec -- make $build CFLAGS=$cflags
 }] -row 4 -column 0 -padx 5 -pady 5
