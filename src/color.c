@@ -17,7 +17,11 @@ color_t dark(color_t c)
 {
 	return c>>7?LIGHT_GRAY:DARK_GRAY;
 }
-color_t cold(color_t c)
+color_t cool(color_t c)
 {
 	return c>>7?TEAL:BLUE;
+}
+color_t warm(color_t c)
+{
+	return c>>7?LIGHT_RED:BROWN;
 }

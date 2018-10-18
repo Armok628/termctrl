@@ -39,6 +39,6 @@ extern color_t (*colormod)(color_t);
 void set_fg(color_t);
 void set_bg(color_t);
 color_t dark(color_t);
-color_t cold(color_t);
+color_t cool(color_t);
 color_t warm(color_t);
 #endif

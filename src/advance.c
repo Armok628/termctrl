@@ -82,15 +82,15 @@ bool update_time(int inc)
 		time%=2400;
 	color_t (*old_colormod)(color_t)=colormod;
 	if (time<500)
-		colormod=dark;
+		colormod=&dark;
 	else if (time<700)
-		colormod=cold;
+		colormod=&warm;
 	else if (time<1700)
 		colormod=NULL;
 	else if (time<1900)
-		colormod=cold;
+		colormod=&cool;
 	else
-		colormod=dark;
+		colormod=&dark;
 	return colormod!=old_colormod;
 }
 void advance(struct tile *z)
