@@ -74,8 +74,29 @@ bool take_turn(struct tile *z,int pos)
 		handle_move(z,pos,think(z,pos));
 	return true;
 }
+bool update_time(int inc)
+{
+	static int time=1200;
+	time+=inc;
+	if (time>=2400)
+		time%=2400;
+	color_t (*old_colormod)(color_t)=colormod;
+	if (time<500)
+		colormod=dark;
+	else if (time<700)
+		colormod=cold;
+	else if (time<1700)
+		colormod=NULL;
+	else if (time<1900)
+		colormod=cold;
+	else
+		colormod=dark;
+	return colormod!=old_colormod;
+}
 void advance(struct tile *z)
 {
+	if (update_time(10))
+		draw_zone(current_zone);
 	struct entity *e[Z_AREA];
 	for (int i=0;i<Z_AREA;i++)
 		e[i]=z[i].e;

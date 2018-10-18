@@ -14,6 +14,7 @@
  */
 #ifndef COLOR_H
 #define COLOR_H
+#include "terminal.h"
 enum color {
 	BLACK=FG_BLACK,
 	DARK_GRAY=(1<<7)+FG_BLACK,
@@ -33,15 +34,11 @@ enum color {
 	WHITE=(1<<7)+FG_GRAY,
 };
 typedef unsigned char color_t;
-static inline void set_fg(color_t c)
-{
-	printf("\033[%hhu;%hhum",
-			(unsigned char)(c&(1<<7)?BOLD:NORMAL),
-			(unsigned char)(c&~(1<<7)));
-}
-static inline void set_bg(color_t c)
-{ // BOLD bit ignored; no standard bold background colors
-	printf("\033[%hhum",
-			(unsigned char)((10+c)&~(1<<7)));
-}
+extern color_t (*colormod)(color_t);
+
+void set_fg(color_t);
+void set_bg(color_t);
+color_t dark(color_t);
+color_t cold(color_t);
+color_t warm(color_t);
 #endif
