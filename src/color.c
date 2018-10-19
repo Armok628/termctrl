@@ -10,12 +10,14 @@ void set_fg(color_t c)
 }
 void set_bg(color_t c)
 { // BOLD bit ignored; no standard bold background colors
+	if (c!=BLACK&&colormod)
+		c=colormod(c);
 	printf("\033[%hhum",
 			(unsigned char)((10+c)&~(1<<7)));
 }
 color_t dark(color_t c)
 {
-	return c>>7?LIGHT_GRAY:DARK_GRAY;
+	return c>>7?DARK_GRAY:DARK_GRAY;
 }
 color_t cool(color_t c)
 {
@@ -23,5 +25,5 @@ color_t cool(color_t c)
 }
 color_t warm(color_t c)
 {
-	return c>>7?LIGHT_RED:BROWN;
+	return c>>7?BROWN:LIGHT_RED;
 }

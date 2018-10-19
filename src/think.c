@@ -42,7 +42,7 @@ char alt_dir(struct tile *z,int pos,char c)
 	if (legal_move(pos,to_c)&&!occupied(z,to_c))
 		return c;
 	char a=c,b=c;
-	for (int i=0;i<5;i++) {
+	for (int i=0;i<4;i++) {
 		a=cw[a-'0'];
 		b=ccw[b-'0'];
 		int to_a=pos+input_offset(a);
