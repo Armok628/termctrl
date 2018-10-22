@@ -103,6 +103,8 @@ struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)
 	if (t_o!=0)
 		for (int i=0;i<W_AREA;i++)
 			w[i].temp+=t_o;
+	for (int i=0;i<W_AREA/384;i++)
+		run_river(w,rand_land(w));
 	return w;
 }
 enum terrain terrain_type(struct worldtile *tile)
@@ -280,8 +282,8 @@ void draw_worldtile(struct worldtile *w)
 	if (w->river) {
 		set_fg(w->temp<400?CYAN:BLUE);
 		putchar(river_char(w->river));
-	}
-	draw_terrain(terrain_type(w));
+	} else
+		draw_terrain(terrain_type(w));
 }
 void draw_whole_world(struct worldtile *w)
 {
