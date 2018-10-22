@@ -22,8 +22,22 @@ void spread_factions(struct worldtile *w)
 		if (!f)
 			continue;
 		int target=spread_influence(w,i);
-		if (target!=i)
+		if (target==i)
+			continue;
+		if (!change[target])
 			change[target]=f;
+		else {
+			switch (rand()%2) {
+			case 0:
+				change[target]=f;
+				break;
+			case 1:
+				change[target]=NULL;
+				break;
+			case 2:
+				break;
+			}
+		}
 	}
 	for (int i=0;i<W_AREA;i++)
 		if (change[i])
