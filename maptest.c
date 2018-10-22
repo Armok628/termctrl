@@ -6,8 +6,8 @@
 #include "src/terminal.h"
 int main(int argc,char **argv)
 {
-	int age=4,e_o=0,t_o=0;
-	float e_f=1.0,t_f=1.0;
+	int age=DEF_AGE,e_o=DEF_E_O,t_o=DEF_T_O;
+	float e_f=DEF_E_F,t_f=DEF_T_F;
 	unsigned long seed=time(NULL);
 	for (int i=1;i<argc;i++) {
 		sscanf(argv[i],"seed=%lu",&seed);
@@ -19,6 +19,7 @@ int main(int argc,char **argv)
 	}
 	srand(seed);
 	clear_screen();
+	move_cursor(0,0);
 	struct worldtile *world=worldgen(age,e_o,t_o,e_f,t_f);
 	world_pos=rand_land(world);
 #ifdef SCROLL

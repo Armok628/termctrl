@@ -47,6 +47,37 @@ ttk::labelframe .o -text "Extra Options"
 	grid .o.no_time -row 2 -column 1 -padx 5 -pady 5 -sticky w
 grid .o -row 1 -column 0 -padx 5 -pady 5 -sticky nswe
 
+ttk::labelframe .d -text "Default World Generation Options"
+	ttk::label .d.at -text "Age"
+	ttk::entry .d.ae -textvariable age
+	grid .d.at -row 0 -column 0 -sticky we -padx 5 -pady 5
+	grid .d.ae -row 0 -column 1 -sticky we -padx 5 -pady 5
+
+	ttk::label .d.eft -text "Elevation Factor"
+	ttk::entry .d.efe -textvariable e_f
+		set e_f ""
+	grid .d.eft -row 1 -column 0 -sticky we -padx 5 -pady 5
+	grid .d.efe -row 1 -column 1 -sticky we -padx 5 -pady 5
+
+	ttk::label .d.tft -text "Temperature Factor"
+	ttk::entry .d.tfe -textvariable t_f
+		set t_f ""
+	grid .d.tft -row 2 -column 0 -sticky we -padx 5 -pady 5
+	grid .d.tfe -row 2 -column 1 -sticky we -padx 5 -pady 5
+
+	ttk::label .d.eot -text "Elevation Offset"
+	ttk::entry .d.eoe -textvariable e_o
+		set e_o ""
+	grid .d.eot -row 3 -column 0 -sticky we -padx 5 -pady 5
+	grid .d.eoe -row 3 -column 1 -sticky we -padx 5 -pady 5
+
+	ttk::label .d.tot -text "Temperature Offset"
+	ttk::entry .d.toe -textvariable t_o
+		set t_o ""
+	grid .d.tot -row 4 -column 0 -sticky we -padx 5 -pady 5
+	grid .d.toe -row 4 -column 1 -sticky we -padx 5 -pady 5
+grid .d -row 2 -column 0 -padx 5 -pady 5 -sticky nswe
+
 proc gencmd {} {
 	upvar cflags cflags; upvar cmd cmd
 	# Scan dimensional inputs
@@ -62,15 +93,20 @@ proc gencmd {} {
 	if {$::scroll ne ""} {append cflags " $::scroll"}
 	if {$::no_weather ne ""} {append cflags " $::no_weather"}
 	if {$::no_time ne ""} {append cflags " $::no_time"}
+	if {$::age ne ""} {append cflags " -DDEF_AGE=$::age"}
+	if {$::e_f ne ""} {append cflags " -DDEF_E_F=$::e_f"}
+	if {$::t_f ne ""} {append cflags " -DDEF_T_F=$::t_f"}
+	if {$::e_o ne ""} {append cflags " -DDEF_E_O=$::e_o"}
+	if {$::t_o ne ""} {append cflags " -DDEF_T_O=$::t_o"}
 	set ::cmd "make $::build 'CFLAGS=$cflags'"
 	.out select range 0 end
 	focus .out
 }
 ttk::button .gen -text "Generate Command" -command gencmd
-grid .gen -row 2 -column 0 -padx 5 -pady 5
+grid .gen -row 3 -column 0 -padx 5 -pady 5
 
 ttk::entry .out -textvariable cmd
-grid .out -row 3 -column 0 -padx 5 -pady 5 -sticky we
+grid .out -row 4 -column 0 -padx 5 -pady 5 -sticky we
 bind .out <<Copy>> {
 	clipboard clear
 	clipboard append $cmd
@@ -81,10 +117,10 @@ grid [ttk::button .comp -text "Compile" -command {
 	update
 	exec -- make $build CFLAGS=$cflags
 	set sav [open ".lastcomp" w]
-	foreach var [list build zdims wdims gdims hemi scroll no_weather no_time] {
+	foreach var [list build zdims wdims gdims hemi scroll no_weather no_time age e_f t_f e_o t_o] {
 		puts $sav "set $var {[set $var]}"
 	}
 	close $sav
-}] -row 4 -column 0 -padx 5 -pady 5
+}] -row 5 -column 0 -padx 5 -pady 5
 if [file exists .lastcomp] {catch {source .lastcomp}}
 focus .comp
