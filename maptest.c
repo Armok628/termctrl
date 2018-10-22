@@ -10,8 +10,6 @@ int main(int argc,char **argv)
 	float e_f=1.0,t_f=1.0;
 	unsigned long seed=time(NULL);
 	for (int i=1;i<argc;i++) {
-		if (!strcmp(argv[i],"show_climates"))
-			show_climates=true;
 		sscanf(argv[i],"seed=%lu",&seed);
 		sscanf(argv[i],"age=%d",&age);
 		sscanf(argv[i],"e_o=%d",&e_o);

@@ -1,5 +1,4 @@
 #include "world.h"
-bool show_climates=false;
 short avg_around(short *elevs,int pos)
 {
 	int sum=0;
@@ -153,19 +152,6 @@ static inline void putcchar(color_t co,char ch)
 }
 void draw_terrain(enum terrain t)
 {
-	if (show_climates) {
-		switch (t%3) {
-		case 2:
-			set_bg(RED);
-			break;
-		case 1:
-			set_bg(BLACK);
-			break;
-		case 0:
-			set_bg(BLUE);
-		}
-	} else
-		set_bg(BLACK);
 	switch (t) {
 	// Nothing
 	case COLD_NO_TERRAIN:
@@ -284,6 +270,10 @@ char river_char(enum dir d)
 }
 void draw_worldtile(struct worldtile *w)
 {
+	if (w->faction)
+		set_bg(w->faction->color);
+	else
+		set_bg(BLACK);
 	if (w->river) {
 		set_fg(w->temp<400?CYAN:BLUE);
 		putchar(river_char(w->river));

@@ -46,6 +46,16 @@ bool legal_world_move(int from,int to)
 	int dx=to%W_WIDTH-from%W_WIDTH;
 	return -1<=dx&&dx<=1&&0<=to&&to<W_AREA;
 }
+/*Temporary*/
+struct faction f1={
+	.name="Faction 1",
+	.color=GREEN,
+};
+struct faction f2={
+	.name="Faction 2",
+	.color=WHITE,
+};
+/**/
 void open_map(struct worldtile *w)
 {
 	clear_screen();
@@ -71,6 +81,14 @@ void open_map(struct worldtile *w)
 		int to=world_pos+input_offset_width(c,W_WIDTH);
 		if (legal_world_move(world_pos,to))
 			world_pos=to;
+		/**/
+		if (c=='\n')
+			w[world_pos].faction=rand()%2?&f1:&f2;
+		if (c==' ') {
+			spread_factions(w);
+			draw_world(w);
+		}
+		/**/
 	}
 }
 

@@ -87,3 +87,4 @@ grid [ttk::button .comp -text "Compile" -command {
 	close $sav
 }] -row 4 -column 0 -padx 5 -pady 5
 if [file exists .lastcomp] {catch {source .lastcomp}}
+focus .comp

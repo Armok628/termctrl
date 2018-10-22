@@ -40,10 +40,12 @@ enum dir {
 struct worldtile {
 	short elev,temp;
 	struct tile *zone;
+	struct faction *faction;
 	enum dir river;
 	bool town;
 };
 extern bool show_climates;
+#include "faction.h"
 
 struct worldtile *worldgen(int,int,int,float,float);
 enum terrain terrain_type(struct worldtile *);

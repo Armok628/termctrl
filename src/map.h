@@ -9,4 +9,5 @@ extern int world_pos;
 void scroll_map(int);
 #endif
 void open_map(struct worldtile *);
+bool legal_world_move(int,int);
 #endif
