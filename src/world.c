@@ -29,6 +29,20 @@ void erode(struct worldtile *w)
 			w[i].temp=avg_around(temps,i);
 		}
 }
+char least_around(short *elevs,int pos)
+{ // Returns '1'-'9'
+	short e[9];
+	int i=0;
+	for (int dx=-1;dx<=1;dx++)
+		for (int dy=-1;dy<=1;dy++)
+			e[i++]=elevs[pos+dx+dy*W_WIDTH];
+	int min=0;
+	for (i=1;i<9;i++)
+		if (e[i]<e[min])
+			min=i;
+	return i+'1';
+} // To convert to enum dir, subtract '0'
+//TODO: void spawn_river(struct worldtile *w,int pos);
 struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)
 {
 	struct worldtile *w=calloc(W_AREA,sizeof(struct worldtile));
