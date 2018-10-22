@@ -6,11 +6,7 @@ short avg_around(short *elevs,int pos)
 	for (int dx=-1;dx<=1;dx++)
 		for (int dy=-1;dy<=1;dy++)
 			sum+=elevs[pos+dx+dy*W_WIDTH];
-	for (int dx=-1;dx<=1;dx++)
-		sum+=elevs[pos+dx];
-	for (int dy=-1;dy<=1;dy++)
-		sum+=elevs[pos+dy*W_WIDTH];
-	return sum/15;
+	return sum/9;
 }
 void erode(struct worldtile *w)
 {
@@ -29,14 +25,14 @@ void erode(struct worldtile *w)
 			w[i].temp=avg_around(temps,i);
 		}
 }
-char descend(short *elevs,int pos)
+char descend(struct worldtile *w,int pos)
 { // Returns '1'-'9'
-	int i=0,m=0,min=elevs[pos];
+	int i=0,m=0,min=w[pos].elev;
 	for (int dx=-1;dx<=1;dx++)
 		for (int dy=-1;dy<=1;dy++) {
 			int p=pos+dx+dy*W_WIDTH;
-			if (elevs[p]<min) {
-				min=elevs[p];
+			if (w[p].elev<min) {
+				min=w[p].elev;
 				m=i;
 			}
 			i++;
@@ -45,11 +41,8 @@ char descend(short *elevs,int pos)
 } // To convert to enum dir, subtract '0'
 void run_river(struct worldtile *w,int pos)
 {
-	short elevs[W_AREA];
-	for (int i=0;i<W_AREA;i++)
-		elevs[i]=w[i].elev;
 	while (w[pos].elev>500&&!w[pos].river) {
-		char d=descend(elevs,pos);
+		char d=descend(w,pos);
 		w[pos].river=d-'0';
 		pos+=input_offset_width(d,W_WIDTH);
 	}
@@ -69,6 +62,7 @@ struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)
 	for (int x=0;x<W_WIDTH;x++)
 		w[x+(W_HEIGHT-1)*W_WIDTH].temp=1000;
 #endif
+	puts("Generating noisemaps");
 	for (int x=1;x<W_WIDTH-1;x++)
 		for (int y=1;y<W_HEIGHT-1;y++) {
 			// Generate values
@@ -89,22 +83,33 @@ struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)
 			w[i].elev=e;
 			w[i].temp=t;
 		}
+	puts("Simulating erosion");
 	for (int i=0;i<age;i++)
 		erode(w);
-	if (e_f!=1.0)
+	if (e_f!=1.0) {
+		puts("Applying elevation factor");
 		for (int i=0;i<W_AREA;i++)
 			w[i].elev=500+(w[i].elev-500)*e_f;
-	if (t_f!=1.0)
+	}
+	if (t_f!=1.0) {
+		puts("Applying temperature factor");
 		for (int i=0;i<W_AREA;i++)
 			w[i].temp=500+(w[i].temp-500)*t_f;
-	if (e_o!=0)
+	}
+	if (e_o!=0) {
+		puts("Applying elevation offset");
 		for (int i=0;i<W_AREA;i++)
 			w[i].elev+=e_o;
-	if (t_o!=0)
+	}
+	if (t_o!=0) {
+		puts("Applying temperature offset");
 		for (int i=0;i<W_AREA;i++)
 			w[i].temp+=t_o;
-	for (int i=0;i<W_AREA/384;i++)
+	}
+	puts("Running rivers");
+	for (int i=0;i<W_AREA/640;i++)
 		run_river(w,rand_land(w));
+	puts("Done");
 	return w;
 }
 enum terrain terrain_type(struct worldtile *tile)

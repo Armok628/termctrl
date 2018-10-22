@@ -80,4 +80,10 @@ grid [ttk::button .comp -text "Compile" -command {
 	gencmd
 	update
 	exec -- make $build CFLAGS=$cflags
+	set sav [open ".lastcomp" w]
+	foreach var [list build zdims wdims gdims hemi scroll no_weather no_time] {
+		puts $sav "set $var {[set $var]}"
+	}
+	close $sav
 }] -row 4 -column 0 -padx 5 -pady 5
+if [file exists .lastcomp] {catch {source .lastcomp}}

@@ -71,11 +71,6 @@ void open_map(struct worldtile *w)
 		int to=world_pos+input_offset_width(c,W_WIDTH);
 		if (legal_world_move(world_pos,to))
 			world_pos=to;
-		/**/
-		if (c=='\n') {
-			run_river(w,world_pos);
-			draw_world(w);
-		}
 	}
 }
 
