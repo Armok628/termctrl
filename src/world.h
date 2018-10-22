@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "terminal.h"
 #include "color.h"
+#include "input.h"
 #ifndef W_WIDTH
 #define W_WIDTH 80
 #endif
@@ -45,7 +46,8 @@ struct worldtile {
 extern bool show_climates;
 
 struct worldtile *worldgen(int,int,int,float,float);
-enum terrain terrain_type(struct worldtile *tile);
+enum terrain terrain_type(struct worldtile *);
 void draw_worldtile(struct worldtile *);
 void draw_whole_world(struct worldtile *);
+int rand_land(struct worldtile *);
 #endif

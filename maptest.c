@@ -22,7 +22,7 @@ int main(int argc,char **argv)
 	srand(seed);
 	clear_screen();
 	struct worldtile *world=worldgen(age,e_o,t_o,e_f,t_f);
-	world_pos=rand()%W_AREA;
+	world_pos=rand_land(world);
 #ifdef SCROLL
 	scroll_map(world_pos);
 #endif

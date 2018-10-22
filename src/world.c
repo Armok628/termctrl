@@ -29,20 +29,31 @@ void erode(struct worldtile *w)
 			w[i].temp=avg_around(temps,i);
 		}
 }
-char least_around(short *elevs,int pos)
+char descend(short *elevs,int pos)
 { // Returns '1'-'9'
-	short e[9];
-	int i=0;
+	int i=0,m=0,min=elevs[pos];
 	for (int dx=-1;dx<=1;dx++)
-		for (int dy=-1;dy<=1;dy++)
-			e[i++]=elevs[pos+dx+dy*W_WIDTH];
-	int min=0;
-	for (i=1;i<9;i++)
-		if (e[i]<e[min])
-			min=i;
-	return i+'1';
+		for (int dy=-1;dy<=1;dy++) {
+			int p=pos+dx+dy*W_WIDTH;
+			if (elevs[p]<min) {
+				min=elevs[p];
+				m=i;
+			}
+			i++;
+		}
+	return m+'1';
 } // To convert to enum dir, subtract '0'
-//TODO: void spawn_river(struct worldtile *w,int pos);
+void run_river(struct worldtile *w,int pos)
+{
+	short elevs[W_AREA];
+	for (int i=0;i<W_AREA;i++)
+		elevs[i]=w[i].elev;
+	while (w[pos].elev>500&&!w[pos].river) {
+		char d=descend(elevs,pos);
+		w[pos].river=d-'0';
+		pos+=input_offset_width(d,W_WIDTH);
+	}
+}
 struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)
 {
 	struct worldtile *w=calloc(W_AREA,sizeof(struct worldtile));
@@ -245,8 +256,31 @@ void draw_terrain(enum terrain t)
 		break;
 	}
 }
+char river_char(enum dir d)
+{
+	switch (d) {
+	case SOUTHWEST:
+	case NORTHEAST:
+		return '/';
+	case SOUTH:
+	case NORTH:
+		return '|';
+	case SOUTHEAST:
+	case NORTHWEST:
+		return '\\';
+	case WEST:
+	case EAST:
+		return '-';
+	default:
+		return '*';
+	}
+}
 void draw_worldtile(struct worldtile *w)
 {
+	if (w->river) {
+		set_fg(w->temp<400?CYAN:BLUE);
+		putchar(river_char(w->river));
+	}
 	draw_terrain(terrain_type(w));
 }
 void draw_whole_world(struct worldtile *w)
@@ -255,4 +289,14 @@ void draw_whole_world(struct worldtile *w)
 		move_cursor(i%W_WIDTH,i/W_WIDTH);
 		draw_worldtile(&w[i]);
 	}
+}
+int rand_land(struct worldtile *w)
+{
+	int lands[W_AREA],l=0;
+	for (int i=0;i<W_AREA;i++)
+		if (w[i].elev>=500)
+			lands[l++]=i;
+	if (!l)
+		return 0;
+	return lands[rand()%l];
 }
