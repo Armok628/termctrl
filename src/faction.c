@@ -27,7 +27,7 @@ void spread_factions(struct worldtile *w)
 		if (!change[target])
 			change[target]=f;
 		else {
-			switch (rand()%2) {
+			switch (rand()%3) {
 			case 0:
 				change[target]=f;
 				break;

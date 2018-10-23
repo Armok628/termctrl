@@ -82,10 +82,14 @@ void open_map(struct worldtile *w)
 		if (legal_world_move(world_pos,to))
 			world_pos=to;
 		/**/
-		if (c=='\n')
-			w[world_pos].faction=rand()%2?&f1:&f2;
+		if (c=='\n') {
+			static bool f=false;
+			w[world_pos].faction=f?&f1:&f2;
+			f=!f;
+		}
 		if (c==' ') {
-			spread_factions(w);
+			for (int i=0;i<10;i++)
+				spread_factions(w);
 			draw_world(w);
 		}
 		/**/
