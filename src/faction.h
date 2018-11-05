@@ -7,5 +7,5 @@ struct faction {
 	char *name;
 	color_t color;
 };
-void spread_factions(struct worldtile *);
+void spread_faction(struct worldtile *,struct faction *);
 #endif

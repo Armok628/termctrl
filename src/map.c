@@ -28,13 +28,12 @@ void draw_world(struct worldtile *w)
 	for (int x=0;x<G_WIDTH;x++)
 		for (int y=0;y<G_HEIGHT;y++) {
 			int x2=x-w_offset_x,y2=y-w_offset_y;
-			int i=x2+y2*W_WIDTH;
 			move_cursor(x,y);
 			if (x2<0||x2>=W_WIDTH||y2<0||y2>=W_HEIGHT) {
 				sgr(RESET);
 				putchar(' ');
 			} else
-				draw_worldtile(&w[i]);
+				draw_worldtile(&w[x2+y2*W_WIDTH]);
 		}
 #else
 	for (int i=0;i<W_AREA;i++)
@@ -88,8 +87,8 @@ void open_map(struct worldtile *w)
 			f=!f;
 		}
 		if (c==' ') {
-			for (int i=0;i<10;i++)
-				spread_factions(w);
+			spread_faction(w,&f1);
+			spread_faction(w,&f2);
 			draw_world(w);
 		}
 		/**/
