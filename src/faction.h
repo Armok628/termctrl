@@ -21,4 +21,5 @@ void spread_faction(struct worldtile *,struct faction *);
 void spread_all_factions(struct worldtile *);
 void recolor_faction(struct faction *);
 struct faction *random_faction(void);
+void cause_rebellion(struct worldtile *,struct faction *);
 #endif

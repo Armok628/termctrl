@@ -98,3 +98,21 @@ struct faction *random_faction(void)
 	factions[num_factions++]=f;
 	return f;
 }
+static struct faction *faction_search=NULL;
+// ^ Static variable gets around callback limitations
+bool in_territory(struct worldtile *t)
+{
+	return t->faction==faction_search;
+}
+void cause_rebellion(struct worldtile *w,struct faction *f)
+{
+	struct faction *r=random_faction();
+	while (r->color==f->color)
+		recolor_faction(r);
+	faction_search=f;
+	int p=rand_loc(w,&in_territory);
+	w[p].faction=r;
+	for (int i=0;i<20;i++)
+		spread_faction(w,r);
+	report("s ss","A rebellion occurs under",f->name,"!");
+}
