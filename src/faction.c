@@ -112,7 +112,9 @@ void cause_rebellion(struct worldtile *w,struct faction *f)
 		recolor_faction(r);
 	faction_search=f;
 	int p=rand_loc(w,&in_territory);
+	decr_size(w[p].faction);
 	w[p].faction=r;
+	incr_size(r);
 	for (int i=0;i<20;i++)
 		spread_faction(w,r);
 }
