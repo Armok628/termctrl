@@ -58,9 +58,9 @@ void open_map(struct worldtile *w)
 		move_cursor(0,report_height);
 		if (w[world_pos].faction) {
 			struct faction *f=w[world_pos].faction;
-			report_here("s (d)",f->name,f->size);
+			report_here("%s (Size: %d, Stagnation: %d)",f->name,f->size,f->stagnation);
 		} else
-			report_here("s","Unoccupied territory");
+			report_here("Unoccupied territory");
 #ifdef SCROLL
 		scroll_map(world_pos);
 		draw_world(w);

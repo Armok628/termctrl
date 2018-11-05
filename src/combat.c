@@ -19,13 +19,13 @@ bool attack(struct tile *z,int a,int d)
 { // Returns true if defender is killed
 	struct entity *atkr=z[a].e,*defr=z[d].e;
 	if (chance(dodge(atkr,defr)))
-		report("e s e s",atkr,"attacks",defr,"but is dodged");
+		report("%e attacks %e but is dodged",atkr,defr);
 	else if (chance(miss(atkr)))
-		report("e s e s",atkr,"attacks",defr,"but misses");
+		report("%e attacks %e but misses",atkr,defr);
 	else {
 		int dmg=rand()%max_damage(atkr,defr);
 		defr->hp-=dmg;
-		report("e s e s d s",atkr,"attacks",defr,"for",dmg,"damage");
+		report("%e attacks %e for %d damage",atkr,defr,dmg);
 		if (defr->hp<=0) {
 			kill_entity(z,d);
 			fputs(", killing it!",stdout);

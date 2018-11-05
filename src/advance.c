@@ -54,7 +54,7 @@ void update_stats(struct tile *z,int pos)
 	if (!e)
 		e=z[pos].c;
 	if (!e) {
-		report("s","NULL");
+		report("NULL");
 		return;
 	}
 	report_here("n s d/d s d s d s d s d",e,

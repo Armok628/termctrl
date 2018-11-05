@@ -6,6 +6,11 @@ void vreport(char *fmt,va_list args)
 	struct entity *e;
 	sgr(RESET);
 	for (char *s=fmt;*s;s++) {
+		if (*s!='%') {
+			putchar(*s);
+			continue;
+		}
+		s++;
 		switch (*s) {
 		case 's':
 			fputs(va_arg(args,char *),stdout);

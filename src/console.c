@@ -15,7 +15,7 @@ void command(struct tile *z,int pos)
 		if (!sscanf(buf,"%128[^\n]",cmd))
 			return;
 	if (!strcmp(cmd,"think")) {
-		report("s c","Thought:",think(z,target(z,pos)));
+		report("Thought: %c",think(z,target(z,pos)));
 	} else if (!strcmp(cmd,"swap")) {
 		int p=target(z,pos);
 		if (z[p].e)
