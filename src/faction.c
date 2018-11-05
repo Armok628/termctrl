@@ -100,12 +100,6 @@ struct faction *random_faction(void)
 	factions[num_factions++]=f;
 	return f;
 }
-static struct faction *territory_search=NULL;
-// ^ Static variable gets around callback limitations
-bool in_territory(struct worldtile *w,int i)
-{
-	return w[i].faction==territory_search;
-}
 void place_uprising(struct worldtile *w,int i,struct faction *r)
 {
 	decr_size(w[i].faction);
@@ -114,8 +108,16 @@ void place_uprising(struct worldtile *w,int i,struct faction *r)
 	for (int i=0;i<20;i++)
 		spread_faction(w,r);
 }
+static struct faction *territory_search=NULL;
+// ^ Static variable gets around callback limitations
+bool in_territory(struct worldtile *w,int i)
+{
+	return w[i].faction==territory_search;
+}
 void random_rebellion(struct worldtile *w,struct faction *f)
 {
+	if (!f)
+		return;
 	report("s ss","A rebellion occurs under",f->name,"!");
 	struct faction *r=random_faction();
 	r->color=f->color;
@@ -123,4 +125,34 @@ void random_rebellion(struct worldtile *w,struct faction *f)
 	territory_search=f;
 	int p=rand_loc(w,&in_territory);
 	place_uprising(w,p,r);
+}
+bool coastal(struct worldtile *w,int p)
+{
+	if (w[p].elev<500)
+		return false;
+	for (int dx=-1;dx<=1;dx++)
+		for (int dy=-1;dy<=1;dy++)
+			if ((dx||dy)&&w[p+dx+dy*W_HEIGHT].elev<500)
+				return true;
+	return false;
+}
+bool raidable(struct worldtile *w,int p)
+{
+	return coastal(w,p)&&!in_territory(w,p);
+}
+void coastal_raid(struct worldtile *w,struct faction *f)
+{
+	struct faction *raid_party=malloc(sizeof(struct faction));
+	territory_search=f;
+	int landing=rand_loc(w,&raidable);
+	if (!landing)
+		return;
+	place_uprising(w,landing,raid_party);
+	for (int i=0;i<W_AREA;i++) {
+		if (w[i].faction==raid_party) {
+			w[i].faction=f;
+			incr_size(f);
+		}
+	}
+	free(raid_party);
 }
