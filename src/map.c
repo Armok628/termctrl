@@ -45,35 +45,34 @@ bool legal_world_move(int from,int to)
 	int dx=to%W_WIDTH-from%W_WIDTH;
 	return -1<=dx&&dx<=1&&0<=to&&to<W_AREA;
 }
-/*Temporary*/
-struct faction f1={
-	.name="Faction 1",
-	.color=GREEN,
-};
-struct faction f2={
-	.name="Faction 2",
-	.color=WHITE,
-};
-/**/
 void open_map(struct worldtile *w)
 {
 	clear_screen();
-#ifndef SCROLL
-	report_height=W_HEIGHT;
-#endif
+	#ifndef SCROLL
+		report_height=W_HEIGHT;
+	#endif
 	draw_world(w);
 	while (/**/!exit_req/**/) {
-#ifdef SCROLL
-		scroll_map(world_pos);
-		draw_world(w);
-		int x=world_pos%W_WIDTH+w_offset_x;
-		int y=world_pos/W_WIDTH+w_offset_y;
-		move_cursor(x,y);
-#else
-		move_cursor(world_pos%W_WIDTH,world_pos/W_WIDTH);
-#endif
-		set_fg(RED);
-		set_bg(BLACK);
+		#ifdef SCROLL
+			move_cursor(0,G_HEIGHT);
+		#else
+			move_cursor(0,W_HEIGHT);
+		#endif
+		clear_line();
+		if (w[world_pos].faction)
+			puts(w[world_pos].faction->name);
+		#ifdef SCROLL
+			scroll_map(world_pos);
+			draw_world(w);
+			int x=world_pos%W_WIDTH+w_offset_x;
+			int y=world_pos/W_WIDTH+w_offset_y;
+			draw_world_pos(w,world_pos);
+			move_cursor(x,y);
+		#else
+			draw_world_pos(w,world_pos);
+			move_cursor(world_pos%W_WIDTH,world_pos/W_WIDTH);
+		#endif
+		set_fg(LIGHT_RED);
 		putchar('*');
 		char c=key();
 		draw_world_pos(w,world_pos);
@@ -82,13 +81,18 @@ void open_map(struct worldtile *w)
 			world_pos=to;
 		/**/
 		if (c=='\n') {
-			static bool f=false;
-			w[world_pos].faction=f?&f1:&f2;
-			f=!f;
-		}
-		if (c==' ') {
-			spread_faction(w,&f1);
-			spread_faction(w,&f2);
+			struct faction *f=w[world_pos].faction;
+			color_t c=f?f->color:BLACK;
+			f=random_faction();
+			w[world_pos].faction=f;
+			while (f->color==c)
+				recolor_faction(f);
+			draw_world(w);
+		} else if (c==' ') {
+			spread_all_factions(w);
+			draw_world(w);
+		} else if (c=='!') {
+			spread_faction(w,w[world_pos].faction);
 			draw_world(w);
 		}
 		/**/

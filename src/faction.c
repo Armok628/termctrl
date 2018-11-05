@@ -41,3 +41,27 @@ void spread_faction(struct worldtile *w,struct faction *f)
 			}
 	}
 }
+#define MAX_FACTIONS 64
+static struct faction *factions[MAX_FACTIONS];
+static int num_factions=0;
+void spread_all_factions(struct worldtile *w)
+{
+	for (int i=0;i<num_factions;i++)
+		spread_faction(w,factions[i]);
+}
+void recolor_faction(struct faction *f)
+{
+	static range_t faction_colors={RED,LIGHT_GRAY};
+	f->color=rrand(faction_colors);
+}
+struct faction *random_faction(void)
+{
+	if (num_factions==MAX_FACTIONS)
+		return factions[rand()%num_factions];
+	struct faction *f=malloc(sizeof(struct faction));
+	f->name=random_word(3+rand()%3);
+	f->name[0]+='A'-'a';
+	recolor_faction(f);
+	factions[num_factions++]=f;
+	return f;
+}
