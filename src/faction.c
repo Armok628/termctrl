@@ -69,10 +69,10 @@ void spread_all_factions(struct worldtile *w)
 {
 	for (int i=0;i<num_factions;i++)
 		spread_faction(w,factions[i]);
-	if (num_factions>1&&!(rand()%20)) {
+	if (!(rand()%20)) {
 		struct faction *f=factions[rand()%num_factions];
-		report("s s",f->name,"has a resurgence!");
-		for (int i=0;i<10;i++)
+		report("s s",f->name,"surges forth!");
+		for (int i=0;i<5;i++)
 			spread_faction(w,f);
 	}
 }

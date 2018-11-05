@@ -107,7 +107,7 @@ struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)
 	}
 	puts("Running rivers");
 	for (int i=0;i<W_AREA/640;i++)
-		run_river(w,rand_land(w));
+		run_river(w,rand_loc(w,&is_land));
 	puts("Done");
 	return w;
 }
@@ -287,13 +287,17 @@ void draw_whole_world(struct worldtile *w)
 		draw_worldtile(&w[i]);
 	}
 }
-int rand_land(struct worldtile *w)
+int rand_loc(struct worldtile *w,bool (*f)(struct worldtile *))
 {
-	int lands[W_AREA],l=0;
+	int t[W_AREA],n=0;
 	for (int i=0;i<W_AREA;i++)
-		if (w[i].elev>=500)
-			lands[l++]=i;
-	if (!l)
+		if (f(&w[i]))
+			t[n++]=i;
+	if (!n)
 		return 0;
-	return lands[rand()%l];
+	return t[rand()%n];
+}
+bool is_land(struct worldtile *t)
+{
+	return t->elev>=500;
 }

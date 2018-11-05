@@ -48,9 +48,9 @@ bool legal_world_move(int from,int to)
 void open_map(struct worldtile *w)
 {
 	clear_screen();
-	#ifndef SCROLL
-		report_height=W_HEIGHT;
-	#endif
+#ifndef SCROLL
+	report_height=W_HEIGHT;
+#endif
 	draw_world(w);
 	while (/**/!exit_req/**/) {
 		move_cursor(0,report_height);
