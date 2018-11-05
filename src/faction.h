@@ -26,5 +26,5 @@ struct faction *random_faction(void);
 bool in_territory(struct worldtile *,int);
 void place_rebellion(struct worldtile *,int,struct faction *);
 void random_rebellion(struct worldtile *,struct faction *);
-void coastal_raid(struct worldtile *,struct faction *);
+void form_colony(struct worldtile *,struct faction *);
 #endif

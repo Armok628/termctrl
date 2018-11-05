@@ -97,15 +97,6 @@ void open_map(struct worldtile *w)
 		} else if (c==' ') { // Spread all factions
 			spread_all_factions(w);
 			draw_world(w);
-		} else if (c=='!') { // Spread faction at position
-			spread_faction(w,w[world_pos].faction);
-			draw_world(w);
-		} else if (c=='R') { // Cause rebellion
-			random_rebellion(w,w[world_pos].faction);
-			draw_world(w);
-		} else if (c=='S') { // Sail
-			coastal_raid(w,w[world_pos].faction);
-			draw_world(w);
 		}
 		/**/
 	}

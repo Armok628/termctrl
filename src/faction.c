@@ -78,10 +78,15 @@ void resolve_stagnation(struct worldtile *w,struct faction *f)
 { // Create a raid or rebellion if f's growth has stagnated
 	if ((rand()%100)<f->stagnation) {
 		f->stagnation=0;
-		if (rand()%2)
-			coastal_raid(w,f);
-		else {
-			int n=rand()%(2+f->size/200);
+		int n;
+		switch (rand()%2) {
+		case 0:
+			report("s s",f->name,"seeks to colonize distant lands");
+			form_colony(w,f);
+			break;
+		case 1:
+			n=rand()%(2+f->size/200);
+			report("d ss ss s s",n,"rebellion",n==1?"":"s","form",n==1?"s":"","under",f->name);
 			for (int i=0;i<n;i++)
 				random_rebellion(w,f);
 		}
@@ -91,14 +96,15 @@ struct faction *factions[MAX_FACTIONS];
 int num_factions=0;
 void spread_all_factions(struct worldtile *w)
 { // Give all factions a chance to spread
-	for (int i=0;i<num_factions;i++)
+	for (int i=0;i<num_factions;i++) {
 		spread_faction(w,factions[i]);
-	if (!(rand()%20)) {
+		resolve_stagnation(w,factions[i]);
+	}
+	if (!(rand()%20)) { // 1/20 chance: Give one faction 5 turns to grow
 		struct faction *f=factions[rand()%num_factions];
 		report("s s",f->name,"surges forth!");
 		for (int i=0;i<5;i++) {
 			spread_faction(w,f);
-			resolve_stagnation(w,f);
 		}
 	}
 }
@@ -143,14 +149,13 @@ void random_rebellion(struct worldtile *w,struct faction *f)
 { // Summon an uprising in a random area of f's territory
 	if (!f)
 		return;
-	report("s ss","A rebellion occurs under",f->name,"!");
 	struct faction *r=random_faction();
 	r->color=f->color;
 	recolor_faction(r);
 	territory_search=f;
 	int p=rand_loc(w,&in_territory);
 	if (p)
-		place_uprising(w,p,r,1+f->size/20);
+		place_uprising(w,p,r,1+f->size/25);
 }
 bool coastal(struct worldtile *w,int p)
 { // True if w[p] has adjacent water
@@ -162,7 +167,7 @@ bool coastal(struct worldtile *w,int p)
 				return true;
 	return false;
 }
-bool raidable(struct worldtile *w,int p)
+bool colonizable(struct worldtile *w,int p)
 { // True if coastal and outside sought territory
 	return coastal(w,p)&&!in_territory(w,p);
 }
@@ -175,13 +180,13 @@ void annex(struct worldtile *w,struct faction *r,struct faction *e)
 		}
 	destroy_faction(e);
 }
-void coastal_raid(struct worldtile *w,struct faction *f)
+void form_colony(struct worldtile *w,struct faction *f)
 { // Start an uprising on an enemy or unoccupied coast
-	struct faction *raid_party=random_faction();
+	struct faction *party=random_faction();
 	territory_search=f;
-	int landing=rand_loc(w,&raidable);
+	int landing=rand_loc(w,&colonizable);
 	if (!landing)
 		return;
-	place_uprising(w,landing,raid_party,1+f->size/100);
-	annex(w,f,raid_party);
+	place_uprising(w,landing,party,1+f->size/100);
+	annex(w,f,party);
 }
