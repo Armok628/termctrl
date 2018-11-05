@@ -31,6 +31,10 @@ int main(int argc,char **argv)
 	set_canon(true);
 	set_cursor_visible(true);
 	free(world);
+	for (int i=0;i<num_factions;i++) {
+		free(factions[i]->name);
+		free(factions[i]);
+	}
 	sgr(RESET);
 	move_cursor(0,report_height);
 	return 0;

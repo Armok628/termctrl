@@ -53,48 +53,49 @@ void open_map(struct worldtile *w)
 	#endif
 	draw_world(w);
 	while (/**/!exit_req/**/) {
-		#ifdef SCROLL
-			move_cursor(0,G_HEIGHT);
-		#else
-			move_cursor(0,W_HEIGHT);
-		#endif
-		clear_line();
-		if (w[world_pos].faction)
-			puts(w[world_pos].faction->name);
-		#ifdef SCROLL
-			scroll_map(world_pos);
-			draw_world(w);
-			int x=world_pos%W_WIDTH+w_offset_x;
-			int y=world_pos/W_WIDTH+w_offset_y;
-			draw_world_pos(w,world_pos);
-			move_cursor(x,y);
-		#else
-			draw_world_pos(w,world_pos);
-			move_cursor(world_pos%W_WIDTH,world_pos/W_WIDTH);
-		#endif
+		move_cursor(0,report_height);
+		if (w[world_pos].faction) {
+			struct faction *f=w[world_pos].faction;
+			report_here("s (d)",f->name,f->size);
+		} else
+			report_here("s","Unoccupied territory");
+#ifdef SCROLL
+		scroll_map(world_pos);
+		draw_world(w);
+		int x=world_pos%W_WIDTH+w_offset_x;
+		int y=world_pos/W_WIDTH+w_offset_y;
+		draw_world_pos(w,world_pos);
+		move_cursor(x,y);
+#else
+		draw_world_pos(w,world_pos);
+		move_cursor(world_pos%W_WIDTH,world_pos/W_WIDTH);
+#endif
 		set_fg(LIGHT_RED);
 		putchar('*');
 		char c=key();
+		clear_reports();
 		draw_world_pos(w,world_pos);
 		int to=world_pos+input_offset_width(c,W_WIDTH);
 		if (legal_world_move(world_pos,to))
 			world_pos=to;
 		/**/
-		if (c=='\n') {
+		if (c=='\n') { // Add new faction at position
 			struct faction *f=w[world_pos].faction;
+			decr_size(f);
 			color_t c=f?f->color:BLACK;
 			f=random_faction();
 			w[world_pos].faction=f;
+			incr_size(f);
 			while (f->color==c)
 				recolor_faction(f);
 			draw_world(w);
-		} else if (c=='C') {
+		} else if (c=='C') { // Recolor faction at position
 			recolor_faction(w[world_pos].faction);
 			draw_world(w);
-		} else if (c==' ') {
+		} else if (c==' ') { // Spread all factions
 			spread_all_factions(w);
 			draw_world(w);
-		} else if (c=='!') {
+		} else if (c=='!') { // Spread faction at position
 			spread_faction(w,w[world_pos].faction);
 			draw_world(w);
 		}

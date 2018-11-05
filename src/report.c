@@ -71,27 +71,10 @@ void report_here(char *fmt,...)
 }
 void clear_reports(void)
 {
-	for (int i=1;i<next_line;i++) {
+	for (int i=0;i<next_line;i++) {
 		move_cursor(0,Z_HEIGHT+i);
 		clear_line();
 	}
 	next_line=1;
 }
-void update_stats(struct tile *z,int pos)
-{
-	move_cursor(0,report_height);
-	clear_line();
-	struct entity *e=z[pos].e;
-	if (!e)
-		e=z[pos].c;
-	if (!e) {
-		report("s","NULL");
-		return;
-	}
-	report_here("n s d/d s d s d s d s d",e,
-			"HP:",e->hp,e->maxhp,
-			"RES:",e->res,
-			"AGI:",e->agi,
-			"WIS:",e->wis,
-			"STR:",e->str);
-}
+
