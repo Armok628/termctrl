@@ -88,6 +88,9 @@ void open_map(struct worldtile *w)
 			while (f->color==c)
 				recolor_faction(f);
 			draw_world(w);
+		} else if (c=='C') {
+			recolor_faction(w[world_pos].faction);
+			draw_world(w);
 		} else if (c==' ') {
 			spread_all_factions(w);
 			draw_world(w);

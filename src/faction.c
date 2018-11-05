@@ -52,7 +52,8 @@ void spread_all_factions(struct worldtile *w)
 void recolor_faction(struct faction *f)
 {
 	static range_t faction_colors={RED,LIGHT_GRAY};
-	f->color=rrand(faction_colors);
+	if (f)
+		f->color=rrand(faction_colors);
 }
 struct faction *random_faction(void)
 {
