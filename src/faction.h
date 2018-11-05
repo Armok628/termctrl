@@ -7,6 +7,7 @@ struct faction {
 	char *name;
 	color_t color;
 	int size;
+	int stagnation;
 };
 static inline void incr_size(struct faction *f)
 {
