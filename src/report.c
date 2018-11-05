@@ -72,7 +72,7 @@ void report_here(char *fmt,...)
 void clear_reports(void)
 {
 	for (int i=0;i<next_line;i++) {
-		move_cursor(0,Z_HEIGHT+i);
+		move_cursor(0,report_height+i);
 		clear_line();
 	}
 	next_line=1;
