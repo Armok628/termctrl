@@ -106,6 +106,7 @@ bool in_territory(struct worldtile *t)
 }
 void cause_rebellion(struct worldtile *w,struct faction *f)
 {
+	report("s ss","A rebellion occurs under",f->name,"!");
 	struct faction *r=random_faction();
 	while (r->color==f->color)
 		recolor_faction(r);
@@ -114,5 +115,4 @@ void cause_rebellion(struct worldtile *w,struct faction *f)
 	w[p].faction=r;
 	for (int i=0;i<20;i++)
 		spread_faction(w,r);
-	report("s ss","A rebellion occurs under",f->name,"!");
 }
