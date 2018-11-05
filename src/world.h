@@ -66,6 +66,6 @@ struct worldtile *worldgen(int,int,int,float,float);
 enum terrain terrain_type(struct worldtile *);
 void draw_worldtile(struct worldtile *);
 void draw_whole_world(struct worldtile *);
-int rand_loc(struct worldtile *,bool (*)(struct worldtile *));
-bool is_land(struct worldtile *);
+int rand_loc(struct worldtile *,bool (*)(struct worldtile *,int));
+bool is_land(struct worldtile *,int);
 #endif

@@ -33,6 +33,8 @@ void decr_size(struct faction *f)
 }
 void spread_faction(struct worldtile *w,struct faction *f)
 {
+	if (!f)
+		return;
 	struct faction *t[W_AREA]; // Territory map
 	for (int i=0;i<W_AREA;i++)
 		t[i]=w[i].faction;
@@ -98,23 +100,27 @@ struct faction *random_faction(void)
 	factions[num_factions++]=f;
 	return f;
 }
-static struct faction *faction_search=NULL;
+static struct faction *territory_search=NULL;
 // ^ Static variable gets around callback limitations
-bool in_territory(struct worldtile *t)
+bool in_territory(struct worldtile *w,int i)
 {
-	return t->faction==faction_search;
+	return w[i].faction==territory_search;
 }
-void cause_rebellion(struct worldtile *w,struct faction *f)
+void place_uprising(struct worldtile *w,int i,struct faction *r)
 {
-	report("s ss","A rebellion occurs under",f->name,"!");
-	struct faction *r=random_faction();
-	while (r->color==f->color)
-		recolor_faction(r);
-	faction_search=f;
-	int p=rand_loc(w,&in_territory);
-	decr_size(w[p].faction);
-	w[p].faction=r;
+	decr_size(w[i].faction);
+	w[i].faction=r;
 	incr_size(r);
 	for (int i=0;i<20;i++)
 		spread_faction(w,r);
+}
+void random_rebellion(struct worldtile *w,struct faction *f)
+{
+	report("s ss","A rebellion occurs under",f->name,"!");
+	struct faction *r=random_faction();
+	r->color=f->color;
+	recolor_faction(r);
+	territory_search=f;
+	int p=rand_loc(w,&in_territory);
+	place_uprising(w,p,r);
 }

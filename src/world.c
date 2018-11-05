@@ -287,17 +287,17 @@ void draw_whole_world(struct worldtile *w)
 		draw_worldtile(&w[i]);
 	}
 }
-int rand_loc(struct worldtile *w,bool (*f)(struct worldtile *))
+int rand_loc(struct worldtile *w,bool (*f)(struct worldtile *,int))
 {
 	int t[W_AREA],n=0;
 	for (int i=0;i<W_AREA;i++)
-		if (f(&w[i]))
+		if (f(w,i))
 			t[n++]=i;
 	if (!n)
 		return 0;
 	return t[rand()%n];
 }
-bool is_land(struct worldtile *t)
+bool is_land(struct worldtile *w,int i)
 {
-	return t->elev>=500;
+	return w[i].elev>=500;
 }

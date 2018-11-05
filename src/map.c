@@ -101,7 +101,7 @@ void open_map(struct worldtile *w)
 			spread_faction(w,w[world_pos].faction);
 			draw_world(w);
 		} else if (c=='R'&&w[world_pos].faction) { // Cause rebellion
-			cause_rebellion(w,w[world_pos].faction);
+			random_rebellion(w,w[world_pos].faction);
 			draw_world(w);
 		}
 		/**/
