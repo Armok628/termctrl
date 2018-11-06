@@ -100,7 +100,7 @@ void spread_all_factions(struct worldtile *w)
 		spread_faction(w,factions[i]);
 		resolve_stagnation(w,factions[i]);
 	}
-	if (!(rand()%20)) { // 1/20 chance: Give one faction 5 turns to grow
+	if (num_factions&&!(rand()%20)) { // 1/20 chance: Give one faction 5 turns to grow
 		struct faction *f=factions[rand()%num_factions];
 		report("%s surges forth!",f->name);
 		for (int i=0;i<5;i++) {
@@ -187,6 +187,6 @@ void form_colony(struct worldtile *w,struct faction *f)
 	int landing=rand_loc(w,&colonizable);
 	if (!landing)
 		return;
-	place_uprising(w,landing,party,1+f->size/100);
+	place_uprising(w,landing,party,1+f->size/50);
 	annex(w,f,party);
 }
