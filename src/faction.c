@@ -5,11 +5,14 @@ color_t choose_color(void)
 {
 	static range_t faction_color_range={RED,LIGHT_GRAY};
 	if (MAX_FACTIONS<=7) {
+		// If factions are only as numerous as their possible colors,
+		// make sure colors don't repeat.
 		int n=rand()%n_faction_colors;
 		color_t c=faction_colors[n];
 		faction_colors[n]=faction_colors[--n_faction_colors];
 		return c;
 	} else {
+		// Otherwise, pick a valid color randomly
 		return rrand(faction_color_range);
 	}
 }

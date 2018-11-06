@@ -1,4 +1,4 @@
-CFLAGS=-Wall -Wextra -Wpedantic -std=gnu99 -g
+CFLAGS=-Wall -Wextra -Wpedantic -std=gnu99 -g -O3
 CC=clang
 
 world:
