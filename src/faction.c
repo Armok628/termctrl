@@ -41,14 +41,9 @@ int spread_influence(struct worldtile *w,int pos)
 void destroy_faction(struct faction *f)
 { // Remove a faction from the factions list and free its memory
 	report("%s has been obliterated!",f->name);
-	int i=0;
-	for (;i<num_factions;i++)
-		if (factions[i]==f)
-			break;
 	release_color(f->color);
 	free(f->name);
 	free(f);
-	factions[i]=factions[--num_factions];
 }
 void spread_faction(struct worldtile *w,struct faction *f)
 { // Give one faction a chance to grow, map-wide
@@ -111,19 +106,25 @@ void resolve_stagnation(struct worldtile *w,struct faction *f)
 }
 struct faction *factions[MAX_FACTIONS];
 int num_factions=0;
+void remove_faction(int i)
+{
+	destroy_faction(factions[i]);
+	factions[i]=factions[--num_factions];
+}
+void cull_dead_factions(void)
+{
+	for (int i=0;i<num_factions;i++)
+		if (!factions[i]->size) {
+			remove_faction(i);
+			i--;
+		}
+}
 void spread_all_factions(struct worldtile *w)
 { // Give all factions a chance to spread
-	struct faction *fs[MAX_FACTIONS];
-	int n=0;
-	for (int i=0;i<num_factions;i++)
-		fs[n++]=factions[i];
-	for (int i=0;i<n;i++) {
-		spread_faction(w,fs[i]);
-		resolve_stagnation(w,fs[i]);
+	for (int i=0;i<num_factions;i++) {
+		spread_faction(w,factions[i]);
+		resolve_stagnation(w,factions[i]);
 	}
-	for (int i=0;i<n;i++)
-		if (!fs[i]->size)
-			destroy_faction(fs[i]);
 	if (num_factions&&!(rand()%20)) { // 1/20 chance: Give one faction 5 turns to grow
 		struct faction *f=factions[rand()%num_factions];
 		report("%s surges forth!",f->name);
@@ -131,6 +132,7 @@ void spread_all_factions(struct worldtile *w)
 			spread_faction(w,f);
 		}
 	}
+	cull_dead_factions();
 }
 struct faction *random_faction(void)
 { // Generate a faction with a random name and color

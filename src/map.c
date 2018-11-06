@@ -84,8 +84,9 @@ void open_map(struct worldtile *w)
 		/**/
 		if (c=='\n') { // Add new faction at position
 			struct faction *f=w[world_pos].faction;
-			if (f&&!--(f->size))
-				destroy_faction(f);
+			if (f)
+				f->size--;
+			cull_dead_factions();
 			f=random_faction();
 			w[world_pos].faction=f;
 			f->size++;
