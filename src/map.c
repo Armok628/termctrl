@@ -54,6 +54,7 @@ void open_map(struct worldtile *w)
 	report_height=W_HEIGHT;
 #endif
 	draw_world(w);
+	int dt=1;
 	while (/**/!exit_req/**/) {
 		move_cursor(0,report_height);
 		if (w[world_pos].faction) {
@@ -88,8 +89,20 @@ void open_map(struct worldtile *w)
 			incr_size(f);
 			draw_world(w);
 		} else if (c==' ') { // Spread all factions
-			spread_all_factions(w);
+			for (int i=0;i<dt;i++)
+				spread_all_factions(w);
 			draw_world(w);
+		} else if (c=='#') {
+			char s[1000];
+			move_cursor(0,report_height);
+			clear_line();
+			report_here("dt=");
+			set_canon(true);
+			set_cursor_visible(true);
+			fgets(s,100,stdin);
+			sscanf(s,"%d",&dt);
+			set_cursor_visible(false);
+			set_canon(false);
 		}
 		/**/
 	}

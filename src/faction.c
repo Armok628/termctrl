@@ -186,7 +186,7 @@ bool colonizable(struct worldtile *w,int p)
 }
 void annex(struct worldtile *w,struct faction *r,struct faction *e)
 { // Turn all of one faction's territory into another's
-	if (e->size>r->size)
+	if (e->size>r->size||e==r)
 		return;
 	for (int i=0;i<W_AREA;i++)
 		if (w[i].faction==e) {

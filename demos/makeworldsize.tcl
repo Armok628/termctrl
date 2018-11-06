@@ -7,5 +7,5 @@ if {$w eq "max" || $h eq ""} {
 	file delete size
 	incr h -2
 }
-puts "make world 'CFLAGS=-DW_WIDTH=$w -DW_HEIGHT=$h'"
-exec  make world "CFLAGS=-DW_WIDTH=$w -DW_HEIGHT=$h"
+puts "make world 'CFLAGS=-O3 -DW_WIDTH=$w -DW_HEIGHT=$h'"
+exec  make world "CFLAGS=-O3 -DW_WIDTH=$w -DW_HEIGHT=$h"
