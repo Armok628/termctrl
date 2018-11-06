@@ -188,5 +188,6 @@ void form_colony(struct worldtile *w,struct faction *f)
 	if (!landing)
 		return;
 	place_uprising(w,landing,party,1+f->size/50);
-	annex(w,f,party);
+	if (rand()%3)
+		annex(w,f,party);
 }
