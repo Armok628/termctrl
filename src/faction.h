@@ -9,23 +9,17 @@ struct faction {
 	int size;
 	int stagnation;
 };
-static inline void incr_size(struct faction *f)
-{
-	f->size++;
-}
 #ifndef MAX_FACTIONS
 #define MAX_FACTIONS 7
 #endif
 extern struct faction *factions[MAX_FACTIONS];
 extern int num_factions;
 
-int spread_influence(struct worldtile *,int);
-void decr_size(struct faction *);
+void destroy_faction(struct faction *);
 void spread_faction(struct worldtile *,struct faction *);
 void spread_all_factions(struct worldtile *);
 struct faction *random_faction(void);
-bool in_territory(struct worldtile *,int);
-void place_rebellion(struct worldtile *,int,struct faction *);
 void random_rebellion(struct worldtile *,struct faction *);
+void annex(struct worldtile *,struct faction *,struct faction *);
 void form_colony(struct worldtile *,struct faction *);
 #endif

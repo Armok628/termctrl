@@ -4,6 +4,7 @@ static int next_line=1;
 void vreport(char *fmt,va_list args)
 {
 	struct entity *e;
+	char *str;
 	sgr(RESET);
 	for (char *s=fmt;*s;s++) {
 		if (*s!='%') {
@@ -13,7 +14,11 @@ void vreport(char *fmt,va_list args)
 		s++;
 		switch (*s) {
 		case 's':
-			fputs(va_arg(args,char *),stdout);
+			str=va_arg(args,char *);
+			if (str)
+				fputs(str,stdout);
+			else
+				fputs("(null)",stdout);
 			break;
 		case 'd':
 			printf("%d",va_arg(args,int));

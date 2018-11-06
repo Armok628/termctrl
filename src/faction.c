@@ -40,6 +40,7 @@ int spread_influence(struct worldtile *w,int pos)
 }
 void destroy_faction(struct faction *f)
 { // Remove a faction from the factions list and free its memory
+	report("%s has been obliterated!",f->name);
 	int i=0;
 	for (;i<num_factions;i++)
 		if (factions[i]==f)
@@ -48,16 +49,6 @@ void destroy_faction(struct faction *f)
 	free(f->name);
 	free(f);
 	factions[i]=factions[--num_factions];
-}
-void decr_size(struct faction *f)
-{ // Decrement f's size, and remove it if it no longer exists
-	if (!f)
-		return;
-	f->size--;
-	if (f->size)
-		return;
-	report("%s has been obliterated!",f->name);
-	destroy_faction(f);
 }
 void spread_faction(struct worldtile *w,struct faction *f)
 { // Give one faction a chance to grow, map-wide
@@ -75,17 +66,19 @@ void spread_faction(struct worldtile *w,struct faction *f)
 			continue;
 		if (!t[i]&&rand()%2) {
 			w[target].faction=f;
-			incr_size(f);
+			f->size++;
 		} else {
 			struct faction *t=w[target].faction;
 			switch (rand()%3) {
 			case 0:
-				decr_size(t);
-				incr_size(f);
+				if (t)
+					t->size--;
+				f->size++;
 				w[target].faction=f;
 				break;
 			case 1:
-				decr_size(t);
+				if (t)
+					t->size--;
 				w[target].faction=NULL;
 				break;
 			case 2:
@@ -120,10 +113,17 @@ struct faction *factions[MAX_FACTIONS];
 int num_factions=0;
 void spread_all_factions(struct worldtile *w)
 { // Give all factions a chance to spread
-	for (int i=0;i<num_factions;i++) {
-		spread_faction(w,factions[i]);
-		resolve_stagnation(w,factions[i]);
+	struct faction *fs[MAX_FACTIONS];
+	int n=0;
+	for (int i=0;i<num_factions;i++)
+		fs[n++]=factions[i];
+	for (int i=0;i<n;i++) {
+		spread_faction(w,fs[i]);
+		resolve_stagnation(w,fs[i]);
 	}
+	for (int i=0;i<n;i++)
+		if (!fs[i]->size)
+			destroy_faction(fs[i]);
 	if (num_factions&&!(rand()%20)) { // 1/20 chance: Give one faction 5 turns to grow
 		struct faction *f=factions[rand()%num_factions];
 		report("%s surges forth!",f->name);
@@ -148,9 +148,10 @@ struct faction *random_faction(void)
 }
 void place_uprising(struct worldtile *w,int i,struct faction *r,int n)
 { // Let a faction spread for n turns
-	decr_size(w[i].faction);
+	if (w[i].faction)
+		w[i].faction->size--;
 	w[i].faction=r;
-	incr_size(r);
+	r->size++;
 	for (int i=0;i<n;i++)
 		spread_faction(w,r);
 }
@@ -191,9 +192,9 @@ void annex(struct worldtile *w,struct faction *r,struct faction *e)
 	for (int i=0;i<W_AREA;i++)
 		if (w[i].faction==e) {
 			w[i].faction=r;
-			incr_size(r);
+			r->size++;
+			e->size--;
 		}
-	destroy_faction(e);
 }
 void form_colony(struct worldtile *w,struct faction *f)
 { // Start an uprising on an enemy or unoccupied coast
