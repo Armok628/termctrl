@@ -82,17 +82,10 @@ void open_map(struct worldtile *w)
 			world_pos=to;
 		/**/
 		if (c=='\n') { // Add new faction at position
-			struct faction *f=w[world_pos].faction;
-			decr_size(f);
-			color_t c=f?f->color:BLACK;
-			f=random_faction();
+			decr_size(w[world_pos].faction);
+			struct faction *f=random_faction();
 			w[world_pos].faction=f;
 			incr_size(f);
-			while (f->color==c)
-				recolor_faction(f);
-			draw_world(w);
-		} else if (c=='C') { // Recolor faction at position
-			recolor_faction(w[world_pos].faction);
 			draw_world(w);
 		} else if (c==' ') { // Spread all factions
 			spread_all_factions(w);

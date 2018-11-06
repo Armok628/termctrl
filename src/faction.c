@@ -1,4 +1,24 @@
 #include "faction.h"
+static color_t faction_colors[]={RED,GREEN,BROWN,BLUE,PURPLE,TEAL,LIGHT_GRAY};
+static int n_faction_colors=7;
+color_t choose_color(void)
+{
+	static range_t faction_color_range={RED,LIGHT_GRAY};
+	if (MAX_FACTIONS<=7) {
+		int n=rand()%n_faction_colors;
+		color_t c=faction_colors[n];
+		faction_colors[n]=faction_colors[--n_faction_colors];
+		return c;
+	} else {
+		return rrand(faction_color_range);
+	}
+}
+void release_color(color_t c)
+{
+	if (MAX_FACTIONS<=7) {
+		faction_colors[n_faction_colors++]=c;
+	}
+}
 int spread_influence(struct worldtile *w,int pos)
 { // Decide which adjacent location to spread influence to
 	struct faction *f=w[pos].faction;
@@ -21,6 +41,7 @@ void destroy_faction(struct faction *f)
 	for (;i<num_factions;i++)
 		if (factions[i]==f)
 			break;
+	release_color(f->color);
 	free(f->name);
 	free(f);
 	factions[i]=factions[--num_factions];
@@ -108,26 +129,17 @@ void spread_all_factions(struct worldtile *w)
 		}
 	}
 }
-void recolor_faction(struct faction *f)
-{ // Change a faction's color to a different one
-	static range_t faction_colors={RED,LIGHT_GRAY};
-	if (f) {
-		color_t c=f->color;
-		while (f->color==c)
-			f->color=rrand(faction_colors);
-	}
-}
 struct faction *random_faction(void)
 { // Generate a faction with a random name and color
-	if (num_factions==MAX_FACTIONS)
-		return factions[rand()%num_factions];
+	if (num_factions>=MAX_FACTIONS) // If there are already too many,
+		return factions[rand()%num_factions]; // pick one
+	// Otherwise make a new one
 	struct faction *f=malloc(sizeof(struct faction));
 	f->name=random_word(3+rand()%3);
-	f->size=0;
 	f->name[0]+='A'-'a';
-	f->color=BLACK;
+	f->color=choose_color();
+	f->size=0;
 	f->stagnation=0;
-	recolor_faction(f);
 	factions[num_factions++]=f;
 	return f;
 }
@@ -150,8 +162,6 @@ void random_rebellion(struct worldtile *w,struct faction *f)
 	if (!f)
 		return;
 	struct faction *r=random_faction();
-	r->color=f->color;
-	recolor_faction(r);
 	territory_search=f;
 	int p=rand_loc(w,&in_territory);
 	if (p)
@@ -173,6 +183,8 @@ bool colonizable(struct worldtile *w,int p)
 }
 void annex(struct worldtile *w,struct faction *r,struct faction *e)
 { // Turn all of one faction's territory into another's
+	if (e->size>r->size)
+		return;
 	for (int i=0;i<W_AREA;i++)
 		if (w[i].faction==e) {
 			w[i].faction=r;

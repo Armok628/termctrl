@@ -13,7 +13,9 @@ static inline void incr_size(struct faction *f)
 {
 	f->size++;
 }
-#define MAX_FACTIONS 64
+#ifndef MAX_FACTIONS
+#define MAX_FACTIONS 7
+#endif
 extern struct faction *factions[MAX_FACTIONS];
 extern int num_factions;
 
@@ -21,7 +23,6 @@ int spread_influence(struct worldtile *,int);
 void decr_size(struct faction *);
 void spread_faction(struct worldtile *,struct faction *);
 void spread_all_factions(struct worldtile *);
-void recolor_faction(struct faction *);
 struct faction *random_faction(void);
 bool in_territory(struct worldtile *,int);
 void place_rebellion(struct worldtile *,int,struct faction *);
