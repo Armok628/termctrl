@@ -18,7 +18,7 @@ extern int num_factions;
 void destroy_faction(struct faction *);
 void spread_faction(struct worldtile *,struct faction *);
 void cull_dead_factions(void);
-void spread_all_factions(struct worldtile *);
+void advance_world(struct worldtile *);
 struct faction *random_faction(void);
 void random_rebellion(struct worldtile *,struct faction *);
 void annex(struct worldtile *,struct faction *,struct faction *);

@@ -52,12 +52,14 @@ enum dir {
 	NORTH=8,
 	NORTHEAST=9,
 };
+#define TOWN_POP_CAP 1000
 struct worldtile {
 	short elev,temp;
 	struct tile *zone;
 	struct faction *faction;
 	enum dir river;
 	bool town;
+	short pop;
 };
 extern bool show_climates;
 #include "faction.h"

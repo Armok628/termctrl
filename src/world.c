@@ -108,6 +108,12 @@ struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)
 	puts("Running rivers");
 	for (int i=0;i<W_AREA/640;i++)
 		run_river(w,rand_loc(w,&is_land));
+	puts("Placing towns");
+	for (int i=0;i<10;i++) {
+		int p=rand_loc(w,&is_land);
+		w[p].town=true;
+		w[p].pop=rand()%(TOWN_POP_CAP/2);
+	}
 	puts("Done");
 	return w;
 }
@@ -274,7 +280,19 @@ void draw_worldtile(struct worldtile *w)
 		set_bg(w->faction->color);
 	else
 		set_bg(BLACK);
-	if (w->river) {
+	if (w->town) {
+		set_fg(LIGHT_RED);
+		if (w->pop<1)
+			putchar('_');
+		else if (w->pop<TOWN_POP_CAP/4)
+			putchar('.');
+		else if (w->pop<TOWN_POP_CAP/2)
+			putchar(':');
+		else if (w->pop<TOWN_POP_CAP*3/4)
+			putchar('*');
+		else
+			putchar('#');
+	} else if (w->river) {
 		set_fg(w->temp<400?CYAN:BLUE);
 		putchar(river_char(w->river));
 	} else

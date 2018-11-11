@@ -74,7 +74,7 @@ void open_map(struct worldtile *w)
 		move_cursor(world_pos%W_WIDTH,world_pos/W_WIDTH);
 #endif
 		set_fg(LIGHT_RED);
-		putchar('*');
+		putchar('@');
 		char c=key();
 		clear_reports();
 		draw_world_pos(w,world_pos);
@@ -93,7 +93,7 @@ void open_map(struct worldtile *w)
 			draw_world(w);
 		} else if (c==' ') { // Spread all factions
 			for (int i=0;i<dt;i++)
-				spread_all_factions(w);
+				advance_world(w);
 			draw_world(w);
 		} else if (c=='#') {
 			char s[1000];

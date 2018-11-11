@@ -45,6 +45,36 @@ void destroy_faction(struct faction *f)
 	free(f->name);
 	free(f);
 }
+static struct faction *territory_search=NULL;
+// ^ Static variable gets around callback limitations
+bool in_territory(struct worldtile *w,int p)
+{ // True if w[p] is in the sought territory
+	return w[p].faction==territory_search;
+}
+bool townworthy(struct worldtile *w,int p)
+{
+	if (!in_territory(w,p))
+		return false;
+	for (int dx=-1;dx<=1;dx++)
+		for (int dy=-1;dy<=1;dy++) {
+			int i=p+dx+dy*W_WIDTH;
+			if (!legal_move(p,i))
+				continue;
+			if (w[i].town&&w[i].pop>0)
+				return false;
+		}
+	return true;
+}
+void new_town(struct worldtile *w,struct faction *f)
+{
+	report("%s builds a new town",f->name);
+	territory_search=f;
+	int n=rand_loc(w,&townworthy);
+	if (!n)
+		return;
+	w[n].town=true;
+	w[n].town+=(1+TOWN_POP_CAP/1000)*f->stagnation;
+}
 void spread_faction(struct worldtile *w,struct faction *f)
 { // Give one faction a chance to grow, map-wide
 	int oldsize=f->size;
@@ -79,17 +109,25 @@ void spread_faction(struct worldtile *w,struct faction *f)
 			case 2:
 				break;
 			}
+			if (w[target].town&&w[target].pop>0) {
+				w[target].pop-=200;
+				if (w[target].pop<-100) {
+					w[target].town=false;
+					w[target].pop=0;
+				}
+			}
 		}
 	}
+	if (!(rand()%200))
+		new_town(w,f);
 	if (f->size-oldsize<2) {
 		f->stagnation++;
 	} else
 		f->stagnation=0;
 }
 void resolve_stagnation(struct worldtile *w,struct faction *f)
-{ // Create a raid or rebellion if f's growth has stagnated
+{ // Create a colony or rebellion if growth has stagnated
 	if ((rand()%200)<f->stagnation) {
-		f->stagnation=0;
 		int n;
 		switch (rand()%2) {
 		case 0:
@@ -101,7 +139,9 @@ void resolve_stagnation(struct worldtile *w,struct faction *f)
 			report("%d rebellion%s form%s under %s",n,n==1?"":"s",n==1?"s":"",f->name);
 			for (int i=0;i<n;i++)
 				random_rebellion(w,f);
+			break;
 		}
+		f->stagnation=0;
 	}
 }
 struct faction *factions[MAX_FACTIONS];
@@ -119,8 +159,11 @@ void cull_dead_factions(void)
 			i--;
 		}
 }
-void spread_all_factions(struct worldtile *w)
-{ // Give all factions a chance to spread
+void advance_world(struct worldtile *w)
+{ // Give all factions a chance to spread, and grow towns
+	for (int i=0;i<W_AREA;i++)
+		if (w[i].town&&w[i].faction)
+			w[i].pop+=w[i].pop<TOWN_POP_CAP;
 	for (int i=0;i<num_factions;i++) {
 		spread_faction(w,factions[i]);
 		resolve_stagnation(w,factions[i]);
@@ -156,12 +199,6 @@ void place_uprising(struct worldtile *w,int i,struct faction *r,int n)
 	r->size++;
 	for (int i=0;i<n;i++)
 		spread_faction(w,r);
-}
-static struct faction *territory_search=NULL;
-// ^ Static variable gets around callback limitations
-bool in_territory(struct worldtile *w,int p)
-{ // True if w[p] is in the sought territory
-	return w[p].faction==territory_search;
 }
 void random_rebellion(struct worldtile *w,struct faction *f)
 { // Summon an uprising in a random area of f's territory
