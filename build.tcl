@@ -2,11 +2,11 @@
 wm title . "Build Command Generator"
 wm resizable . 0 0
 ttk::labelframe .t -text "Build Type"
-	ttk::radiobutton .t.game -text "Zone" -variable build -value "game"
-	grid .t.game -row 0 -column 0 -sticky w -padx 5 -pady 5
 	ttk::radiobutton .t.world -text "World" -variable build -value "world"
-	grid .t.world -row 1 -column 0 -sticky w -padx 5 -pady 5
-	set build "game"
+	grid .t.world -row 0 -column 0 -sticky w -padx 5 -pady 5
+	ttk::radiobutton .t.game -text "Zone" -variable build -value "zone"
+	grid .t.game -row 1 -column 0 -sticky w -padx 5 -pady 5
+	set build "world"
 grid .t -row 0 -column 0 -padx 5 -pady 5
 
 ttk::labelframe .o -text "Extra Options"
@@ -28,6 +28,12 @@ ttk::labelframe .o -text "Extra Options"
 			set gdims ""
 		grid .o.d.gl -row 2 -column 0 -sticky w -padx 5 -pady 5
 		grid .o.d.ge -row 2 -column 1 -sticky we -padx 5 -pady 5
+
+		ttk::label .o.d.fl -text "Number of factions"
+		ttk::entry .o.d.fe -textvariable factions
+			set factions 7
+		grid .o.d.fl -row 3 -column 0 -sticky w -padx 5 -pady 5
+		grid .o.d.fe -row 3 -column 1 -sticky we -padx 5 -pady 5
 	grid .o.d -row 0 -column 0 -columnspan 2 -padx 5 -pady 5
 
 	ttk::checkbutton .o.hemi -text "Hemisphere mode" -variable hemi -onvalue "-DHEMISPHERE" -offvalue ""
@@ -50,30 +56,31 @@ grid .o -row 1 -column 0 -padx 5 -pady 5 -sticky nswe
 ttk::labelframe .d -text "Default World Generation Options"
 	ttk::label .d.at -text "Age"
 	ttk::entry .d.ae -textvariable age
+		set age 4
 	grid .d.at -row 0 -column 0 -sticky we -padx 5 -pady 5
 	grid .d.ae -row 0 -column 1 -sticky we -padx 5 -pady 5
 
 	ttk::label .d.eft -text "Elevation Factor"
 	ttk::entry .d.efe -textvariable e_f
-		set e_f ""
+		set e_f "1.0"
 	grid .d.eft -row 1 -column 0 -sticky we -padx 5 -pady 5
 	grid .d.efe -row 1 -column 1 -sticky we -padx 5 -pady 5
 
 	ttk::label .d.tft -text "Temperature Factor"
 	ttk::entry .d.tfe -textvariable t_f
-		set t_f ""
+		set t_f "1.0"
 	grid .d.tft -row 2 -column 0 -sticky we -padx 5 -pady 5
 	grid .d.tfe -row 2 -column 1 -sticky we -padx 5 -pady 5
 
 	ttk::label .d.eot -text "Elevation Offset"
 	ttk::entry .d.eoe -textvariable e_o
-		set e_o ""
+		set e_o "0"
 	grid .d.eot -row 3 -column 0 -sticky we -padx 5 -pady 5
 	grid .d.eoe -row 3 -column 1 -sticky we -padx 5 -pady 5
 
 	ttk::label .d.tot -text "Temperature Offset"
 	ttk::entry .d.toe -textvariable t_o
-		set t_o ""
+		set t_o "0"
 	grid .d.tot -row 4 -column 0 -sticky we -padx 5 -pady 5
 	grid .d.toe -row 4 -column 1 -sticky we -padx 5 -pady 5
 grid .d -row 2 -column 0 -padx 5 -pady 5 -sticky nswe
@@ -93,11 +100,12 @@ proc gencmd {} {
 	if {$::scroll ne ""} {append cflags " $::scroll"}
 	if {$::no_weather ne ""} {append cflags " $::no_weather"}
 	if {$::no_time ne ""} {append cflags " $::no_time"}
-	if {$::age ne ""} {append cflags " -DDEF_AGE=$::age"}
-	if {$::e_f ne ""} {append cflags " -DDEF_E_F=$::e_f"}
-	if {$::t_f ne ""} {append cflags " -DDEF_T_F=$::t_f"}
-	if {$::e_o ne ""} {append cflags " -DDEF_E_O=$::e_o"}
-	if {$::t_o ne ""} {append cflags " -DDEF_T_O=$::t_o"}
+	if {$::age ne "4"} {append cflags " -DDEF_AGE=$::age"}
+	if {$::e_f ne "1.0"} {append cflags " -DDEF_E_F=$::e_f"}
+	if {$::t_f ne "1.0"} {append cflags " -DDEF_T_F=$::t_f"}
+	if {$::e_o ne "0"} {append cflags " -DDEF_E_O=$::e_o"}
+	if {$::t_o ne "0"} {append cflags " -DDEF_T_O=$::t_o"}
+	if {$::factions ne "7"} {append cflags " -DMAX_FACTIONS=$::factions"}
 	set ::cmd "make $::build 'CFLAGS=$cflags'"
 	.out select range 0 end
 	focus .out
@@ -117,7 +125,7 @@ grid [ttk::button .comp -text "Compile" -command {
 	update
 	exec -- make $build CFLAGS=$cflags
 	set sav [open ".lastcomp" w]
-	foreach var [list build zdims wdims gdims hemi scroll no_weather no_time age e_f t_f e_o t_o] {
+	foreach var [list build zdims wdims gdims hemi scroll no_weather no_time age e_f t_f e_o t_o factions] {
 		puts $sav "set $var {[set $var]}"
 	}
 	close $sav
