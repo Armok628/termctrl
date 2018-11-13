@@ -2,4 +2,5 @@
 #define RANDWORD_H
 #include <stdlib.h>
 char *random_word(int);
+char *capitalize(char *);
 #endif

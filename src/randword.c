@@ -14,3 +14,8 @@ char *random_word(int length)
 			word[i]=cns[rand()%n_cns];
 	return word;
 }
+char *capitalize(char *s)
+{
+	s[0]+='A'-'a';
+	return s;
+}

@@ -177,17 +177,20 @@ void advance_world(struct worldtile *w)
 	}
 	cull_dead_factions();
 }
+struct faction *new_faction(void)
+{ // Allocate memory for a new faction
+	struct faction *f=calloc(1,sizeof(struct faction));
+	f->color=BLACK;
+	return f;
+}
 struct faction *random_faction(void)
-{ // Generate a faction with a random name and color
+{ // Generate a faction with a random name and color and add it to the list
 	if (num_factions>=MAX_FACTIONS) // If there are already too many,
 		return factions[rand()%num_factions]; // pick one
 	// Otherwise make a new one
-	struct faction *f=malloc(sizeof(struct faction));
-	f->name=random_word(3+rand()%3);
-	f->name[0]+='A'-'a';
+	struct faction *f=new_faction();
+	f->name=capitalize(random_word(3+rand()%3));
 	f->color=choose_color();
-	f->size=0;
-	f->stagnation=0;
 	factions[num_factions++]=f;
 	return f;
 }
@@ -237,12 +240,12 @@ void annex(struct worldtile *w,struct faction *r,struct faction *e)
 }
 void form_colony(struct worldtile *w,struct faction *f)
 { // Start an uprising on an enemy or unoccupied coast
-	struct faction *party=random_faction();
+	struct faction *party=new_faction();
 	territory_search=f;
 	int landing=rand_loc(w,&colonizable);
 	if (!landing)
 		return;
 	place_uprising(w,landing,party,1+f->size/50);
-	if (rand()%3)
-		annex(w,f,party);
+	annex(w,rand()%4?f:random_faction(),party);
+	free(party);
 }

@@ -31,10 +31,9 @@ struct entity *transform(struct entity *e,struct entitytype *t)
 		free(e->name);
 	}
 	e->flags=t->flags;
-	if (t->flags&NAMED) {
-		e->name=random_word(4+rand()%4);
-		e->name[0]+='A'-'a';
-	} else
+	if (t->flags&NAMED)
+		e->name=capitalize(random_word(4+rand()%4));
+	else
 		e->name=t->name;
 	e->sym=t->sym;
 	e->color=t->color;
