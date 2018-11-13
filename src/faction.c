@@ -39,7 +39,7 @@ int spread_influence(struct worldtile *w,int pos)
 	return choices[rand()%n];
 }
 void destroy_faction(struct faction *f)
-{ // Remove a faction from the factions list and free its memory
+{ // Announce a faction's destruction and free its memory
 	report("%s has been obliterated!",f->name);
 	release_color(f->color);
 	free(f->name);
@@ -212,6 +212,9 @@ void random_rebellion(struct worldtile *w,struct faction *f)
 	int p=rand_loc(w,&in_territory);
 	if (p)
 		place_uprising(w,p,r,1+f->size/20);
+	else
+		if (!r->size)
+			destroy_faction(r);
 }
 bool coastal(struct worldtile *w,int p)
 { // True if w[p] has adjacent water
@@ -229,8 +232,6 @@ bool colonizable(struct worldtile *w,int p)
 }
 void annex(struct worldtile *w,struct faction *r,struct faction *e)
 { // Turn all of one faction's territory into another's
-	if (e->size>r->size||e==r)
-		return;
 	for (int i=0;i<W_AREA;i++)
 		if (w[i].faction==e) {
 			w[i].faction=r;
@@ -240,12 +241,21 @@ void annex(struct worldtile *w,struct faction *r,struct faction *e)
 }
 void form_colony(struct worldtile *w,struct faction *f)
 { // Start an uprising on an enemy or unoccupied coast
-	struct faction *party=new_faction();
+	struct faction *colony=new_faction();
 	territory_search=f;
 	int landing=rand_loc(w,&colonizable);
 	if (!landing)
 		return;
-	place_uprising(w,landing,party,1+f->size/50);
-	annex(w,rand()%4?f:random_faction(),party);
-	free(party);
+	place_uprising(w,landing,colony,1+f->size/50);
+	if (rand()%4||(num_factions==MAX_FACTIONS-1&&colony->size>f->size))
+		annex(w,f,colony);
+	else {
+		struct faction *a=random_faction();
+		if (num_factions==MAX_FACTIONS-1)
+			report("The colony breaks away, choosing to join %s",a->name);
+		else
+			report("The colony breaks away, choosing the name %s",a->name);
+		annex(w,a,colony);
+	}
+	free(colony);
 }
