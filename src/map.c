@@ -92,8 +92,11 @@ void open_map(struct worldtile *w)
 			f->size++;
 			draw_world(w);
 		} else if (c==' ') { // Spread all factions
+			clock_t t=clock();
 			for (int i=0;i<dt;i++)
 				advance_world(w);
+			t=clock()-t;
+			report("dt=%d, %fms",dt,1000.0*t/CLOCKS_PER_SEC);
 			draw_world(w);
 		} else if (c=='#') {
 			char s[1000];

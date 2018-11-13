@@ -23,6 +23,9 @@ void vreport(char *fmt,va_list args)
 		case 'd':
 			printf("%d",va_arg(args,int));
 			break;
+		case 'f':
+			printf("%f",va_arg(args,double));
+			break;
 		case 'c':
 			putchar(va_arg(args,int));
 			break;
