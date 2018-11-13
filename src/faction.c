@@ -75,6 +75,32 @@ void new_town(struct worldtile *w,struct faction *f)
 	w[n].town=true;
 	w[n].town+=(1+TOWN_POP_CAP/1000)*f->stagnation;
 }
+void spread_to_tile(struct worldtile *w,struct faction *f,int target)
+{ // Try to spread faction f to tile target in w
+	struct faction *t=w[target].faction;
+	switch (rand()%3) {
+		case 0:
+			if (t)
+				t->size--;
+			f->size++;
+			w[target].faction=f;
+			break;
+		case 1:
+			if (t)
+				t->size--;
+			w[target].faction=NULL;
+			break;
+		case 2:
+			break;
+	}
+	if (w[target].town&&w[target].pop>0) {
+		w[target].pop-=200;
+		if (w[target].pop<-100) {
+			w[target].town=false;
+			w[target].pop=0;
+		}
+	}
+}
 void spread_faction(struct worldtile *w,struct faction *f)
 { // Give one faction a chance to grow, map-wide
 	int oldsize=f->size;
@@ -89,60 +115,33 @@ void spread_faction(struct worldtile *w,struct faction *f)
 		int target=spread_influence(w,i);
 		if (target==i)
 			continue;
-		if (!t[i]&&rand()%2) {
+		if (!t[i]&&rand()%2) { // 1/2 chance to spread to unoccupied land
 			w[target].faction=f;
 			f->size++;
-		} else {
-			struct faction *t=w[target].faction;
-			switch (rand()%3) {
-			case 0:
-				if (t)
-					t->size--;
-				f->size++;
-				w[target].faction=f;
-				break;
-			case 1:
-				if (t)
-					t->size--;
-				w[target].faction=NULL;
-				break;
-			case 2:
-				break;
-			}
-			if (w[target].town&&w[target].pop>0) {
-				w[target].pop-=200;
-				if (w[target].pop<-100) {
-					w[target].town=false;
-					w[target].pop=0;
-				}
-			}
-		}
+		} else
+			spread_to_tile(w,f,target);
 	}
 	if (!(rand()%200))
 		new_town(w,f);
-	if (f->size-oldsize<2) {
+	if (f->size-oldsize<2)
 		f->stagnation++;
-	} else
+	else
 		f->stagnation=0;
 }
 void resolve_stagnation(struct worldtile *w,struct faction *f)
 { // Create a colony or rebellion if growth has stagnated
-	if ((rand()%200)<f->stagnation) {
-		int n;
-		switch (rand()%2) {
-		case 0:
-			report("%s seeks to colonize distant lands",f->name);
-			form_colony(w,f);
-			break;
-		case 1:
-			n=rand()%(2+f->size/200);
-			report("%d rebellion%s form%s under %s",n,n==1?"":"s",n==1?"s":"",f->name);
-			for (int i=0;i<n;i++)
-				random_rebellion(w,f);
-			break;
-		}
-		f->stagnation=0;
+	if ((rand()%200)>f->stagnation)
+		return;
+	if (rand()%2) {
+		report("%s seeks to colonize distant lands",f->name);
+		form_colony(w,f);
+	} else {
+		int n=rand()%(2+f->size/200);
+		report("%d rebellion%s form%s under %s",n,n==1?"":"s",n==1?"s":"",f->name);
+		for (int i=0;i<n;i++)
+			random_rebellion(w,f);
 	}
+	f->stagnation=0;
 }
 struct faction *factions[MAX_FACTIONS];
 int num_factions=0;
@@ -168,7 +167,8 @@ void advance_world(struct worldtile *w)
 		spread_faction(w,factions[i]);
 		resolve_stagnation(w,factions[i]);
 	}
-	if (num_factions&&!(rand()%20)) { // 1/20 chance: Give one faction 5 turns to grow
+	if (num_factions&&!(rand()%20)) {
+		// ^ 1/20 chance: Give one faction 5 turns to grow
 		struct faction *f=factions[rand()%num_factions];
 		report("%s surges forth!",f->name);
 		for (int i=0;i<5;i++) {
@@ -212,9 +212,7 @@ void random_rebellion(struct worldtile *w,struct faction *f)
 	int p=rand_loc(w,&in_territory);
 	if (p)
 		place_uprising(w,p,r,1+f->size/20);
-	else
-		if (!r->size)
-			destroy_faction(r);
+	// Unused faction will be removed on next cull_dead_factions()
 }
 bool coastal(struct worldtile *w,int p)
 { // True if w[p] has adjacent water
