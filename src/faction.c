@@ -121,8 +121,6 @@ void spread_faction(struct worldtile *w,struct faction *f)
 		} else
 			spread_to_tile(w,f,target);
 	}
-	if (!(rand()%200))
-		new_town(w,f);
 	if (f->size-oldsize<2)
 		f->stagnation++;
 	else
@@ -130,6 +128,8 @@ void spread_faction(struct worldtile *w,struct faction *f)
 }
 void resolve_stagnation(struct worldtile *w,struct faction *f)
 { // Create a colony or rebellion if growth has stagnated
+	if (!(rand()%200))
+		new_town(w,f); // (possibly create a new town)
 	if ((rand()%200)>f->stagnation)
 		return;
 	if (rand()%2) {
