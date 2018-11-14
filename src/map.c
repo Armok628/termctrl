@@ -63,8 +63,6 @@ void open_map(struct worldtile *w)
 		} else
 			report_here("Unoccupied territory");
 #ifdef SCROLL
-		scroll_map(world_pos);
-		draw_world(w);
 		int x=world_pos%W_WIDTH+w_offset_x;
 		int y=world_pos/W_WIDTH+w_offset_y;
 		draw_world_pos(w,world_pos);
@@ -79,8 +77,13 @@ void open_map(struct worldtile *w)
 		clear_reports();
 		draw_world_pos(w,world_pos);
 		int to=world_pos+input_offset_width(c,W_WIDTH);
-		if (legal_world_move(world_pos,to))
+		if (to!=world_pos&&legal_world_move(world_pos,to)) {
 			world_pos=to;
+#ifdef SCROLL
+			scroll_map(world_pos);
+			draw_world(w);
+#endif
+		}
 		/**/
 		if (c=='\n') { // Add new faction at position
 			struct faction *f=w[world_pos].faction;
