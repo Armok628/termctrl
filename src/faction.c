@@ -100,6 +100,7 @@ void spread_to_tile(struct worldtile *w,struct faction *f,int target)
 			w[target].pop=0;
 		}
 	}
+	draw_world_pos(w,target);
 }
 void spread_faction(struct worldtile *w,struct faction *f)
 { // Give one faction a chance to grow, map-wide
@@ -195,11 +196,12 @@ struct faction *random_faction(void)
 	return f;
 }
 void place_uprising(struct worldtile *w,int i,struct faction *r,int n)
-{ // Let a faction spread for n turns
+{ // Place a faction and let it spread for n turns
 	if (w[i].faction)
 		w[i].faction->size--;
 	w[i].faction=r;
 	r->size++;
+	draw_world_pos(w,i);
 	for (int i=0;i<n;i++)
 		spread_faction(w,r);
 }
@@ -235,6 +237,7 @@ void annex(struct worldtile *w,struct faction *r,struct faction *e)
 			w[i].faction=r;
 			r->size++;
 			e->size--;
+			draw_world_pos(w,i);
 		}
 }
 void form_colony(struct worldtile *w,struct faction *f)

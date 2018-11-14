@@ -90,14 +90,14 @@ void open_map(struct worldtile *w)
 			f=random_faction();
 			w[world_pos].faction=f;
 			f->size++;
-			draw_world(w);
 		} else if (c==' ') { // Spread all factions
+			static int turn=0;
 			clock_t t=clock();
 			for (int i=0;i<dt;i++)
 				advance_world(w);
 			t=clock()-t;
 			report("dt=%d, %fms",dt,1000.0*t/CLOCKS_PER_SEC);
-			draw_world(w);
+			report("Turn: %d",turn+=dt);
 		} else if (c=='#') {
 			char s[1000];
 			move_cursor(0,report_height);
@@ -107,8 +107,12 @@ void open_map(struct worldtile *w)
 			set_cursor_visible(true);
 			fgets(s,100,stdin);
 			sscanf(s,"%d",&dt);
+			if (dt<0)
+				dt=1;
 			set_cursor_visible(false);
 			set_canon(false);
+		} else if (c=='R') {
+			draw_world(w);
 		}
 		/**/
 	}
