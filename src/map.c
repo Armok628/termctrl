@@ -80,8 +80,11 @@ void open_map(struct worldtile *w)
 		if (to!=world_pos&&legal_world_move(world_pos,to)) {
 			world_pos=to;
 #ifdef SCROLL
+			clock_t t=clock();
 			scroll_map(world_pos);
 			draw_world(w);
+			t=clock()-t;
+			report("Scroll took %fms",1000.0*t/CLOCKS_PER_SEC);
 #endif
 		}
 		/**/
