@@ -75,8 +75,7 @@ bool take_turn(struct tile *z,int pos)
 			command(z,pos);
 			return false;
 		case 'R':
-			clear_screen();
-			draw_zone(z);
+			redraw();
 			return false;
 		case 'c':
 			pos+=input_offset(key());
@@ -117,7 +116,7 @@ void advance(struct tile *z)
 {
 #ifndef NO_TIME
 	if (update_time(10))
-		draw_zone(current_zone);
+		redraw();
 #endif
 	struct entity *e[Z_AREA];
 	for (int i=0;i<Z_AREA;i++)

@@ -5,4 +5,5 @@
 
 void next_draw(int,int);
 void draw(char,color_t,color_t);
+void redraw(void);
 #endif

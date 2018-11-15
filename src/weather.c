@@ -1,7 +1,7 @@
 #include "weather.h"
 #define N_PARTICLES (Z_AREA/192)
 void (*weather)(void)=NULL;
-void precip(color_t c,char fg)
+void precip(char c,color_t fg)
 {
 	static int pos[N_PARTICLES]={0},next=0;
 	static clock_t last_update=0;
@@ -16,8 +16,7 @@ void precip(color_t c,char fg)
 			int x=p%Z_WIDTH+z_offset_x,y=p/Z_WIDTH+z_offset_y;
 			if (x>0&&x<G_WIDTH&&y>0&&y<G_HEIGHT) {
 				next_draw(x,y);
-				set_fg(c);
-				putchar(fg);
+				draw(c,fg,BLACK);
 			}
 		}
 #else
@@ -25,7 +24,7 @@ void precip(color_t c,char fg)
 		pos[next]=p;
 		next_draw(p%Z_WIDTH,p/Z_WIDTH);
 		set_fg(c);
-		putchar(fg);
+		draw(c,fg,BLACK);
 #endif
 		if (++next>=N_PARTICLES)
 			next=0;
@@ -33,9 +32,9 @@ void precip(color_t c,char fg)
 }
 void rain(void)
 {
-	precip(LIGHT_BLUE,',');
+	precip(',',LIGHT_BLUE);
 }
 void snow(void)
 {
-	precip(WHITE,'*');
+	precip('*',WHITE);
 }

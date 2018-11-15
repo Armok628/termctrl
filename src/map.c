@@ -114,9 +114,8 @@ void open_map(struct worldtile *w)
 				dt=1;
 			set_cursor_visible(false);
 			set_canon(false);
-		} else if (c=='R') {
-			draw_world(w);
-		}
+		} else if (c=='R')
+			redraw();
 		/**/
 	}
 }

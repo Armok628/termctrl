@@ -34,14 +34,17 @@ void draw(char c,color_t fg,color_t bg)
 }
 void redraw(void)
 {
+	sgr(RESET);
 	clear_screen();
-	for (int i=0;i<TERM_WIDTH;i++) {
+	for (int i=0;i<TERM_AREA;i++) {
+		move_cursor(i%TERM_WIDTH,i/TERM_WIDTH);
 		if (screen_chrs[i]) {
 			set_fg(screen_fgs[i]);
 			set_bg(screen_bgs[i]);
 			putchar(screen_chrs[i]);
-		} else
+		} else {
+			sgr(RESET);
 			putchar(' ');
-		putchar('\n');
+		}
 	}
 }
