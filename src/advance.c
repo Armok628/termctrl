@@ -57,7 +57,7 @@ void update_stats(struct tile *z,int pos)
 		report("NULL");
 		return;
 	}
-	report_here("n s d/d s d s d s d s d",e,
+	report_here("%n %s %d/%d %s %d %s %d %s %d %s %d",e,
 			"HP:",e->hp,e->maxhp,
 			"RES:",e->res,
 			"AGI:",e->agi,

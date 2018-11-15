@@ -18,7 +18,7 @@ void draw_world_pos(struct worldtile *w,int pos)
 	if (x>=0&&x<G_WIDTH&&y>=0&&y<G_HEIGHT) // If x,y is on-screen
 #endif
 	{
-		move_cursor(x,y);
+		next_draw(x,y);
 		draw_worldtile(&w[pos]);
 	}
 }
@@ -28,11 +28,10 @@ void draw_world(struct worldtile *w)
 	for (int x=0;x<G_WIDTH;x++)
 		for (int y=0;y<G_HEIGHT;y++) {
 			int x2=x-w_offset_x,y2=y-w_offset_y;
-			move_cursor(x,y);
-			if (x2<0||x2>=W_WIDTH||y2<0||y2>=W_HEIGHT) {
-				sgr(RESET);
-				putchar(' ');
-			} else
+			next_draw(x,y);
+			if (x2<0||x2>=W_WIDTH||y2<0||y2>=W_HEIGHT)
+				draw(' ',RESET,RESET);
+			else
 				draw_worldtile(&w[x2+y2*W_WIDTH]);
 		}
 #else
@@ -62,17 +61,15 @@ void open_map(struct worldtile *w)
 			report_here("%s (Size: %d, Stagnation: %d)",f->name,f->size,f->stagnation);
 		} else
 			report_here("Unoccupied territory");
+		color_t fc=w[world_pos].faction?w[world_pos].faction->color:BLACK;
 #ifdef SCROLL
 		int x=world_pos%W_WIDTH+w_offset_x;
 		int y=world_pos/W_WIDTH+w_offset_y;
-		draw_world_pos(w,world_pos);
-		move_cursor(x,y);
+		next_draw(x,y);
 #else
-		draw_world_pos(w,world_pos);
-		move_cursor(world_pos%W_WIDTH,world_pos/W_WIDTH);
+		next_draw(world_pos%W_WIDTH,world_pos/W_WIDTH);
 #endif
-		set_fg(LIGHT_RED);
-		putchar('@');
+		draw('@',LIGHT_RED,fc);
 		char c=key();
 		clear_reports();
 		draw_world_pos(w,world_pos);

@@ -2,6 +2,7 @@
 #define TILE_H
 #include "terminal.h"
 #include "entity.h"
+#include "diffdraw.h"
 #ifndef Z_WIDTH
 #define Z_WIDTH 80
 #endif

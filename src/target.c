@@ -5,13 +5,11 @@ int target(struct tile *z,int pos)
 	char c;
 	for (;;) {
 #ifdef SCROLL
-		move_cursor(z_offset_x+p%Z_WIDTH,z_offset_y+p/Z_WIDTH);
+		next_draw(z_offset_x+p%Z_WIDTH,z_offset_y+p/Z_WIDTH);
 #else
-		move_cursor(p%Z_WIDTH,p/Z_WIDTH);
+		next_draw(p%Z_WIDTH,p/Z_WIDTH);
 #endif
-		set_fg(LIGHT_RED);
-		set_bg(BLACK);
-		putchar('X');
+		draw('X',LIGHT_RED,BLACK);
 		c=fgetc(stdin);
 		if (c=='\n')
 			break;

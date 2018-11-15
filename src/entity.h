@@ -4,6 +4,7 @@
 #include "range.h"
 #include "randword.h"
 #include "color.h"
+#include "diffdraw.h"
 enum entityflags {
 	NONE=0,
 	NAMED=1<<0,

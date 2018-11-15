@@ -15,7 +15,7 @@ void precip(color_t c,char fg)
 			int p=pos[i];
 			int x=p%Z_WIDTH+z_offset_x,y=p/Z_WIDTH+z_offset_y;
 			if (x>0&&x<G_WIDTH&&y>0&&y<G_HEIGHT) {
-				move_cursor(x,y);
+				next_draw(x,y);
 				set_fg(c);
 				putchar(fg);
 			}
@@ -23,7 +23,7 @@ void precip(color_t c,char fg)
 #else
 		int p=rand()%Z_AREA;
 		pos[next]=p;
-		move_cursor(p%Z_WIDTH,p/Z_WIDTH);
+		next_draw(p%Z_WIDTH,p/Z_WIDTH);
 		set_fg(c);
 		putchar(fg);
 #endif

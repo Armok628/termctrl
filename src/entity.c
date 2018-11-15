@@ -60,7 +60,5 @@ void free_entity(struct entity *e)
 }
 void draw_entity(struct entity *e)
 {
-	set_fg(e->color);
-	set_bg(e->hp>0?BLACK:RED);
-	putchar(e->sym);
+	draw(e->sym,e->color,e->hp>0?BLACK:RED);
 }

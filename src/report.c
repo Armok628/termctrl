@@ -37,11 +37,13 @@ void vreport(char *fmt,va_list args)
 			}
 			if (e->flags&NAMED) {
 				printf("%s (",e->name);
-				draw_entity(e);
+				set_fg(e->color);
+				putchar(e->sym);
 				sgr(RESET);
 				putchar(')');
 			} else {
-				draw_entity(e);
+				set_fg(e->color);
+				putchar(e->sym);
 				sgr(RESET);
 			}
 			break;
@@ -52,7 +54,8 @@ void vreport(char *fmt,va_list args)
 				continue;
 			}
 			printf("%s (",e->name);
-			draw_entity(e);
+			set_fg(e->color);
+			putchar(e->sym);
 			sgr(RESET);
 			putchar(')');
 			break;

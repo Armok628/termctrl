@@ -151,107 +151,102 @@ enum terrain terrain_type(struct worldtile *tile)
 		t++;
 	return t;
 }
-static inline void putcchar(color_t co,char ch)
-{
-	set_fg(co);
-	putchar(ch);
-}
-void draw_terrain(enum terrain t)
+void draw_terrain(enum terrain t,color_t bg)
 {
 	switch (t) {
 	// Nothing
 	case COLD_NO_TERRAIN:
 	case NO_TERRAIN:
 	case HOT_NO_TERRAIN:
-		putcchar(BLACK,' ');
+		draw(' ',BLACK,bg);
 		break;
 	// Sea
 	case COLD_SHALLOW_SEA:
-		putcchar(CYAN,'_');
+		draw('_',CYAN,bg);
 		break;
 	case COLD_DEEP_SEA:
-		putcchar(TEAL,'_');
+		draw('_',TEAL,bg);
 		break;
 	case SHALLOW_SEA:
 	case HOT_SHALLOW_SEA:
-		putcchar(LIGHT_BLUE,'_');
+		draw('_',LIGHT_BLUE,bg);
 		break;
 	case DEEP_SEA:
 	case HOT_DEEP_SEA:
-		putcchar(BLUE,'_');
+		draw('_',BLUE,bg);
 		break;
 	// Sand
 	case COLD_BEACH:
-		putcchar(WHITE,'~');
+		draw('~',WHITE,bg);
 		break;
 	case BEACH:
 	case HOT_BEACH:
-		putcchar(YELLOW,'~');
+		draw('~',YELLOW,bg);
 		break;
 	// Meadows / Fields
 	case COLD_MEADOW:
-		putcchar(WHITE,'~');
+		draw('~',WHITE,bg);
 		break;
 	case COLD_FIELD:
-		putcchar(LIGHT_GRAY,'~');
+		draw('~',LIGHT_GRAY,bg);
 		break;
 	case MEADOW:
-		putcchar(LIGHT_GREEN,'~');
+		draw('~',LIGHT_GREEN,bg);
 		break;
 	case FIELD:
-		putcchar(GREEN,'~');
+		draw('~',GREEN,bg);
 		break;
 	case HOT_MEADOW:
-		putcchar(YELLOW,'~');
+		draw('~',YELLOW,bg);
 		break;
 	case HOT_FIELD:
-		putcchar(BROWN,'~');
+		draw('~',BROWN,bg);
 		break;
 	// Forest
 	case COLD_FOREST:
-		putcchar(WHITE,'%');
+		draw('%',WHITE,bg);
 		break;
 	case FOREST:
-		putcchar(GREEN,'%');
+		draw('%',GREEN,bg);
 		break;
 	case HOT_FOREST:
-		putcchar(BROWN,'%');
+		draw('%',BROWN,bg);
 		break;
 	// Low Mountain
 	case COLD_LOW_MOUNTAIN:
-		putcchar(WHITE,'-');
+		draw('-',WHITE,bg);
 		break;
 	case LOW_MOUNTAIN:
-		putcchar(DARK_GRAY,'-');
+		draw('-',DARK_GRAY,bg);
 		break;
 	case HOT_LOW_MOUNTAIN:
-		putcchar(LIGHT_GRAY,'-');
+		draw('-',LIGHT_GRAY,bg);
 		break;
 	// High Mountain
 	case COLD_HIGH_MOUNTAIN:
 	case HIGH_MOUNTAIN:
-		putcchar(WHITE,'=');
+		draw('=',WHITE,bg);
 		break;
 	case HOT_HIGH_MOUNTAIN:
-		putcchar(LIGHT_GRAY,'=');
+		draw('=',LIGHT_GRAY,bg);
 		break;
 	// Summit
 	case COLD_SUMMIT:
 	case SUMMIT:
-		putcchar(WHITE,'^');
+		draw('^',WHITE,bg);
 		break;
 	case HOT_SUMMIT:
-		putcchar(LIGHT_GRAY,'^');
+		draw('^',LIGHT_GRAY,bg);
 		break;
 	// High Summit
 	case COLD_HIGH_SUMMIT:
-		putcchar(CYAN,'^');
+		draw('^',CYAN,bg);
 		break;
 	case HIGH_SUMMIT:
-		putcchar(WHITE,'^');
+		draw('^',WHITE,bg);
 		break;
 	case HOT_HIGH_SUMMIT:
-		putcchar(LIGHT_RED,'^');
+		draw('^',LIGHT_RED,bg);
 		break;
 	}
 }
@@ -276,32 +271,28 @@ char river_char(enum dir d)
 }
 void draw_worldtile(struct worldtile *w)
 {
-	if (w->faction)
-		set_bg(w->faction->color);
-	else
-		set_bg(BLACK);
+	color_t bg=w->faction?w->faction->color:BLACK;
 	if (w->town) {
 		set_fg(LIGHT_RED);
 		if (w->pop<1)
-			putchar('_');
+			draw('_',LIGHT_RED,bg);
 		else if (w->pop<TOWN_POP_CAP/4)
-			putchar('.');
+			draw('.',LIGHT_RED,bg);
 		else if (w->pop<TOWN_POP_CAP/2)
-			putchar(':');
+			draw(':',LIGHT_RED,bg);
 		else if (w->pop<TOWN_POP_CAP*3/4)
-			putchar('*');
+			draw('*',LIGHT_RED,bg);
 		else
-			putchar('#');
+			draw('#',LIGHT_RED,bg);
 	} else if (w->river) {
-		set_fg(w->temp<400?CYAN:BLUE);
-		putchar(river_char(w->river));
+		draw(river_char(w->river),w->temp<400?CYAN:BLUE,bg);
 	} else
-		draw_terrain(terrain_type(w));
+		draw_terrain(terrain_type(w),bg);
 }
 void draw_whole_world(struct worldtile *w)
 {
 	for (int i=0;i<W_AREA;i++) {
-		move_cursor(i%W_WIDTH,i/W_WIDTH);
+		next_draw(i%W_WIDTH,i/W_WIDTH);
 		draw_worldtile(&w[i]);
 	}
 }

@@ -10,18 +10,14 @@ void scroll_zone(int pos)
 #endif
 void draw_tile(struct tile *t)
 {
-	set_bg(BLACK);
 	if (t->e)
 		draw_entity(t->e);
 	else if (t->c)
 		draw_entity(t->c);
-	else if (t->fg) {
-		set_fg(t->fg_c);
-		putchar(t->fg);
-	} else if (t->bg) {
-		set_fg(t->bg_c);
-		putchar(t->bg);
-	}
+	else if (t->fg)
+		draw(t->fg,t->fg_c,BLACK);
+	else if (t->bg)
+		draw(t->bg,t->bg_c,BLACK);
 }
 void free_zone(struct tile *z)
 {
@@ -42,7 +38,7 @@ void draw_pos(struct tile *z,int pos)
 	if (x>=0&&x<G_WIDTH&&y>=0&&y<G_HEIGHT) // If x,y is on-screen
 #endif
 	{
-		move_cursor(x,y);
+		next_draw(x,y);
 		draw_tile(&z[pos]);
 	}
 }
@@ -53,7 +49,7 @@ void draw_zone(struct tile *z)
 		for (int y=0;y<G_HEIGHT;y++) {
 			int x2=x-z_offset_x,y2=y-z_offset_y;
 			int i=x2+y2*Z_WIDTH;
-			move_cursor(x,y);
+			next_draw(x,y);
 			if (x2<0||x2>=Z_WIDTH||y2<0||y2>=Z_HEIGHT) {
 				sgr(RESET);
 				putchar(' ');
