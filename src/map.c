@@ -58,7 +58,8 @@ void open_map(struct worldtile *w)
 		move_cursor(0,report_height);
 		if (w[world_pos].faction) {
 			struct faction *f=w[world_pos].faction;
-			report_here("%s (Size: %d, Stagnation: %d)",f->name,f->size,f->stagnation);
+			report_here("%s (Size: %d, Stagnation: %d, Age: %d)",
+					f->name,f->size,f->stagnation,f->age);
 		} else
 			report_here("Unoccupied territory");
 		color_t fc=w[world_pos].faction?w[world_pos].faction->color:BLACK;

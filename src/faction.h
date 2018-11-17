@@ -5,9 +5,10 @@
 #include "map.h"
 struct faction {
 	char *name;
-	color_t color;
 	int size;
-	int stagnation;
+	int age;
+	color_t color;
+	short stagnation;
 };
 #ifndef MAX_FACTIONS
 #define MAX_FACTIONS 7

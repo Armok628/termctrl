@@ -167,6 +167,7 @@ void advance_world(struct worldtile *w)
 	for (int i=0;i<num_factions;i++) {
 		spread_faction(w,factions[i]);
 		resolve_stagnation(w,factions[i]);
+		factions[i]->age++;
 	}
 	if (num_factions&&!(rand()%20)) {
 		// ^ 1/20 chance: Give one faction 5 turns to grow
