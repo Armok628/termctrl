@@ -285,7 +285,7 @@ void draw_worldtile(struct worldtile *w)
 		else
 			draw('#',LIGHT_RED,bg);
 	} else if (w->river) {
-		draw(river_char(w->river),w->temp<400?CYAN:BLUE,bg);
+		draw(river_char(w->river),w->temp<400?CYAN:LIGHT_BLUE,bg);
 	} else
 		draw_terrain(terrain_type(w),bg);
 }
