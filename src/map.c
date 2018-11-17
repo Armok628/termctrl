@@ -44,6 +44,21 @@ bool legal_world_move(int from,int to)
 	int dx=to%W_WIDTH-from%W_WIDTH;
 	return -1<=dx&&dx<=1&&0<=to&&to<W_AREA;
 }
+#define REPORT_SORTED_FACTIONS(f,memb) \
+do {\
+	int indices[num_factions]; \
+	for (int i=0;i<num_factions;i++) \
+		indices[i]=i; \
+	sort(indices,num_factions,&f); \
+	for (int i=0;i<num_factions;i++) { \
+		next_report(); \
+		set_bg(factions[indices[i]]->color); \
+		putchar(' '); \
+		sgr(RESET); \
+		printf(" %s\t",factions[indices[i]]->name); \
+		printf("(%d)",factions[indices[i]]->memb); \
+	} \
+} while (0);
 void open_map(struct worldtile *w)
 {
 	clear_screen();
@@ -117,7 +132,10 @@ void open_map(struct worldtile *w)
 			set_canon(false);
 		} else if (c=='R')
 			redraw();
+		else if (c=='A')
+			REPORT_SORTED_FACTIONS(descending_age,age)
+		else if (c=='S')
+			REPORT_SORTED_FACTIONS(descending_size,size)
 		/**/
 	}
 }
-

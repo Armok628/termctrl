@@ -24,4 +24,6 @@ struct faction *random_faction(void);
 void random_rebellion(struct worldtile *,struct faction *);
 void annex(struct worldtile *,struct faction *,struct faction *);
 void form_colony(struct worldtile *,struct faction *);
+bool descending_age(int,int);
+bool descending_size(int,int);
 #endif

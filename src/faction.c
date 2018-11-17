@@ -261,3 +261,11 @@ void form_colony(struct worldtile *w,struct faction *f)
 	}
 	free(colony);
 }
+bool descending_age(int a,int b)
+{
+	return factions[a]->age>factions[b]->age;
+}
+bool descending_size(int a,int b)
+{
+	return factions[a]->size>factions[b]->size;
+}

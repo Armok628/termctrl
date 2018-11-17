@@ -3,6 +3,7 @@
 #include "world.h"
 #include "tile.h"
 #include "report.h"
+#include "sort.h"
 extern int world_pos;
 
 #ifdef SCROLL
