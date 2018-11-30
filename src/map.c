@@ -59,6 +59,10 @@ do {\
 		printf("(%d)",factions[indices[i]]->memb); \
 	} \
 } while (0);
+bool uncivilized_town(struct worldtile *w,int p)
+{
+	return w[p].town&&!w[p].faction;
+}
 void open_map(struct worldtile *w)
 {
 	clear_screen();
@@ -136,6 +140,15 @@ void open_map(struct worldtile *w)
 			REPORT_SORTED_FACTIONS(descending_age,age)
 		else if (c=='S')
 			REPORT_SORTED_FACTIONS(descending_size,size)
+		else if (c=='T') {
+			int i=rand_loc(w,&uncivilized_town);
+			if (!i)
+				continue;
+			struct faction *f=random_faction();
+			w[i].faction=f;
+			f->size++;
+			draw_world_pos(w,i);
+		}
 		/**/
 	}
 }
