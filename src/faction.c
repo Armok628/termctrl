@@ -243,11 +243,11 @@ void annex(struct worldtile *w,struct faction *r,struct faction *e)
 }
 void form_colony(struct worldtile *w,struct faction *f)
 { // Start an uprising on an enemy or unoccupied coast
-	struct faction *colony=new_faction();
 	territory_search=f;
 	int landing=rand_loc(w,&colonizable);
 	if (!landing)
 		return;
+	struct faction *colony=new_faction();
 	place_uprising(w,landing,colony,1+f->size/50);
 	if (rand()%4||(num_factions==MAX_FACTIONS-1&&colony->size>f->size))
 		annex(w,f,colony);
