@@ -24,7 +24,7 @@ int main(int argc,char **argv)
 	struct worldtile *world=worldgen(age,e_o,t_o,e_f,t_f);
 	draw_whole_world(world);
 	int h=0,n=0,c=0;
-	for (int i=0;i<W_AREA;i++)
+	for (int i=0;i<WORLD_AREA;i++)
 		if (world[i].elev>=500)
 			switch (terrain_type(&world[i])%3) {
 			case 2:

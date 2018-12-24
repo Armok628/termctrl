@@ -4,22 +4,22 @@ short avg_around(short *elevs,int pos)
 	int sum=0;
 	for (int dx=-1;dx<=1;dx++)
 		for (int dy=-1;dy<=1;dy++)
-			sum+=elevs[pos+dx+dy*W_WIDTH];
+			sum+=elevs[pos+dx+dy*WORLD_WIDTH];
 	return sum/9;
 }
 void erode(struct worldtile *w)
 {
-	short elevs[W_AREA];
-	short temps[W_AREA];
-	for (int x=0;x<W_WIDTH;x++)
-		for (int y=0;y<W_HEIGHT;y++) {
-			int i=x+y*W_WIDTH;
+	short elevs[WORLD_AREA];
+	short temps[WORLD_AREA];
+	for (int x=0;x<WORLD_WIDTH;x++)
+		for (int y=0;y<WORLD_HEIGHT;y++) {
+			int i=x+y*WORLD_WIDTH;
 			elevs[i]=w[i].elev;
 			temps[i]=w[i].temp;
 		}
-	for (int x=1;x<W_WIDTH-1;x++)
-		for (int y=1;y<W_HEIGHT-1;y++) {
-			int i=x+y*W_WIDTH;
+	for (int x=1;x<WORLD_WIDTH-1;x++)
+		for (int y=1;y<WORLD_HEIGHT-1;y++) {
+			int i=x+y*WORLD_WIDTH;
 			w[i].elev=avg_around(elevs,i);
 			w[i].temp=avg_around(temps,i);
 		}
@@ -29,7 +29,7 @@ char descend(struct worldtile *w,int pos)
 	int i=0,m=0,min=w[pos].elev;
 	for (int dx=-1;dx<=1;dx++)
 		for (int dy=-1;dy<=1;dy++) {
-			int p=pos+dx+dy*W_WIDTH;
+			int p=pos+dx+dy*WORLD_WIDTH;
 			if (w[p].elev<min) {
 				min=w[p].elev;
 				m=i;
@@ -43,42 +43,42 @@ void run_river(struct worldtile *w,int pos)
 	while (w[pos].elev>500&&!w[pos].river) {
 		char d=descend(w,pos);
 		w[pos].river=d-'0';
-		pos+=input_offset(d,W_WIDTH);
+		pos+=input_offset(d,WORLD_WIDTH);
 	}
 }
 struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)
 {
-	struct worldtile *w=calloc(W_AREA,sizeof(struct worldtile));
-	for (int y=W_HEIGHT/5+2;y<W_HEIGHT*4/5;y++) {
-		w[y*W_WIDTH].temp=500;
-		w[(y+1)*W_WIDTH-1].temp=500;
+	struct worldtile *w=calloc(WORLD_AREA,sizeof(struct worldtile));
+	for (int y=WORLD_HEIGHT/5+2;y<WORLD_HEIGHT*4/5;y++) {
+		w[y*WORLD_WIDTH].temp=500;
+		w[(y+1)*WORLD_WIDTH-1].temp=500;
 	}
 #ifdef HEMISPHERE
-	for (int y=W_HEIGHT*4/5;y<W_HEIGHT;y++) {
-		w[y*W_WIDTH].temp=1000;
-		w[(y+1)*W_WIDTH-1].temp=1000;
+	for (int y=WORLD_HEIGHT*4/5;y<WORLD_HEIGHT;y++) {
+		w[y*WORLD_WIDTH].temp=1000;
+		w[(y+1)*WORLD_WIDTH-1].temp=1000;
 	}
-	for (int x=0;x<W_WIDTH;x++)
-		w[x+(W_HEIGHT-1)*W_WIDTH].temp=1000;
+	for (int x=0;x<WORLD_WIDTH;x++)
+		w[x+(WORLD_HEIGHT-1)*WORLD_WIDTH].temp=1000;
 #endif
 	puts("Generating noisemaps");
-	for (int x=1;x<W_WIDTH-1;x++)
-		for (int y=1;y<W_HEIGHT-1;y++) {
+	for (int x=1;x<WORLD_WIDTH-1;x++)
+		for (int y=1;y<WORLD_HEIGHT-1;y++) {
 			// Generate values
 			int e=rand()%1000;
 #ifdef HEMISPHERE
-			int t=y-W_HEIGHT;
+			int t=y-WORLD_HEIGHT;
 			t=t<0?-t:t;
-			t*=-500/W_HEIGHT;
+			t*=-500/WORLD_HEIGHT;
 			t+=350+rand()%800;
 #else
-			int t=y-W_HEIGHT/2;
+			int t=y-WORLD_HEIGHT/2;
 			t=t<0?-t:t;
-			t*=-1000/W_HEIGHT;
+			t*=-1000/WORLD_HEIGHT;
 			t+=300+rand()%800;
 #endif
 			// Insert values
-			int i=x+y*W_WIDTH;
+			int i=x+y*WORLD_WIDTH;
 			w[i].elev=e;
 			w[i].temp=t;
 		}
@@ -87,26 +87,26 @@ struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)
 		erode(w);
 	if (e_f!=1.0) {
 		puts("Applying elevation factor");
-		for (int i=0;i<W_AREA;i++)
+		for (int i=0;i<WORLD_AREA;i++)
 			w[i].elev=500+(w[i].elev-500)*e_f;
 	}
 	if (t_f!=1.0) {
 		puts("Applying temperature factor");
-		for (int i=0;i<W_AREA;i++)
+		for (int i=0;i<WORLD_AREA;i++)
 			w[i].temp=500+(w[i].temp-500)*t_f;
 	}
 	if (e_o!=0) {
 		puts("Applying elevation offset");
-		for (int i=0;i<W_AREA;i++)
+		for (int i=0;i<WORLD_AREA;i++)
 			w[i].elev+=e_o;
 	}
 	if (t_o!=0) {
 		puts("Applying temperature offset");
-		for (int i=0;i<W_AREA;i++)
+		for (int i=0;i<WORLD_AREA;i++)
 			w[i].temp+=t_o;
 	}
 	puts("Running rivers");
-	for (int i=0;i<W_AREA/640;i++)
+	for (int i=0;i<WORLD_AREA/640;i++)
 		run_river(w,rand_loc(w,&is_land));
 	puts("Placing towns");
 	for (int i=0;i<10;i++) {
@@ -291,15 +291,15 @@ void draw_worldtile(struct worldtile *w)
 }
 void draw_whole_world(struct worldtile *w)
 {
-	for (int i=0;i<W_AREA;i++) {
-		next_draw(i%W_WIDTH,i/W_WIDTH);
+	for (int i=0;i<WORLD_AREA;i++) {
+		next_draw(i%WORLD_WIDTH,i/WORLD_WIDTH);
 		draw_worldtile(&w[i]);
 	}
 }
 int rand_loc(struct worldtile *w,bool (*f)(struct worldtile *,int))
 {
-	int t[W_AREA],n=0;
-	for (int i=0;i<W_AREA;i++)
+	int t[WORLD_AREA],n=0;
+	for (int i=0;i<WORLD_AREA;i++)
 		if (f(w,i))
 			t[n++]=i;
 	if (!n)

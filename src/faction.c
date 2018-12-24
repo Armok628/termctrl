@@ -28,7 +28,7 @@ int spread_influence(struct worldtile *w,int pos)
 	int choices[9],n=0;
 	for (int dx=-1;dx<=1;dx++)
 		for (int dy=-1;dy<=1;dy++) {
-			int i=pos+dx+dy*W_WIDTH;
+			int i=pos+dx+dy*WORLD_WIDTH;
 			if (!legal_world_move(pos,i))
 				continue;
 			if (w[i].elev>=500&&w[i].faction!=f)
@@ -57,7 +57,7 @@ bool townworthy(struct worldtile *w,int p)
 		return false;
 	for (int dx=-1;dx<=1;dx++)
 		for (int dy=-1;dy<=1;dy++) {
-			int i=p+dx+dy*W_WIDTH;
+			int i=p+dx+dy*WORLD_WIDTH;
 			if (!legal_world_move(p,i))
 				continue;
 			if (w[i].town&&w[i].pop>0)
@@ -107,10 +107,10 @@ void spread_faction(struct worldtile *w,struct faction *f)
 	int oldsize=f->size;
 	if (!f)
 		return;
-	struct faction *t[W_AREA]; // Territory map
-	for (int i=0;i<W_AREA;i++)
+	struct faction *t[WORLD_AREA]; // Territory map
+	for (int i=0;i<WORLD_AREA;i++)
 		t[i]=w[i].faction;
-	for (int i=0;i<W_AREA;i++) {
+	for (int i=0;i<WORLD_AREA;i++) {
 		if (t[i]!=f)
 			continue;
 		int target=spread_influence(w,i);
@@ -161,7 +161,7 @@ void cull_dead_factions(void)
 }
 void advance_world(struct worldtile *w)
 { // Give all factions a chance to spread, and grow towns
-	for (int i=0;i<W_AREA;i++)
+	for (int i=0;i<WORLD_AREA;i++)
 		if (w[i].town&&w[i].faction)
 			w[i].pop+=w[i].pop<TOWN_POP_CAP;
 	for (int i=0;i<num_factions;i++) {
@@ -223,7 +223,7 @@ bool coastal(struct worldtile *w,int p)
 		return false;
 	for (int dx=-1;dx<=1;dx++)
 		for (int dy=-1;dy<=1;dy++)
-			if ((dx||dy)&&w[p+dx+dy*W_HEIGHT].elev<500)
+			if ((dx||dy)&&w[p+dx+dy*WORLD_HEIGHT].elev<500)
 				return true;
 	return false;
 }
@@ -233,7 +233,7 @@ bool colonizable(struct worldtile *w,int p)
 }
 void annex(struct worldtile *w,struct faction *r,struct faction *e)
 { // Turn all of one faction's territory into another's
-	for (int i=0;i<W_AREA;i++)
+	for (int i=0;i<WORLD_AREA;i++)
 		if (w[i].faction==e) {
 			w[i].faction=r;
 			r->size++;

@@ -5,19 +5,19 @@
 #include "terminal.h"
 #include "color.h"
 #include "input.h"
-#ifndef W_WIDTH
-#define W_WIDTH 80
+#ifndef WORLD_WIDTH
+#define WORLD_WIDTH 80
 #endif
-#ifndef W_HEIGHT
-#define W_HEIGHT 24
+#ifndef WORLD_HEIGHT
+#define WORLD_HEIGHT 24
 #endif
-#ifndef G_WIDTH
-#define G_WIDTH 80
+#ifndef GAME_WIDTH
+#define GAME_WIDTH 80
 #endif
-#ifndef G_HEIGHT
-#define G_HEIGHT 24
+#ifndef GAME_HEIGHT
+#define GAME_HEIGHT 24
 #endif
-#define W_AREA (W_WIDTH*W_HEIGHT)
+#define WORLD_AREA (WORLD_WIDTH*WORLD_HEIGHT)
 #define TERRAIN(type) COLD_##type, type, HOT_##type
 enum terrain {
 	TERRAIN(NO_TERRAIN),

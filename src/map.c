@@ -5,17 +5,17 @@ int w_offset_x=0;
 int w_offset_y=0;
 void scroll_map(int pos)
 {
-	w_offset_x=G_WIDTH/2-pos%W_WIDTH;
-	w_offset_y=G_HEIGHT/2-pos/W_WIDTH;
+	w_offset_x=GAME_WIDTH/2-pos%WORLD_WIDTH;
+	w_offset_y=GAME_HEIGHT/2-pos/WORLD_WIDTH;
 }
 #endif
 void draw_world_pos(struct worldtile *w,int pos)
 {
-	int x=pos%W_WIDTH,y=pos/W_WIDTH;
+	int x=pos%WORLD_WIDTH,y=pos/WORLD_WIDTH;
 #ifdef SCROLL
 	x+=w_offset_x;
 	y+=w_offset_y;
-	if (x>=0&&x<G_WIDTH&&y>=0&&y<G_HEIGHT) // If x,y is on-screen
+	if (x>=0&&x<GAME_WIDTH&&y>=0&&y<GAME_HEIGHT) // If x,y is on-screen
 #endif
 	{
 		next_draw(x,y);
@@ -25,24 +25,24 @@ void draw_world_pos(struct worldtile *w,int pos)
 void draw_world(struct worldtile *w)
 {
 #ifdef SCROLL
-	for (int x=0;x<G_WIDTH;x++)
-		for (int y=0;y<G_HEIGHT;y++) {
+	for (int x=0;x<GAME_WIDTH;x++)
+		for (int y=0;y<GAME_HEIGHT;y++) {
 			int x2=x-w_offset_x,y2=y-w_offset_y;
 			next_draw(x,y);
-			if (x2<0||x2>=W_WIDTH||y2<0||y2>=W_HEIGHT)
+			if (x2<0||x2>=WORLD_WIDTH||y2<0||y2>=WORLD_HEIGHT)
 				draw(' ',RESET,RESET);
 			else
-				draw_worldtile(&w[x2+y2*W_WIDTH]);
+				draw_worldtile(&w[x2+y2*WORLD_WIDTH]);
 		}
 #else
-	for (int i=0;i<W_AREA;i++)
+	for (int i=0;i<WORLD_AREA;i++)
 		draw_world_pos(w,i);
 #endif
 }
 bool legal_world_move(int from,int to)
 {
-	int dx=to%W_WIDTH-from%W_WIDTH;
-	return -1<=dx&&dx<=1&&0<=to&&to<W_AREA;
+	int dx=to%WORLD_WIDTH-from%WORLD_WIDTH;
+	return -1<=dx&&dx<=1&&0<=to&&to<WORLD_AREA;
 }
 #define REPORT_SORTED_FACTIONS(f,memb) \
 do {\
@@ -67,9 +67,9 @@ void open_map(struct worldtile *w)
 {
 	clear_screen();
 #ifdef SCROLL
-	report_height=G_HEIGHT;
+	report_height=GAME_HEIGHT;
 #else
-	report_height=W_HEIGHT;
+	report_height=WORLD_HEIGHT;
 #endif
 	draw_world(w);
 	int dt=1;
@@ -83,17 +83,17 @@ void open_map(struct worldtile *w)
 			report_here("Unoccupied territory");
 		color_t fc=w[world_pos].faction?w[world_pos].faction->color:BLACK;
 #ifdef SCROLL
-		int x=world_pos%W_WIDTH+w_offset_x;
-		int y=world_pos/W_WIDTH+w_offset_y;
+		int x=world_pos%WORLD_WIDTH+w_offset_x;
+		int y=world_pos/WORLD_WIDTH+w_offset_y;
 		next_draw(x,y);
 #else
-		next_draw(world_pos%W_WIDTH,world_pos/W_WIDTH);
+		next_draw(world_pos%WORLD_WIDTH,world_pos/WORLD_WIDTH);
 #endif
 		draw('@',LIGHT_RED,fc);
 		char c=key();
 		clear_reports();
 		draw_world_pos(w,world_pos);
-		int to=world_pos+input_offset(c,W_WIDTH);
+		int to=world_pos+input_offset(c,WORLD_WIDTH);
 		if (to!=world_pos&&legal_world_move(world_pos,to)) {
 			world_pos=to;
 #ifdef SCROLL
