@@ -43,7 +43,7 @@ void run_river(struct worldtile *w,int pos)
 	while (w[pos].elev>500&&!w[pos].river) {
 		char d=descend(w,pos);
 		w[pos].river=d-'0';
-		pos+=input_offset_width(d,W_WIDTH);
+		pos+=input_offset(d,W_WIDTH);
 	}
 }
 struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)

@@ -4,6 +4,21 @@
 #include <string.h>
 #include "src/map.h"
 #include "src/terminal.h"
+#ifndef DEF_AGE
+#define DEF_AGE 4
+#endif
+#ifndef DEF_E_O
+#define DEF_E_O 0
+#endif
+#ifndef DEF_T_O
+#define DEF_T_O 0
+#endif
+#ifndef DEF_E_F
+#define DEF_E_F 1.0
+#endif
+#ifndef DEF_T_F
+#define DEF_T_F 1.0
+#endif
 int main(int argc,char **argv)
 {
 	int age=DEF_AGE,e_o=DEF_E_O,t_o=DEF_T_O;

@@ -58,7 +58,7 @@ bool townworthy(struct worldtile *w,int p)
 	for (int dx=-1;dx<=1;dx++)
 		for (int dy=-1;dy<=1;dy++) {
 			int i=p+dx+dy*W_WIDTH;
-			if (!legal_move(p,i))
+			if (!legal_world_move(p,i))
 				continue;
 			if (w[i].town&&w[i].pop>0)
 				return false;

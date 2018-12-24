@@ -1,9 +1,8 @@
 #include "report.h"
-int report_height=G_HEIGHT;
+int report_height=0;
 static int next_line=1;
 void vreport(char *fmt,va_list args)
 {
-	struct entity *e;
 	char *str;
 	sgr(RESET);
 	for (char *s=fmt;*s;s++) {
@@ -28,36 +27,6 @@ void vreport(char *fmt,va_list args)
 			break;
 		case 'c':
 			putchar(va_arg(args,int));
-			break;
-		case 'e':
-			e=va_arg(args,struct entity *);
-			if (!e) {
-				printf("NULL");
-				continue;
-			}
-			if (e->flags&NAMED) {
-				printf("%s (",e->name);
-				set_fg(e->color);
-				putchar(e->sym);
-				sgr(RESET);
-				putchar(')');
-			} else {
-				set_fg(e->color);
-				putchar(e->sym);
-				sgr(RESET);
-			}
-			break;
-		case 'n': // Name
-			e=va_arg(args,struct entity *);
-			if (!e) {
-				printf("NULL");
-				continue;
-			}
-			printf("%s (",e->name);
-			set_fg(e->color);
-			putchar(e->sym);
-			sgr(RESET);
-			putchar(')');
 			break;
 		default:
 			putchar(*s);

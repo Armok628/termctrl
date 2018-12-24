@@ -93,7 +93,7 @@ void open_map(struct worldtile *w)
 		char c=key();
 		clear_reports();
 		draw_world_pos(w,world_pos);
-		int to=world_pos+input_offset_width(c,W_WIDTH);
+		int to=world_pos+input_offset(c,W_WIDTH);
 		if (to!=world_pos&&legal_world_move(world_pos,to)) {
 			world_pos=to;
 #ifdef SCROLL
@@ -119,8 +119,8 @@ void open_map(struct worldtile *w)
 			for (int i=0;i<dt;i++)
 				advance_world(w);
 			t=clock()-t;
-			report("dt=%d, %fms",dt,1000.0*t/CLOCKS_PER_SEC);
 			report("Turn: %d",turn+=dt);
+			report("dt=%d, %fms",dt,1000.0*t/CLOCKS_PER_SEC);
 		} else if (c=='#') {
 			char s[1000];
 			move_cursor(0,report_height);

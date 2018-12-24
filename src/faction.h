@@ -3,6 +3,8 @@
 #include "color.h"
 #include "world.h"
 #include "map.h"
+#include "range.h"
+#include "randword.h"
 struct faction {
 	char *name;
 	int size;

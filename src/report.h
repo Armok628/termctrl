@@ -2,7 +2,6 @@
 #define REPORT_H
 #include <stdio.h>
 #include <stdarg.h>
-#include "tile.h"
 #include "terminal.h"
 extern int report_height;
 

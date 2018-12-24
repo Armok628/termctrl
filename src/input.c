@@ -2,27 +2,11 @@
 bool exit_req=false;
 char key(void)
 {
-#ifdef NO_WEATHER
 	char c=fgetc(stdin);
 	exit_req=c==4||c=='q';
 	return c;
-#else
-	char c='\0';
-	if (!weather)
-		c=fgetc(stdin);
-	else {
-		set_blocking(false);
-		while (c<1) {
-			c=fgetc(stdin);
-			weather();
-		}
-		set_blocking(true);
-	}
-	exit_req=c==4||c=='q';
-	return c;
-#endif
 }
-int input_offset_width(char c,int w)
+int input_offset(char c,int w)
 {
 	switch (c) {
 	case '1':
@@ -52,8 +36,4 @@ int input_offset_width(char c,int w)
 	default:
 		return 0;
 	}
-}
-int input_offset(char c)
-{
-	return input_offset_width(c,Z_WIDTH);
 }

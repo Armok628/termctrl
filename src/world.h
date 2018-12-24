@@ -11,20 +11,11 @@
 #ifndef W_HEIGHT
 #define W_HEIGHT 24
 #endif
-#ifndef DEF_AGE
-#define DEF_AGE 4
+#ifndef G_WIDTH
+#define G_WIDTH 80
 #endif
-#ifndef DEF_E_O
-#define DEF_E_O 0
-#endif
-#ifndef DEF_T_O
-#define DEF_T_O 0
-#endif
-#ifndef DEF_E_F
-#define DEF_E_F 1.0
-#endif
-#ifndef DEF_T_F
-#define DEF_T_F 1.0
+#ifndef G_HEIGHT
+#define G_HEIGHT 24
 #endif
 #define W_AREA (W_WIDTH*W_HEIGHT)
 #define TERRAIN(type) COLD_##type, type, HOT_##type
