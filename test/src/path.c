@@ -31,11 +31,11 @@ void print_dists(void)
 {
 	for (int i=0;i<AREA;i++) {
 		if (dists[i]==-2)
-			printf("\033[mX");
+			printf("\033[1;30m%%");
 		else if (dists[i]<0)
 			printf("\033[m ");
 		else {
-			printf("\033[1;%dm%d",30+(dists[i]/10)%8,dists[i]%10);
+			printf("\033[1;%dm%d",31+(6+dists[i]/10)%7,dists[i]%10);
 		}
 		if (i%WIDTH==WIDTH-1)
 			putchar('\n');
