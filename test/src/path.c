@@ -40,6 +40,7 @@ void print_dists(void)
 		if (i%WIDTH==WIDTH-1)
 			putchar('\n');
 	}
+	printf("\033[m");
 }
 void show_path(char *area,int from,int to)
 {

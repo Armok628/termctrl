@@ -19,7 +19,13 @@ void random_room(char *area)
 }
 int main(int argc,char **argv)
 {
-	srand(time(NULL));
+	unsigned int seed;
+	if (argc>1)
+		sscanf(argv[1],"seed=%u",&seed);
+	else
+		seed=time(NULL);
+	srand(seed);
+	printf("Seed: %u\n",seed);
 	for (int i=0;i<AREA;i++)
 		area[i]=' ';
 	for (int i=0;i<8;i++)
@@ -36,6 +42,7 @@ int main(int argc,char **argv)
 		show_path(area,from,to);
 		print_area(area);
 	} else {
+		print_area(area);
 		print_dists();
 	}
 }
