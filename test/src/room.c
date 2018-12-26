@@ -18,6 +18,9 @@ void print_area(char *area)
 		case 'O':
 			printf("\033[0;34;40m");
 			break;
+		case '*':
+			printf("\033[1;33;40m");
+			break;
 		case ' ':
 			printf("\033[0;40m");
 			break;

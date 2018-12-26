@@ -27,12 +27,15 @@ int main(int argc,char **argv)
 	int from=rand()%AREA,to=rand()%AREA;
 	area[from]='O';
 	area[to]='X';
-	print_area(area);
 	printf("From %d to %d\n",from,to);
 	clock_t before=clock();
 	bool b=plan_path(area,from,to);
 	printf("A path was%sfound\n",b?" ":" not ");
 	printf("Pathfinding took %f ms\n",(double)(clock()-before)*1000.0/CLOCKS_PER_SEC);
-	print_dists();
-	printf("\033[m");
+	if (b) {
+		show_path(area,from,to);
+		print_area(area);
+	} else {
+		print_dists();
+	}
 }

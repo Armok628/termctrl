@@ -41,3 +41,33 @@ void print_dists(void)
 			putchar('\n');
 	}
 }
+void show_path(char *area,int from,int to)
+{
+	area[from]='O';
+	int p=from;
+	while (p!=to) {
+		int mins[8],min=dists[p];
+		int n_mins=0;
+		for (int dx=-1;dx<=1;dx++)
+		for (int dy=-1;dy<=1;dy++) {
+			int n=p+dx+dy*WIDTH;
+			int xd=n%WIDTH-p%WIDTH;
+			if (xd<-1||xd>1||n<0||n>=AREA)
+				continue;
+			if (dists[n]<0)
+				continue;
+			if (dists[n]<min) {
+				min=dists[n];
+				n_mins=1;
+				mins[0]=n;
+			} else if (dists[n]==min) {
+				mins[n_mins++]=n;
+			}
+		}
+		if (!n_mins)
+			return;
+		p=mins[rand()%n_mins];
+		area[p]='*';
+	}
+	area[to]='X';
+}
