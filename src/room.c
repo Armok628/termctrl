@@ -90,6 +90,19 @@ void partition_room(char *area,int x,int y,int w,int h)
 	else
 		partition_room_horiz(area,x,y,w,h);
 }
+void random_room(char *area)
+{
+	int x=1+rand()%(WIDTH-9);
+	int y=1+rand()%(HEIGHT-9);
+	int w=10+rand()%(WIDTH/4);
+	int h=10+rand()%(HEIGHT/4);
+	if (x+w>WIDTH-1)
+		x-=w;
+	if (y+h>HEIGHT-1)
+		y-=h;
+	make_room(area,x,y,w,h);
+	partition_room(area,x,y,w,h);
+}
 //// Temporary
 void print_area(char *area)
 {
