@@ -27,7 +27,7 @@ void print_area(char *area)
 		}
 		putchar(area[i]);
 		if (i%WIDTH==WIDTH-1)
-			printf("\033\[m\n");
+			printf("\033[m\n");
 	}
 	printf("\033[m");
 }

@@ -1,10 +1,12 @@
 #ifndef SORT_H
 #define SORT_H
-#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
-void sort(int *,int,bool (*)(int,int));
+void swap(int *,int *);
+void insertion_sort(int *,int,bool (*)(int,int));
 bool ascending(int,int);
 bool descending(int,int);
+void reverse(int *,int);
+void rand_fixed_sum(int *,int,int);
 #endif

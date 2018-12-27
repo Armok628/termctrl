@@ -49,7 +49,7 @@ do {\
 	int indices[num_factions]; \
 	for (int i=0;i<num_factions;i++) \
 		indices[i]=i; \
-	sort(indices,num_factions,&f); \
+	insertion_sort(indices,num_factions,&f); \
 	for (int i=0;i<num_factions;i++) { \
 		next_report(); \
 		set_bg(factions[indices[i]]->color); \

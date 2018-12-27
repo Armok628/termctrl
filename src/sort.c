@@ -1,29 +1,15 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <time.h>
-void sort(int *arr,int size,bool (*f)(int,int))
+#include "sort.h"
+void swap(int *a,int *b)
 {
-	// Split
-	if (size<2)
-		return;
-	int h=size/2;
-	if (size>2) {
-		sort(arr,h,f);
-		sort(&arr[h],size-h,f);
-	}
-	// Merge
-	int l=0,r=h;
-	int tmp[size];
-	for (int i=0;l<h||r<size;i++)
-		if (r<size&&!f(arr[l],arr[r]))
-			tmp[i]=arr[r++];
-		else if (l<h)
-			tmp[i]=arr[l++];
-		else
-			tmp[i]=arr[r++];
-	for (int i=0;i<size;i++)
-		arr[i]=tmp[i];
+	int c=*a;
+	*a=*b;
+	*b=c;
+}
+void insertion_sort(int *arr,int len,bool (*f)(int,int))
+{
+	for (int i=0;i<len-1;i++)
+		for (int j=i+1;j&&f(arr[j],arr[j-1]);j--)
+			swap(&arr[j-1],&arr[j]);
 }
 bool ascending(int a,int b)
 {
@@ -32,4 +18,20 @@ bool ascending(int a,int b)
 bool descending(int a,int b)
 {
 	return a>b;
+}
+void reverse(int *arr,int len)
+{
+	for (int i=0;i<len/2;i++)
+		swap(&arr[i],&arr[len-i-1]);
+}
+void rand_fixed_sum(int *ret,int len,int sum)
+{
+	int arr[len+1];
+	arr[0]=0;
+	for (int i=1;i<len;i++)
+		arr[i]=rand()%sum;
+	arr[len]=sum;
+	insertion_sort(arr,len,&ascending);
+	for (int i=0;i<len;i++)
+		ret[i]=arr[i+1]-arr[i];
 }
