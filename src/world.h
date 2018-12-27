@@ -11,12 +11,6 @@
 #ifndef WORLD_HEIGHT
 #define WORLD_HEIGHT 24
 #endif
-#ifndef GAME_WIDTH
-#define GAME_WIDTH 80
-#endif
-#ifndef GAME_HEIGHT
-#define GAME_HEIGHT 24
-#endif
 #define WORLD_AREA (WORLD_WIDTH*WORLD_HEIGHT)
 #define TERRAIN(type) COLD_##type, type, HOT_##type
 enum terrain {

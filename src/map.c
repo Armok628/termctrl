@@ -5,8 +5,8 @@ int w_offset_x=0;
 int w_offset_y=0;
 void scroll_map(int pos)
 {
-	w_offset_x=GAME_WIDTH/2-pos%WORLD_WIDTH;
-	w_offset_y=GAME_HEIGHT/2-pos/WORLD_WIDTH;
+	w_offset_x=TERM_WIDTH/2-pos%WORLD_WIDTH;
+	w_offset_y=TERM_HEIGHT/2-pos/WORLD_WIDTH;
 }
 #endif
 void draw_world_pos(struct worldtile *w,int pos)
@@ -15,7 +15,7 @@ void draw_world_pos(struct worldtile *w,int pos)
 #ifdef SCROLL
 	x+=w_offset_x;
 	y+=w_offset_y;
-	if (x>=0&&x<GAME_WIDTH&&y>=0&&y<GAME_HEIGHT) // If x,y is on-screen
+	if (x>=0&&x<TERM_WIDTH&&y>=0&&y<TERM_HEIGHT) // If x,y is on-screen
 #endif
 	{
 		next_draw(x,y);
@@ -25,8 +25,8 @@ void draw_world_pos(struct worldtile *w,int pos)
 void draw_world(struct worldtile *w)
 {
 #ifdef SCROLL
-	for (int x=0;x<GAME_WIDTH;x++)
-		for (int y=0;y<GAME_HEIGHT;y++) {
+	for (int x=0;x<TERM_WIDTH;x++)
+		for (int y=0;y<TERM_HEIGHT;y++) {
 			int x2=x-w_offset_x,y2=y-w_offset_y;
 			next_draw(x,y);
 			if (x2<0||x2>=WORLD_WIDTH||y2<0||y2>=WORLD_HEIGHT)
@@ -67,7 +67,7 @@ void open_map(struct worldtile *w)
 {
 	clear_screen();
 #ifdef SCROLL
-	report_height=GAME_HEIGHT;
+	report_height=TERM_HEIGHT;
 #else
 	report_height=WORLD_HEIGHT;
 #endif

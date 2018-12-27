@@ -15,11 +15,11 @@ ttk::labelframe .o -text "Extra Options"
 		grid .o.d.wl -row 1 -column 0 -sticky w -padx 5 -pady 5
 		grid .o.d.we -row 1 -column 1 -sticky we -padx 5 -pady 5
 
-		ttk::label .o.d.gl -text "Game dimensions"
-		ttk::entry .o.d.ge -textvariable gdims
-			set gdims ""
-		grid .o.d.gl -row 2 -column 0 -sticky w -padx 5 -pady 5
-		grid .o.d.ge -row 2 -column 1 -sticky we -padx 5 -pady 5
+		ttk::label .o.d.tl -text "Terminal dimensions"
+		ttk::entry .o.d.te -textvariable tdims
+			set tdims ""
+		grid .o.d.tl -row 2 -column 0 -sticky w -padx 5 -pady 5
+		grid .o.d.te -row 2 -column 1 -sticky we -padx 5 -pady 5
 
 		ttk::label .o.d.fl -text "Number of factions"
 		ttk::entry .o.d.fe -textvariable factions
@@ -73,11 +73,11 @@ proc gencmd {} {
 	upvar cflags cflags; upvar cmd cmd
 	# Scan dimensional inputs
 	lassign [regexp -all -inline {\d+} $::wdims] w_w w_h
-	lassign [regexp -all -inline {\d+} $::gdims] g_w g_h
+	lassign [regexp -all -inline {\d+} $::tdims] t_w t_h
 	# Output command
 	set cflags ""
-	if {$w_w ne "" && $w_h ne ""} {append cflags " -DW_WIDTH=$w_w -DW_HEIGHT=$w_h"}
-	if {$g_w ne "" && $g_h ne ""} {append cflags " -DG_WIDTH=$g_w -DG_HEIGHT=$g_h"}
+	if {$w_w ne "" && $w_h ne ""} {append cflags " -DWORLD_WIDTH=$w_w -DWORLD_HEIGHT=$w_h"}
+	if {$t_w ne "" && $t_h ne ""} {append cflags " -DTERM_WIDTH=$t_w -DTERM_HEIGHT=$t_h"}
 	if {$::hemi ne ""} {append cflags " $::hemi"}
 	if {$::scroll ne ""} {append cflags " $::scroll"}
 	if {$::age ne "4"} {append cflags " -DDEF_AGE=$::age"}
@@ -105,7 +105,7 @@ grid [ttk::button .comp -text "Compile" -command {
 	update
 	exec -- make $build CFLAGS=$cflags
 	set sav [open ".lastcomp" w]
-	foreach var [list build wdims gdims hemi scroll age e_f t_f e_o t_o factions] {
+	foreach var [list build wdims tdims hemi scroll age e_f t_f e_o t_o factions] {
 		puts $sav "set $var {[set $var]}"
 	}
 	close $sav

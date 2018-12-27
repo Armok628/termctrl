@@ -4,9 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "sort.h"
-#define WIDTH 100
-#define HEIGHT 40
-#define AREA (WIDTH*HEIGHT)
+#include "zone.h"
 
 void print_area(char *);
 void make_room(char *,int,int,int,int);
