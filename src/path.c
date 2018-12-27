@@ -27,6 +27,7 @@ bool plan_path(char *area,int from,int to)
 	}
 	return possible;
 }
+//// Temporary
 void print_dists(void)
 {
 	for (int i=0;i<AREA;i++) {

@@ -1,36 +1,4 @@
 #include "room.h"
-void print_area(char *area)
-{
-	for (int i=0;i<AREA;i++) {
-		switch (area[i]) {
-		case '#':
-			printf("\033[0;37;40m");
-			break;
-		case '%':
-			printf("\033[1;30;40m");
-			break;
-		case '+':
-			printf("\033[0;33;40m");
-			break;
-		case 'X':
-			printf("\033[0;31;40m");
-			break;
-		case 'O':
-			printf("\033[0;34;40m");
-			break;
-		case '*':
-			printf("\033[1;33;40m");
-			break;
-		case ' ':
-			printf("\033[0;40m");
-			break;
-		}
-		putchar(area[i]);
-		if (i%WIDTH==WIDTH-1)
-			printf("\033[m\n");
-	}
-	printf("\033[m");
-}
 void make_room(char *area,int x,int y,int w,int h)
 {
 	for (int i=x;i<x+w;i++)
@@ -122,3 +90,37 @@ void partition_room(char *area,int x,int y,int w,int h)
 	else
 		partition_room_horiz(area,x,y,w,h);
 }
+//// Temporary
+void print_area(char *area)
+{
+	for (int i=0;i<AREA;i++) {
+		switch (area[i]) {
+		case '#':
+			printf("\033[0;37;40m");
+			break;
+		case '%':
+			printf("\033[1;30;40m");
+			break;
+		case '+':
+			printf("\033[0;33;40m");
+			break;
+		case 'X':
+			printf("\033[0;31;40m");
+			break;
+		case 'O':
+			printf("\033[0;34;40m");
+			break;
+		case '*':
+			printf("\033[1;33;40m");
+			break;
+		case ' ':
+			printf("\033[0;40m");
+			break;
+		}
+		putchar(area[i]);
+		if (i%WIDTH==WIDTH-1)
+			printf("\033[m\n");
+	}
+	printf("\033[m");
+}
+
