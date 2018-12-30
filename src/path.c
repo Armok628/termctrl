@@ -69,7 +69,7 @@ void show_path(char *area,int from,int to)
 		}
 		if (!n_mins)
 			return;
-		p=mins[rand()%n_mins];
+		p=mins[n_mins/2];//mins[rand()%n_mins];
 		area[p]='*';
 	}
 	area[to]='X';
