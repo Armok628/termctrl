@@ -17,6 +17,9 @@ int main(int argc,char **argv)
 		area[i]=' ';
 	for (int i=0;i<8;i++)
 		random_room(area);
+	fix_bad_doors(area);
+	fix_unreachable_rooms(area);
+	print_area(area);
 	int from=rand()%AREA,to=rand()%AREA;
 	area[from]='O';
 	area[to]='X';

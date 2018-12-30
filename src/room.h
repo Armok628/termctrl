@@ -6,10 +6,11 @@
 #include "sort.h"
 #include "zone.h"
 
-void print_area(char *);
 void make_room(char *,int,int,int,int);
 void place_doors(char *,int,int,int,int);
-void partition_room_vert(char *,int,int,int,int);
-void partition_room_horiz(char *,int,int,int,int);
 void partition_room(char *,int,int,int,int);
+void fix_bad_doors(char *);
+void fix_unreachable_rooms(char *);
+void random_room(char *);
+void print_area(char *);
 #endif
