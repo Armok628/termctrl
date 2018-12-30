@@ -7,10 +7,8 @@
 #include "zone.h"
 
 void make_room(char *,int,int,int,int);
-void place_doors(char *,int,int,int,int);
 void partition_room(char *,int,int,int,int);
-void fix_bad_doors(char *);
-void fix_unreachable_rooms(char *);
+void place_doors(char *);
 void random_room(char *);
 void print_area(char *);
 #endif

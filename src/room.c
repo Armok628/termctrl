@@ -13,26 +13,6 @@ void make_room(char *area,int x,int y,int w,int h)
 		area[(x+w-1)+j*WIDTH]='%';
 	}
 }
-void place_doors(char *area,int x,int y,int w,int h)
-{
-	int n=1+rand()%4;
-	while (n-->0) {
-		switch (rand()%4) {
-		case 0:
-			area[x+w/2+y*WIDTH]='+';
-			break;
-		case 1:
-			area[x+w/2+(y+h-1)*WIDTH]='+';
-			break;
-		case 2:
-			area[x+w-1+(y+h/2)*WIDTH]='+';
-			break;
-		case 3:
-			area[x+(y+h/2)*WIDTH]='+';
-			break;
-		}
-	}
-}
 #define MAX_PARTS 3
 #define N_PARTS (2+rand()%(MAX_PARTS-2))
 #define MIN_WIDTH 3
@@ -56,8 +36,6 @@ void partition_room_vert(char *area,int x,int y,int w,int h)
 		int pw=r-l+1;
 		if (pw>MIN_WIDTH&&pw>w/RECURSE_FACTOR&&rand()%3)
 			partition_room_horiz(area,l,y,pw,h);
-		else
-			place_doors(area,l,y,pw,h);
 		l=r;
 	}
 }
@@ -79,8 +57,6 @@ void partition_room_horiz(char *area,int x,int y,int w,int h)
 		int ph=r-l+1;
 		if (ph>MIN_WIDTH&&ph>h/RECURSE_FACTOR&&rand()%3)
 			partition_room_vert(area,x,l,w,ph);
-		else
-			place_doors(area,x,l,w,ph);
 		l=r;
 	}
 }
@@ -91,18 +67,7 @@ void partition_room(char *area,int x,int y,int w,int h)
 	else
 		partition_room_horiz(area,x,y,w,h);
 }
-void fix_bad_doors(char *area)
-{
-	for (int i=0;i<AREA;i++) {
-		if (area[i]!='+')
-			continue;
-		if (area[i+WIDTH]=='%'^area[i-WIDTH]=='%')
-			area[i]='%';
-		if (area[i+1]=='%'^area[i-1]=='%')
-			area[i]='%';
-	}
-}
-void fix_unreachable_rooms(char *area)
+void place_doors(char *area)
 {
 	int *reached=malloc(AREA*sizeof(int));
 	int *doors=malloc(AREA*sizeof(int));

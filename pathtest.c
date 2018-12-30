@@ -17,22 +17,19 @@ int main(int argc,char **argv)
 		area[i]=' ';
 	for (int i=0;i<8;i++)
 		random_room(area);
-	fix_bad_doors(area);
-	fix_unreachable_rooms(area);
-	print_area(area);
+	place_doors(area);
 	int from=rand()%AREA,to=rand()%AREA;
+	/* Warning: O(inf) ahead */
+	while (area[from]!='#') from=rand()%AREA;
+	while (area[to]!='#') to=rand()%AREA;
+	/**/
 	area[from]='O';
 	area[to]='X';
-	printf("From %d to %d\n",from,to);
-	clock_t before=clock();
-	bool b=plan_path(area,from,to);
-	printf("A path was%sfound\n",b?" ":" not ");
-	printf("Pathfinding took %f ms\n",(double)(clock()-before)*1000.0/CLOCKS_PER_SEC);
-	if (b) {
-		show_path(area,from,to);
-		print_area(area);
-	} else {
-		print_area(area);
-		print_dists();
-	}
+	clock_t t=clock();
+	show_path(area,from,to);
+	t=clock()-t;
+	printf("Pathfinding took %f ms\n",1000.0*t/CLOCKS_PER_SEC);
+	print_dists();
+	putchar('\n');
+	print_area(area);
 }

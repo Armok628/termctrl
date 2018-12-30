@@ -45,6 +45,7 @@ void print_dists(void)
 }
 void show_path(char *area,int from,int to)
 {
+	plan_path(area,from,to);
 	area[from]='O';
 	int p=from;
 	while (p!=to) {
