@@ -13,59 +13,51 @@ void make_room(char *area,int x,int y,int w,int h)
 		area[(x+w-1)+j*WIDTH]='%';
 	}
 }
-#define MAX_PARTS 3
-#define N_PARTS (2+rand()%(MAX_PARTS-2))
-#define MIN_WIDTH 3
-#define RECURSE_FACTOR 5
-void partition_room_horiz(char *,int,int,int,int);
-void partition_room_vert(char *area,int x,int y,int w,int h)
-{ // Vertical room boundaries
-	int bounds[MAX_PARTS];
-	int n=N_PARTS;
-	rand_fixed_sum(bounds,n,w-1);
-	int l=x,r=l;
-	for (int i=0;i<n+1;i++) {
-		if (i<n) {
-			r+=bounds[i];
-			if (r-l<2||x+w-1-r<2)
-				continue;
-			for (int j=y;j<y+h;j++)
-				area[r+j*WIDTH]='%';
-		} else
-			r=x+w-1;
-		int pw=r-l+1;
-		if (pw>MIN_WIDTH&&pw>w/RECURSE_FACTOR&&rand()%3)
-			partition_room_horiz(area,l,y,pw,h);
-		l=r;
-	}
-}
-void partition_room_horiz(char *area,int x,int y,int w,int h)
-{ // Horizontal room boundaries
-	int bounds[MAX_PARTS];
-	int n=N_PARTS;
-	rand_fixed_sum(bounds,n,h-1);
-	int l=y,r=l;
-	for (int i=0;i<n+1;i++) {
-		if (i<n) {
-			r+=bounds[i];
-			if (r-l<2||y+h-1-r<2)
-				continue;
-			for (int j=x;j<x+w;j++)
-				area[j+r*WIDTH]='%';
-		} else
-			r=y+h-1;
-		int ph=r-l+1;
-		if (ph>MIN_WIDTH&&ph>h/RECURSE_FACTOR&&rand()%3)
-			partition_room_vert(area,x,l,w,ph);
-		l=r;
-	}
-}
+#define MIN_BOUNDS 2
+#define MAX_BOUNDS 3
+#define N_BOUNDS() (MIN_BOUNDS+rand()%(MAX_BOUNDS-MIN_BOUNDS+1))
+#define MIN_RECURSE_WIDTH 6
+#define RECURSE_FACTOR 4
 void partition_room(char *area,int x,int y,int w,int h)
 {
-	if (rand()&1)
-		partition_room_vert(area,x,y,w,h);
-	else
-		partition_room_horiz(area,x,y,w,h);
+	int bounds[MAX_BOUNDS];
+	int n=N_BOUNDS();
+	// TODO: Refactor
+	if (w>h) {
+		rand_fixed_sum(bounds,n,w-1);
+		int l=x,r=l;
+		for (int i=0;i<n+1;i++) {
+			if (i<n) {
+				r+=bounds[i];
+				if (r-l<2||x+w-1-r<2)
+					continue;
+				for (int j=y;j<y+h;j++)
+					area[r+j*WIDTH]='%';
+			} else
+				r=x+w-1;
+			int pw=r-l;
+			if (pw>MIN_RECURSE_WIDTH&&pw>w/RECURSE_FACTOR)
+				partition_room(area,l,y,pw+1,h);
+			l=r;
+		}
+	} else {
+		rand_fixed_sum(bounds,n,h-1);
+		int l=y,r=l;
+		for (int i=0;i<n+1;i++) {
+			if (i<n) {
+				r+=bounds[i];
+				if (r-l<2||y+h-1-r<2)
+					continue;
+				for (int j=x;j<x+w;j++)
+					area[j+r*WIDTH]='%';
+			} else
+				r=y+h-1;
+			int ph=r-l;
+			if (ph>MIN_RECURSE_WIDTH&&ph>h/RECURSE_FACTOR)
+				partition_room(area,x,l,w,ph+1);
+			l=r;
+		}
+	}
 }
 void place_doors(char *area)
 {

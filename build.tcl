@@ -31,10 +31,6 @@ ttk::labelframe .o -text "Extra Options"
 	ttk::checkbutton .o.hemi -text "Hemisphere mode" -variable hemi -onvalue "-DHEMISPHERE" -offvalue ""
 		set hemi "" 
 	grid .o.hemi -row 1 -column 0 -padx 5 -pady 5 -sticky w
-
-	ttk::checkbutton .o.scroll -text "Scrolling screen" -variable scroll -onvalue "-DSCROLL" -offvalue ""
-		set scroll ""
-	grid .o.scroll -row 1 -column 1 -padx 5 -pady 5 -sticky w
 grid .o -row 1 -column 0 -padx 5 -pady 5 -sticky nswe
 
 ttk::labelframe .d -text "Default World Generation Options"
@@ -79,7 +75,6 @@ proc gencmd {} {
 	if {$w_w ne "" && $w_h ne ""} {append cflags " -DWORLD_WIDTH=$w_w -DWORLD_HEIGHT=$w_h"}
 	if {$t_w ne "" && $t_h ne ""} {append cflags " -DTERM_WIDTH=$t_w -DTERM_HEIGHT=$t_h"}
 	if {$::hemi ne ""} {append cflags " $::hemi"}
-	if {$::scroll ne ""} {append cflags " $::scroll"}
 	if {$::age ne "4"} {append cflags " -DDEF_AGE=$::age"}
 	if {$::e_f ne "1.0"} {append cflags " -DDEF_E_F=$::e_f"}
 	if {$::t_f ne "1.0"} {append cflags " -DDEF_T_F=$::t_f"}
@@ -105,7 +100,7 @@ grid [ttk::button .comp -text "Compile" -command {
 	update
 	exec -- make $build CFLAGS=$cflags
 	set sav [open ".lastcomp" w]
-	foreach var [list build wdims tdims hemi scroll age e_f t_f e_o t_o factions] {
+	foreach var [list build wdims tdims hemi age e_f t_f e_o t_o factions] {
 		puts $sav "set $var {[set $var]}"
 	}
 	close $sav
