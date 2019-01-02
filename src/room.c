@@ -125,7 +125,7 @@ void place_doors(char *area)
 				n_in_doors?1+n_in_doors/32:1+n_ex_doors/64,
 				n_in_doors?"inside":"outside");
 		clock_t t=clock();
-		while (clock()-t<CLOCKS_PER_SEC/2);
+		while (clock()-t<CLOCKS_PER_SEC/4);
 		/*********************************************/
 		// Pick one or more at random and place a door
 		if (!n_in_doors&&n_ex_doors) {

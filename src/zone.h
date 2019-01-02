@@ -2,8 +2,8 @@
 #define ZONE_H
 #include <stdbool.h>
 #include "color.h"
-#define WIDTH 100
-#define HEIGHT 40
+#define WIDTH 80
+#define HEIGHT 24
 #define AREA (WIDTH*HEIGHT)
 
 #endif
