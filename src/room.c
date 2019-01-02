@@ -134,7 +134,7 @@ void place_doors(char *area)
 		// Pick one or more at random and place a door
 		if (!n_doors)
 			break;
-		for (int i=0;i<1+n_doors/32;i++)
+		for (int i=0;i<1+n_doors/48;i++)
 			area[doors[rand()%n_doors]]='+';
 	}
 	free(reached);
