@@ -1,65 +1,54 @@
 #include "room.h"
 void make_room(char *area,int x,int y,int w,int h)
 {
+	// Make floors
 	for (int i=x;i<x+w;i++)
 		for (int j=y;j<y+h;j++)
 			area[i+j*WIDTH]='#';
+	// North and South walls
 	for (int i=x;i<x+w;i++) {
 		area[i+y*WIDTH]='%';
 		area[i+(y+h-1)*WIDTH]='%';
 	}
+	// West and East walls
 	for (int j=y;j<y+h;j++) {
 		area[x+j*WIDTH]='%';
 		area[(x+w-1)+j*WIDTH]='%';
 	}
 }
-#define MIN_RECURSE_WIDTH 6
+#define RECURSE_LENGTH 8
 #define RECURSE_FACTOR 4
 void partition_room(char *area,int x,int y,int w,int h)
 {
-	int bounds[2];
-	// TODO: Refactor (heavily)
 	if (w>h) {
-		rand_fixed_sum(bounds,2,w-1);
-		int l=x,r=l;
-		for (int i=0;i<3;i++) {
-			if (i<2) {
-				r+=bounds[i];
-				if (r-l<2||x+w-1-r<2)
-					continue;
-				for (int j=y;j<y+h;j++)
-					area[r+j*WIDTH]='%';
-			} else
-				r=x+w-1;
-			int pw=r-l;
-			if (pw>MIN_RECURSE_WIDTH&&pw>w/RECURSE_FACTOR)
-				partition_room(area,l,y,pw+1,h);
-			l=r;
-		}
+		int b=x+2+rand()%(w-4); // Boundary x-coordinate
+		// Create vertical wall
+		for (int i=y+1;i<y+h-1;i++)
+			area[b+i*WIDTH]='%';
+		// If first half meets recursion criteria, recurse
+		if (b-x+1>=RECURSE_LENGTH&&b-x+1>=w/RECURSE_FACTOR)
+			partition_room(area,x,y,b-x+1,h);
+		// If second half meets recursion criteria, recurse
+		if (x+w-b>=RECURSE_LENGTH&&x+w-b>=w/RECURSE_FACTOR)
+			partition_room(area,b,y,x+w-b,h);
 	} else {
-		rand_fixed_sum(bounds,2,h-1);
-		int l=y,r=l;
-		for (int i=0;i<3;i++) {
-			if (i<2) {
-				r+=bounds[i];
-				if (r-l<2||y+h-1-r<2)
-					continue;
-				for (int j=x;j<x+w;j++)
-					area[j+r*WIDTH]='%';
-			} else
-				r=y+h-1;
-			int ph=r-l;
-			if (ph>MIN_RECURSE_WIDTH&&ph>h/RECURSE_FACTOR)
-				partition_room(area,x,l,w,ph+1);
-			l=r;
-		}
+		int b=y+2+rand()%(h-4); // Boundary y-coordinate
+		// Create horizontal wall
+		for (int i=x+1;i<x+w-1;i++)
+			area[i+b*WIDTH]='%';
+		// If first half meets recursion criteria, recurse
+		if (b-y+1>=RECURSE_LENGTH&&b-y+1>=h/RECURSE_FACTOR)
+			partition_room(area,x,y,w,b-y+1);
+		// If second half meets recursion criteria, recurse
+		if (y+h-b>=RECURSE_LENGTH&&y+h-b>=h/RECURSE_FACTOR)
+			partition_room(area,x,b,w,y+h-b);
 	}
 }
 void place_doors(char *area)
 {
 	int *reached=malloc(AREA*sizeof(int));
 	int *in_doors=malloc(AREA*sizeof(int));
-	int *out_doors=malloc(AREA*sizeof(int));
+	int *ex_doors=malloc(AREA*sizeof(int));
 	bool unreachable=false;
 	while (1) {
 		// Setup reachability matrix
@@ -92,7 +81,7 @@ void place_doors(char *area)
 		// Find suitable door locations
 		if (!unreachable)
 			break;
-		int n_out_doors=0,n_in_doors=0;
+		int n_ex_doors=0,n_in_doors=0;
 		for (int i=0;i<AREA;i++) {
 			if (reached[i]!=-1)
 				continue;
@@ -105,7 +94,7 @@ void place_doors(char *area)
 					continue;
 				if (area[i+WIDTH]==' '||area[i-WIDTH]==' '||
 						area[i-1]==' '||area[i+1]==' ')
-					out_doors[n_out_doors++]=i;
+					ex_doors[n_ex_doors++]=i;
 				else
 					in_doors[n_in_doors++]=i;
 			}
@@ -133,15 +122,15 @@ void place_doors(char *area)
 				putchar('\n');
 		}
 		printf("Placing %d %s doors\n",
-				n_in_doors?1+n_in_doors/32:1+n_out_doors/64,
+				n_in_doors?1+n_in_doors/32:1+n_ex_doors/64,
 				n_in_doors?"inside":"outside");
 		clock_t t=clock();
 		while (clock()-t<CLOCKS_PER_SEC/2);
 		/*********************************************/
 		// Pick one or more at random and place a door
-		if (!n_in_doors&&n_out_doors) {
-			for (int i=0;i<1+n_out_doors/64;i++)
-				area[out_doors[rand()%n_out_doors]]='+';
+		if (!n_in_doors&&n_ex_doors) {
+			for (int i=0;i<1+n_ex_doors/64;i++)
+				area[ex_doors[rand()%n_ex_doors]]='+';
 		} else if (n_in_doors) {
 			for (int i=0;i<1+n_in_doors/32;i++)
 				area[in_doors[rand()%n_in_doors]]='+';
@@ -150,7 +139,7 @@ void place_doors(char *area)
 	}
 	free(reached);
 	free(in_doors);
-	free(out_doors);
+	free(ex_doors);
 }
 void random_room(char *area)
 {
