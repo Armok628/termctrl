@@ -92,9 +92,9 @@ void place_doors(char *area)
 				}
 			}
 		}
+		// Find suitable door locations
 		if (!unreachable)
 			break;
-		// Find suitable door locations
 		int n_doors=0;
 		for (int i=0;i<AREA;i++) {
 			if (reached[i]!=-1)
@@ -106,8 +106,36 @@ void place_doors(char *area)
 				doors[n_doors++]=i;
 			// ^ TODO: Refactor ugly condition
 		}
-		// Pick one at random and place a door
-		area[doors[rand()%n_doors]]='+';
+		/* Print reachability matrix (TEMPORARY) */
+		/*****************************************/
+		clear_screen();
+		move_cursor(0,0);
+		for (int i=0;i<AREA;i++) {
+			switch (reached[i]) {
+			case -1:
+				printf("\033[1;30;40m");
+				putchar('#');
+				break;
+			case 0:
+				printf("\033[0;31;40m");
+				putchar('X');
+				break;
+			default:
+				printf("\033[0;40m");
+				putchar(' ');
+			}
+			if (i%WIDTH==WIDTH-1)
+				putchar('\n');
+		}
+		printf("Placing %d doors\n",1+n_doors/48);
+		clock_t t=clock();
+		while (clock()-t<CLOCKS_PER_SEC/2);
+		/*****************************************/
+		// Pick one or more at random and place a door
+		if (!n_doors)
+			break;
+		for (int i=0;i<1+n_doors/32;i++)
+			area[doors[rand()%n_doors]]='+';
 	}
 	free(reached);
 	free(doors);
