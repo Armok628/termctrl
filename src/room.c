@@ -13,21 +13,17 @@ void make_room(char *area,int x,int y,int w,int h)
 		area[(x+w-1)+j*WIDTH]='%';
 	}
 }
-#define MIN_BOUNDS 2
-#define MAX_BOUNDS 3
-#define N_BOUNDS() (MIN_BOUNDS+rand()%(MAX_BOUNDS-MIN_BOUNDS+1))
 #define MIN_RECURSE_WIDTH 6
 #define RECURSE_FACTOR 4
 void partition_room(char *area,int x,int y,int w,int h)
 {
-	int bounds[MAX_BOUNDS];
-	int n=N_BOUNDS();
-	// TODO: Refactor
+	int bounds[2];
+	// TODO: Refactor (heavily)
 	if (w>h) {
-		rand_fixed_sum(bounds,n,w-1);
+		rand_fixed_sum(bounds,2,w-1);
 		int l=x,r=l;
-		for (int i=0;i<n+1;i++) {
-			if (i<n) {
+		for (int i=0;i<3;i++) {
+			if (i<2) {
 				r+=bounds[i];
 				if (r-l<2||x+w-1-r<2)
 					continue;
@@ -41,10 +37,10 @@ void partition_room(char *area,int x,int y,int w,int h)
 			l=r;
 		}
 	} else {
-		rand_fixed_sum(bounds,n,h-1);
+		rand_fixed_sum(bounds,2,h-1);
 		int l=y,r=l;
-		for (int i=0;i<n+1;i++) {
-			if (i<n) {
+		for (int i=0;i<3;i++) {
+			if (i<2) {
 				r+=bounds[i];
 				if (r-l<2||y+h-1-r<2)
 					continue;
@@ -62,7 +58,8 @@ void partition_room(char *area,int x,int y,int w,int h)
 void place_doors(char *area)
 {
 	int *reached=malloc(AREA*sizeof(int));
-	int *doors=malloc(AREA*sizeof(int));
+	int *in_doors=malloc(AREA*sizeof(int));
+	int *out_doors=malloc(AREA*sizeof(int));
 	bool unreachable=false;
 	while (1) {
 		// Setup reachability matrix
@@ -95,19 +92,27 @@ void place_doors(char *area)
 		// Find suitable door locations
 		if (!unreachable)
 			break;
-		int n_doors=0;
+		int n_out_doors=0,n_in_doors=0;
 		for (int i=0;i<AREA;i++) {
 			if (reached[i]!=-1)
 				continue;
 			if ((reached[i+WIDTH]>0&&reached[i-WIDTH]==0)
 					||(reached[i+WIDTH]==0&&reached[i-WIDTH]>0)
 					||(reached[i+1]>0&&reached[i-1]==0)
-					||(reached[i+1]==0&&reached[i-1]>0))
-				doors[n_doors++]=i;
-			// ^ TODO: Refactor ugly condition
+					||(reached[i+1]==0&&reached[i-1]>0)) {
+				if (area[i+WIDTH]=='+'||area[i-WIDTH]=='+'||
+						area[i-1]=='+'||area[i+1]=='+')
+					continue;
+				if (area[i+WIDTH]==' '||area[i-WIDTH]==' '||
+						area[i-1]==' '||area[i+1]==' ')
+					out_doors[n_out_doors++]=i;
+				else
+					in_doors[n_in_doors++]=i;
+			}
+			// ^ TODO: Refactor those disgusting conditions
 		}
-		/* Print reachability matrix (TEMPORARY) */
-		/*****************************************/
+		/* Visualize reachability matrix (TEMPORARY) */
+		/*********************************************/
 		clear_screen();
 		move_cursor(0,0);
 		for (int i=0;i<AREA;i++) {
@@ -127,18 +132,25 @@ void place_doors(char *area)
 			if (i%WIDTH==WIDTH-1)
 				putchar('\n');
 		}
-		printf("Placing %d doors\n",1+n_doors/48);
+		printf("Placing %d %s doors\n",
+				n_in_doors?1+n_in_doors/32:1+n_out_doors/64,
+				n_in_doors?"inside":"outside");
 		clock_t t=clock();
 		while (clock()-t<CLOCKS_PER_SEC/2);
-		/*****************************************/
+		/*********************************************/
 		// Pick one or more at random and place a door
-		if (!n_doors)
+		if (!n_in_doors&&n_out_doors) {
+			for (int i=0;i<1+n_out_doors/64;i++)
+				area[out_doors[rand()%n_out_doors]]='+';
+		} else if (n_in_doors) {
+			for (int i=0;i<1+n_in_doors/32;i++)
+				area[in_doors[rand()%n_in_doors]]='+';
+		} else
 			break;
-		for (int i=0;i<1+n_doors/48;i++)
-			area[doors[rand()%n_doors]]='+';
 	}
 	free(reached);
-	free(doors);
+	free(in_doors);
+	free(out_doors);
 }
 void random_room(char *area)
 {
