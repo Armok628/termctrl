@@ -1,11 +1,4 @@
 #include "diffdraw.h"
-#ifndef TERM_WIDTH
-#define TERM_WIDTH 80
-#endif
-#ifndef TERM_HEIGHT
-#define TERM_HEIGHT 24
-#endif
-#define TERM_AREA (TERM_WIDTH*TERM_HEIGHT)
 static char screen_chrs[TERM_AREA];
 static color_t screen_fgs[TERM_AREA];
 static color_t screen_bgs[TERM_AREA];
