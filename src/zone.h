@@ -1,10 +1,12 @@
 #ifndef ZONE_H
 #define ZONE_H
+#include <stdlib.h>
 #include <stdbool.h>
 #include "color.h"
-#define WIDTH 80
-#define HEIGHT 24
-#define AREA (WIDTH*HEIGHT)
+#include "diffdraw.h"
+#define ZONE_WIDTH 80
+#define ZONE_HEIGHT 24
+#define ZONE_AREA (ZONE_WIDTH*ZONE_HEIGHT)
 struct task {
 	enum {ATTACK,DEFEND,CAPTURE} type;
 	struct entity *target;
@@ -50,4 +52,13 @@ struct tile {
 	// TODO: Effects
 };
 
+void scroll_zone(int);
+void draw_entity(struct entity *);
+void draw_tile(struct tile *);
+void draw_zone_pos(struct tile *,int);
+void draw_zone(struct tile *);
+int rand_tile(struct tile *,bool (*)(struct tile *));
+bool empty_tile(struct tile *);
+int spawn(struct tile *,struct entity *);
+struct tile *new_zone(void);
 #endif

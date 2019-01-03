@@ -1,19 +1,19 @@
 #include "map.h"
 static const bool SCROLL=WORLD_HEIGHT>TERM_HEIGHT||WORLD_WIDTH>TERM_WIDTH;
 int world_pos=-1;
-int w_offset_x=0;
-int w_offset_y=0;
+int world_xscroll=0;
+int world_yscroll=0;
 void scroll_map(int pos)
 {
-	w_offset_x=TERM_WIDTH/2-pos%WORLD_WIDTH;
-	w_offset_y=TERM_HEIGHT/2-pos/WORLD_WIDTH;
+	world_xscroll=TERM_WIDTH/2-pos%WORLD_WIDTH;
+	world_yscroll=TERM_HEIGHT/2-pos/WORLD_WIDTH;
 }
 void draw_world_pos(struct worldtile *w,int pos)
 {
 	int x=pos%WORLD_WIDTH,y=pos/WORLD_WIDTH;
 	if (SCROLL) {
-		x+=w_offset_x;
-		y+=w_offset_y;
+		x+=world_xscroll;
+		y+=world_yscroll;
 		if (x>=0&&x<TERM_WIDTH&&y>=0&&y<TERM_HEIGHT) {
 			// ^ If x,y is on-screen
 			next_draw(x,y);
@@ -29,7 +29,7 @@ void draw_world(struct worldtile *w)
 	if (SCROLL) {
 		for (int x=0;x<TERM_WIDTH;x++)
 		for (int y=0;y<TERM_HEIGHT;y++) {
-			int x2=x-w_offset_x,y2=y-w_offset_y;
+			int x2=x-world_xscroll,y2=y-world_yscroll;
 			next_draw(x,y);
 			if (x2<0||x2>=WORLD_WIDTH||y2<0||y2>=WORLD_HEIGHT)
 				draw(' ',RESET,RESET);
@@ -81,8 +81,8 @@ void open_map(struct worldtile *w)
 			report_here("Unoccupied territory");
 		color_t fc=w[world_pos].faction?w[world_pos].faction->color:BLACK;
 		if (SCROLL) {
-			int x=world_pos%WORLD_WIDTH+w_offset_x;
-			int y=world_pos/WORLD_WIDTH+w_offset_y;
+			int x=world_pos%WORLD_WIDTH+world_xscroll;
+			int y=world_pos/WORLD_WIDTH+world_yscroll;
 			next_draw(x,y);
 		} else
 			next_draw(world_pos%WORLD_WIDTH,world_pos/WORLD_WIDTH);

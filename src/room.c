@@ -4,16 +4,16 @@ void make_room(char *area,int x,int y,int w,int h)
 	// Make floors
 	for (int i=x;i<x+w;i++)
 		for (int j=y;j<y+h;j++)
-			area[i+j*WIDTH]='#';
+			area[i+j*ZONE_WIDTH]='#';
 	// North and South walls
 	for (int i=x;i<x+w;i++) {
-		area[i+y*WIDTH]='%';
-		area[i+(y+h-1)*WIDTH]='%';
+		area[i+y*ZONE_WIDTH]='%';
+		area[i+(y+h-1)*ZONE_WIDTH]='%';
 	}
 	// West and East walls
 	for (int j=y;j<y+h;j++) {
-		area[x+j*WIDTH]='%';
-		area[(x+w-1)+j*WIDTH]='%';
+		area[x+j*ZONE_WIDTH]='%';
+		area[(x+w-1)+j*ZONE_WIDTH]='%';
 	}
 }
 #define RECURSE_LENGTH 8
@@ -24,7 +24,7 @@ void partition_room(char *area,int x,int y,int w,int h)
 		int b=x+2+rand()%(w-4); // Boundary x-coordinate
 		// Create vertical wall
 		for (int i=y+1;i<y+h-1;i++)
-			area[b+i*WIDTH]='%';
+			area[b+i*ZONE_WIDTH]='%';
 		// If first half meets recursion criteria, recurse
 		if (b-x+1>=RECURSE_LENGTH&&b-x+1>=w/RECURSE_FACTOR)
 			partition_room(area,x,y,b-x+1,h);
@@ -35,7 +35,7 @@ void partition_room(char *area,int x,int y,int w,int h)
 		int b=y+2+rand()%(h-4); // Boundary y-coordinate
 		// Create horizontal wall
 		for (int i=x+1;i<x+w-1;i++)
-			area[i+b*WIDTH]='%';
+			area[i+b*ZONE_WIDTH]='%';
 		// If first half meets recursion criteria, recurse
 		if (b-y+1>=RECURSE_LENGTH&&b-y+1>=h/RECURSE_FACTOR)
 			partition_room(area,x,y,w,b-y+1);
@@ -46,13 +46,13 @@ void partition_room(char *area,int x,int y,int w,int h)
 }
 void place_doors(char *area)
 {
-	int *reached=malloc(AREA*sizeof(int));
-	int *in_doors=malloc(AREA*sizeof(int));
-	int *ex_doors=malloc(AREA*sizeof(int));
+	int *reached=malloc(ZONE_AREA*sizeof(int));
+	int *in_doors=malloc(ZONE_AREA*sizeof(int));
+	int *ex_doors=malloc(ZONE_AREA*sizeof(int));
 	bool unreachable=false;
 	while (1) {
 		// Setup reachability matrix
-		for (int i=0;i<AREA;i++)
+		for (int i=0;i<ZONE_AREA;i++)
 			reached[i]=area[i]=='%'?-1:0;
 		reached[0]=1;
 		// Detect unreachable areas
@@ -60,16 +60,16 @@ void place_doors(char *area)
 		for (int d=2;!done;d++) {
 			done=true;
 			unreachable=false;
-			for (int i=0;i<AREA;i++) {
+			for (int i=0;i<ZONE_AREA;i++) {
 				if (!reached[i])
 					unreachable=true;
 				if (reached[i]!=d-1)
 					continue;
 				for (int dx=-1;dx<=1;dx++)
 				for (int dy=-1;dy<=1;dy++) {
-					int n=i+dx+dy*WIDTH;
-					int xd=n%WIDTH-i%WIDTH;
-					if (xd<-1||xd>1||n<0||n>=AREA)
+					int n=i+dx+dy*ZONE_WIDTH;
+					int xd=n%ZONE_WIDTH-i%ZONE_WIDTH;
+					if (xd<-1||xd>1||n<0||n>=ZONE_AREA)
 						continue;
 					if (!reached[n]) {
 						reached[n]=d;
@@ -82,17 +82,17 @@ void place_doors(char *area)
 		if (!unreachable)
 			break;
 		int n_ex_doors=0,n_in_doors=0;
-		for (int i=0;i<AREA;i++) {
+		for (int i=0;i<ZONE_AREA;i++) {
 			if (reached[i]!=-1)
 				continue;
-			if ((reached[i+WIDTH]>0&&reached[i-WIDTH]==0)
-					||(reached[i+WIDTH]==0&&reached[i-WIDTH]>0)
+			if ((reached[i+ZONE_WIDTH]>0&&reached[i-ZONE_WIDTH]==0)
+					||(reached[i+ZONE_WIDTH]==0&&reached[i-ZONE_WIDTH]>0)
 					||(reached[i+1]>0&&reached[i-1]==0)
 					||(reached[i+1]==0&&reached[i-1]>0)) {
-				if (area[i+WIDTH]=='+'||area[i-WIDTH]=='+'||
+				if (area[i+ZONE_WIDTH]=='+'||area[i-ZONE_WIDTH]=='+'||
 						area[i-1]=='+'||area[i+1]=='+')
 					continue;
-				if (area[i+WIDTH]==' '||area[i-WIDTH]==' '||
+				if (area[i+ZONE_WIDTH]==' '||area[i-ZONE_WIDTH]==' '||
 						area[i-1]==' '||area[i+1]==' ')
 					ex_doors[n_ex_doors++]=i;
 				else
@@ -104,7 +104,7 @@ void place_doors(char *area)
 		/*********************************************/
 		clear_screen();
 		move_cursor(0,0);
-		for (int i=0;i<AREA;i++) {
+		for (int i=0;i<ZONE_AREA;i++) {
 			switch (reached[i]) {
 			case -1:
 				printf("\033[1;30;40m");
@@ -118,7 +118,7 @@ void place_doors(char *area)
 				printf("\033[0;40m");
 				putchar(' ');
 			}
-			if (i%WIDTH==WIDTH-1)
+			if (i%ZONE_WIDTH==ZONE_WIDTH-1)
 				putchar('\n');
 		}
 		printf("Placing %d %s doors\n",
@@ -143,17 +143,17 @@ void place_doors(char *area)
 }
 void random_room(char *area)
 {
-	int w=10+rand()%(WIDTH/4);
-	int h=10+rand()%(HEIGHT/4);
-	int x=1+rand()%(WIDTH-w-1);
-	int y=1+rand()%(HEIGHT-h-1);
+	int w=10+rand()%(ZONE_WIDTH/4);
+	int h=10+rand()%(ZONE_HEIGHT/4);
+	int x=1+rand()%(ZONE_WIDTH-w-1);
+	int y=1+rand()%(ZONE_HEIGHT-h-1);
 	make_room(area,x,y,w,h);
 	partition_room(area,x,y,w,h);
 }
 //// Temporary
 void print_area(char *area)
 {
-	for (int i=0;i<AREA;i++) {
+	for (int i=0;i<ZONE_AREA;i++) {
 		switch (area[i]) {
 		case '#':
 			printf("\033[0;37;40m");
@@ -178,7 +178,7 @@ void print_area(char *area)
 			break;
 		}
 		putchar(area[i]);
-		if (i%WIDTH==WIDTH-1)
+		if (i%ZONE_WIDTH==ZONE_WIDTH-1)
 			printf("\033[m\n");
 	}
 	printf("\033[m");

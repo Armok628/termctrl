@@ -3,7 +3,7 @@
 #include <time.h>
 #include "src/room.h"
 #include "src/path.h"
-char area[AREA];
+char area[ZONE_AREA];
 int main(int argc,char **argv)
 {
 	unsigned int seed;
@@ -13,15 +13,15 @@ int main(int argc,char **argv)
 		seed=time(NULL);
 	srand(seed);
 	printf("Seed: %u\n",seed);
-	for (int i=0;i<AREA;i++)
+	for (int i=0;i<ZONE_AREA;i++)
 		area[i]=' ';
 	for (int i=0;i<8;i++)
 		random_room(area);
 	place_doors(area);
-	int from=rand()%AREA,to=rand()%AREA;
+	int from=rand()%ZONE_AREA,to=rand()%ZONE_AREA;
 	/* Warning: O(inf) ahead */
-	while (area[from]!='#') from=rand()%AREA;
-	while (area[to]!='#') to=rand()%AREA;
+	while (area[from]!='#') from=rand()%ZONE_AREA;
+	while (area[to]!='#') to=rand()%ZONE_AREA;
 	/**/
 	area[from]='O';
 	area[to]='X';
