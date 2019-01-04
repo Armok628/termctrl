@@ -4,6 +4,8 @@ wm resizable . 0 0
 ttk::labelframe .t -text "Build Type"
 	ttk::radiobutton .t.world -text "World" -variable build -value "world"
 	grid .t.world -row 0 -column 0 -sticky w -padx 5 -pady 5
+	ttk::radiobutton .t.zone -text "Zone" -variable build -value "zone"
+	grid .t.zone -row 1 -column 0 -sticky w -padx 5 -pady 5
 	set build "world"
 grid .t -row 0 -column 0 -padx 5 -pady 5
 
@@ -15,17 +17,23 @@ ttk::labelframe .o -text "Extra Options"
 		grid .o.d.wl -row 1 -column 0 -sticky w -padx 5 -pady 5
 		grid .o.d.we -row 1 -column 1 -sticky we -padx 5 -pady 5
 
+		ttk::label .o.d.zl -text "Zone dimensions"
+		ttk::entry .o.d.ze -textvariable zdims
+			set zdims ""
+		grid .o.d.zl -row 2 -column 0 -sticky w -padx 5 -pady 5
+		grid .o.d.ze -row 2 -column 1 -sticky we -padx 5 -pady 5
+
 		ttk::label .o.d.tl -text "Terminal dimensions"
 		ttk::entry .o.d.te -textvariable tdims
 			set tdims ""
-		grid .o.d.tl -row 2 -column 0 -sticky w -padx 5 -pady 5
-		grid .o.d.te -row 2 -column 1 -sticky we -padx 5 -pady 5
+		grid .o.d.tl -row 3 -column 0 -sticky w -padx 5 -pady 5
+		grid .o.d.te -row 3 -column 1 -sticky we -padx 5 -pady 5
 
 		ttk::label .o.d.fl -text "Number of factions"
 		ttk::entry .o.d.fe -textvariable factions
 			set factions 7
-		grid .o.d.fl -row 3 -column 0 -sticky w -padx 5 -pady 5
-		grid .o.d.fe -row 3 -column 1 -sticky we -padx 5 -pady 5
+		grid .o.d.fl -row 4 -column 0 -sticky w -padx 5 -pady 5
+		grid .o.d.fe -row 4 -column 1 -sticky we -padx 5 -pady 5
 	grid .o.d -row 0 -column 0 -columnspan 2 -padx 5 -pady 5
 
 	ttk::checkbutton .o.hemi -text "Hemisphere mode" -variable hemi -onvalue "-DHEMISPHERE" -offvalue ""
@@ -69,10 +77,12 @@ proc gencmd {} {
 	upvar cflags cflags; upvar cmd cmd
 	# Scan dimensional inputs
 	lassign [regexp -all -inline {\d+} $::wdims] w_w w_h
+	lassign [regexp -all -inline {\d+} $::zdims] z_w z_h
 	lassign [regexp -all -inline {\d+} $::tdims] t_w t_h
 	# Output command
 	set cflags ""
 	if {$w_w ne "" && $w_h ne ""} {append cflags " -DWORLD_WIDTH=$w_w -DWORLD_HEIGHT=$w_h"}
+	if {$z_w ne "" && $z_h ne ""} {append cflags " -DZONE_WIDTH=$w_w -DZONE_HEIGHT=$w_h"}
 	if {$t_w ne "" && $t_h ne ""} {append cflags " -DTERM_WIDTH=$t_w -DTERM_HEIGHT=$t_h"}
 	if {$::hemi ne ""} {append cflags " $::hemi"}
 	if {$::age ne "4"} {append cflags " -DDEF_AGE=$::age"}
@@ -100,7 +110,7 @@ grid [ttk::button .comp -text "Compile" -command {
 	update
 	exec -- make $build CFLAGS=$cflags
 	set sav [open ".lastcomp" w]
-	foreach var [list build wdims tdims hemi age e_f t_f e_o t_o factions] {
+	foreach var [list build wdims zdims tdims hemi age e_f t_f e_o t_o factions] {
 		puts $sav "set $var {[set $var]}"
 	}
 	close $sav

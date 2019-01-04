@@ -29,20 +29,27 @@ bool plan_path(struct tile *z,int from,int to)
 }
 char go_to(struct tile *z,int from,int to)
 {
-	if (!plan_path(z,from,to))
+	if (from==to||!plan_path(z,from,to))
 		return '0';
-	int c[8],n_c=0,min=dists[from];
+	int mins[8],min=dists[from];
+	int n_mins=0;
 	for (int dx=-1;dx<=1;dx++)
 	for (int dy=-1;dy<=1;dy++) {
 		int n=from+dx+dy*ZONE_WIDTH;
+		if (!in_bounds(from,n)||dists[n]<0)
+			continue;
 		if (dists[n]<min) {
-			n_c=1;
 			min=dists[n];
-			c[0]=n;
-		} else if (dists[n]==min)
-			c[n_c++]=n;
+			n_mins=1;
+			mins[0]=n;
+		} else if (dists[n]==min) {
+			mins[n_mins++]=n;
+		}
 	}
-	if (!n_c)
-		return '0';
-	return c[n_c>>1];//c[rand()%n_c];
+	if (!n_mins)
+		return '5';
+	int p=mins[n_mins/2];//[rand()%n_mins];
+	int dx=p%ZONE_WIDTH-from%ZONE_WIDTH;
+	int dy=p/ZONE_WIDTH-from/ZONE_WIDTH;
+	return '5'+dx-dy*3;
 }

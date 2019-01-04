@@ -2,8 +2,10 @@
 int zone_xscroll=0,zone_yscroll=0;
 void scroll_zone(int i)
 {
-	zone_xscroll=TERM_WIDTH/2-i%ZONE_WIDTH;
-	zone_yscroll=TERM_HEIGHT/2-i/ZONE_WIDTH;
+	if (ZONE_WIDTH>TERM_WIDTH||ZONE_HEIGHT>TERM_HEIGHT) {
+		zone_xscroll=TERM_WIDTH/2-i%ZONE_WIDTH;
+		zone_yscroll=TERM_HEIGHT/2-i/ZONE_WIDTH;
+	}
 }
 void draw_entity(struct entity *e)
 {
@@ -89,13 +91,16 @@ int move_entity(struct tile *z,int from,int to)
 {
 	if (!in_bounds(from,to))
 		return from;
-	if (!z[to].fg&&!z[to].next_entity) {
+	if (!z[to].fg) {
 		// TODO: Add way to move specific entity from tile
 		struct entity *e=z[from].next_entity;
 		z[from].next_entity=e->next_entity;
 		e->next_entity=z[to].next_entity;
 		z[to].next_entity=e;
 		return to;
+	} else if (z[to].fg=='+'&&z[to].fg_c==BROWN) {
+		z[to].fg='\0';
+		return from;
 	}
 	return from;
 }

@@ -1,44 +1,35 @@
 #include "map.h"
-static const bool SCROLL=WORLD_HEIGHT>TERM_HEIGHT||WORLD_WIDTH>TERM_WIDTH;
 int world_pos=-1;
 int world_xscroll=0;
 int world_yscroll=0;
 void scroll_map(int pos)
 {
-	world_xscroll=TERM_WIDTH/2-pos%WORLD_WIDTH;
-	world_yscroll=TERM_HEIGHT/2-pos/WORLD_WIDTH;
+	if (WORLD_HEIGHT>TERM_HEIGHT||WORLD_WIDTH>TERM_WIDTH) {
+		world_xscroll=TERM_WIDTH/2-pos%WORLD_WIDTH;
+		world_yscroll=TERM_HEIGHT/2-pos/WORLD_WIDTH;
+	}
 }
 void draw_world_pos(struct worldtile *w,int pos)
 {
 	int x=pos%WORLD_WIDTH,y=pos/WORLD_WIDTH;
-	if (SCROLL) {
-		x+=world_xscroll;
-		y+=world_yscroll;
-		if (x>=0&&x<TERM_WIDTH&&y>=0&&y<TERM_HEIGHT) {
-			// ^ If x,y is on-screen
-			next_draw(x,y);
-			draw_worldtile(&w[pos]);
-		}
-	} else {
+	x+=world_xscroll;
+	y+=world_yscroll;
+	if (x>=0&&x<TERM_WIDTH&&y>=0&&y<TERM_HEIGHT) {
+		// ^ If x,y is on-screen
 		next_draw(x,y);
 		draw_worldtile(&w[pos]);
 	}
 }
 void draw_world(struct worldtile *w)
 {
-	if (SCROLL) {
-		for (int x=0;x<TERM_WIDTH;x++)
-		for (int y=0;y<TERM_HEIGHT;y++) {
-			int x2=x-world_xscroll,y2=y-world_yscroll;
-			next_draw(x,y);
-			if (x2<0||x2>=WORLD_WIDTH||y2<0||y2>=WORLD_HEIGHT)
-				draw(' ',RESET,RESET);
-			else
-				draw_worldtile(&w[x2+y2*WORLD_WIDTH]);
-		}
-	} else {
-		for (int i=0;i<WORLD_AREA;i++)
-			draw_world_pos(w,i);
+	for (int x=0;x<TERM_WIDTH;x++)
+	for (int y=0;y<TERM_HEIGHT;y++) {
+		int x2=x-world_xscroll,y2=y-world_yscroll;
+		next_draw(x,y);
+		if (x2<0||x2>=WORLD_WIDTH||y2<0||y2>=WORLD_HEIGHT)
+			draw(' ',RESET,RESET);
+		else
+			draw_worldtile(&w[x2+y2*WORLD_WIDTH]);
 	}
 }
 bool legal_world_move(int from,int to)
@@ -68,7 +59,7 @@ bool uncivilized_town(struct worldtile *w,int p)
 void open_map(struct worldtile *w)
 {
 	clear_screen();
-	report_height=SCROLL?TERM_HEIGHT:WORLD_HEIGHT;
+	report_height=WORLD_HEIGHT>TERM_HEIGHT?TERM_HEIGHT:WORLD_HEIGHT;
 	draw_world(w);
 	int dt=1;
 	while (/**/!exit_req/**/) {
@@ -80,21 +71,18 @@ void open_map(struct worldtile *w)
 		} else
 			report_here("Unoccupied territory");
 		color_t fc=w[world_pos].faction?w[world_pos].faction->color:BLACK;
-		if (SCROLL) {
-			int x=world_pos%WORLD_WIDTH+world_xscroll;
-			int y=world_pos/WORLD_WIDTH+world_yscroll;
-			next_draw(x,y);
-		} else
-			next_draw(world_pos%WORLD_WIDTH,world_pos/WORLD_WIDTH);
+		int x=world_pos%WORLD_WIDTH+world_xscroll;
+		int y=world_pos/WORLD_WIDTH+world_yscroll;
+		next_draw(x,y);
 		draw('@',LIGHT_RED,fc);
 		char c=key();
 		clear_reports();
 		draw_world_pos(w,world_pos);
 		int to=world_pos+input_offset(c,WORLD_WIDTH);
-		if (to!=world_pos&&legal_world_move(world_pos,to))
+		if (to!=world_pos&&legal_world_move(world_pos,to)) {
 			world_pos=to;
-			if (SCROLL)
-				scroll_map(world_pos);
+			scroll_map(world_pos);
+		}
 		/**/
 		if (c=='\n') { // Add new faction at position
 			struct faction *f=w[world_pos].faction;

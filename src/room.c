@@ -8,8 +8,7 @@ void make_wall(struct tile *t)
 }
 void make_floor(struct tile *t)
 {
-	t->fg='#';
-	t->fg_c=LIGHT_GRAY;
+	t->fg='\0';
 	t->bg='#';
 	t->bg_c=LIGHT_GRAY;
 }
@@ -69,9 +68,17 @@ bool is_wall(struct tile *t)
 {
 	return t->fg=='%';
 }
+bool is_floor(struct tile *t)
+{
+	return t->bg=='#';
+}
 bool is_door(struct tile *t)
 {
 	return t->fg=='+';
+}
+bool inside(struct tile *t)
+{
+	return is_wall(t)||is_floor(t);
 }
 void place_doors(struct tile *area)
 {
@@ -118,8 +125,8 @@ void place_doors(struct tile *area)
 					||(reached[i+ZONE_WIDTH]==0&&reached[i-ZONE_WIDTH]>0)
 					||(reached[i+1]>0&&reached[i-1]==0)
 					||(reached[i+1]==0&&reached[i-1]>0)) {
-				if (!area[i+ZONE_WIDTH].fg||!area[i-ZONE_WIDTH].fg||
-						!area[i-1].fg||!area[i+1].fg)
+				if (!inside(&area[i+ZONE_WIDTH])||!inside(&area[i+ZONE_WIDTH])||
+						!inside(&area[i+1])||!inside(&area[i+1]))
 					ex_doors[n_ex_doors++]=i;
 				else
 					in_doors[n_in_doors++]=i;
