@@ -99,3 +99,23 @@ int move_entity(struct tile *z,int from,int to)
 	}
 	return from;
 }
+int target(struct tile *z,int start)
+{
+	char c='\0';
+	int i=start;
+	do {
+		scroll_zone(i);
+		draw_zone(z);
+		int x=i%ZONE_WIDTH+zone_xscroll;
+		int y=i/ZONE_WIDTH+zone_yscroll;
+		next_draw(x,y);
+		draw('X',RED,BLACK);
+		c=key();
+		int o=input_offset(c,ZONE_WIDTH);
+		if (o&&in_bounds(i,i+o))
+			i+=o;
+	} while (c!='\n'&&!exit_req);
+	scroll_zone(start);
+	draw_zone(z);
+	return i;
+}
