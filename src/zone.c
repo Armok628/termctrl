@@ -80,3 +80,20 @@ struct tile *new_zone(void)
 	}
 	return z;
 }
+bool in_bounds(int from,int to)
+{
+	int dx=to%ZONE_WIDTH-from%ZONE_WIDTH;
+	return -1<=dx&&dx<=1&&0<=to&&to<ZONE_AREA;
+}
+int move_entity(struct tile *z,int from,int to)
+{
+	if (!in_bounds(from,to))
+		return from;
+	if (!z[to].fg&&!z[to].e) {
+		struct entity *e=z[from].e;
+		z[from].e=NULL;
+		z[to].e=e;
+		return to;
+	}
+	return from;
+}

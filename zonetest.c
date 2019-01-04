@@ -25,9 +25,7 @@ int main(int argc,char **argv)
 	while (!exit_req) {
 		char c=key();
 		int o=input_offset(c,ZONE_WIDTH);
-		z[pc].e=NULL;
-		pc+=o;
-		z[pc].e=&player_ent;
+		pc=move_entity(z,pc,pc+o);
 		scroll_zone(pc);
 		draw_zone(z);
 	}

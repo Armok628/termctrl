@@ -4,8 +4,12 @@
 #include <stdbool.h>
 #include "color.h"
 #include "diffdraw.h"
+#ifndef ZONE_WIDTH
 #define ZONE_WIDTH 80
+#endif
+#ifndef ZONE_HEIGHT
 #define ZONE_HEIGHT 24
+#endif
 #define ZONE_AREA (ZONE_WIDTH*ZONE_HEIGHT)
 struct task {
 	enum {ATTACK,DEFEND,CAPTURE} type;
@@ -61,4 +65,6 @@ int rand_tile(struct tile *,bool (*)(struct tile *));
 bool empty_tile(struct tile *);
 int spawn(struct tile *,struct entity *);
 struct tile *new_zone(void);
+bool in_bounds(int,int);
+int move_entity(struct tile *,int,int);
 #endif
