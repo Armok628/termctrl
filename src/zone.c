@@ -22,8 +22,8 @@ void draw_tile(struct tile *t)
 {
 	if (t->fg)
 		draw(t->fg,t->fg_c,BLACK);
-	else if (t->e)
-		draw_entity(t->e);
+	else if (t->next_entity)
+		draw_entity(t->next_entity);
 	else
 		draw(t->bg,t->bg_c,BLACK);
 }
@@ -59,12 +59,12 @@ int rand_tile(struct tile *z,bool (*f)(struct tile *))
 }
 bool empty_tile(struct tile *t)
 {
-	return !t->fg&&!t->e;
+	return !t->fg&&!t->next_entity;
 }
 int spawn(struct tile *z,struct entity *e)
 {
 	int n=rand_tile(z,empty_tile);
-	z[n].e=e;
+	z[n].next_entity=e;
 	return n;
 }
 struct tile *new_zone(void)
@@ -74,7 +74,7 @@ struct tile *new_zone(void)
 	struct tile *z=malloc(ZONE_AREA*sizeof(struct tile));
 	for (int i=0;i<ZONE_AREA;i++) {
 		z[i].fg='\0';
-		z[i].e=NULL;
+		z[i].next_entity=NULL;
 		z[i].bg=grass[rand()%n_grass];
 		z[i].bg_c=rand()&1?GREEN:LIGHT_GREEN;
 	}
@@ -89,10 +89,12 @@ int move_entity(struct tile *z,int from,int to)
 {
 	if (!in_bounds(from,to))
 		return from;
-	if (!z[to].fg&&!z[to].e) {
-		struct entity *e=z[from].e;
-		z[from].e=NULL;
-		z[to].e=e;
+	if (!z[to].fg&&!z[to].next_entity) {
+		// TODO: Add way to move specific entity from tile
+		struct entity *e=z[from].next_entity;
+		z[from].next_entity=e->next_entity;
+		e->next_entity=z[to].next_entity;
+		z[to].next_entity=e;
 		return to;
 	}
 	return from;

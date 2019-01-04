@@ -47,12 +47,13 @@ struct entity {
 		struct creature *c;
 		struct item *i;
 	} ptr;
+	struct entity *next_entity;
 };
 struct tile {
 	char fg,bg;
 	color_t fg_c,bg_c;
 	// TODO: Entities
-	struct entity *e; // Temporary
+	struct entity *next_entity;
 	// TODO: Effects
 };
 

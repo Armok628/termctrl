@@ -11,6 +11,7 @@ struct creature player={
 struct entity player_ent={
 	.type=CREATURE,
 	.ptr={.c=&player},
+	.next_entity=NULL,
 };
 int main(int argc,char **argv)
 {
