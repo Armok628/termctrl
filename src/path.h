@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include "room.h"
 
-bool plan_path(char *,int,int);
-void print_dists(void);
-void show_path(char *,int,int);
+bool plan_path(struct tile *,int,int);
+char go_to(struct tile *,int,int);
 #endif

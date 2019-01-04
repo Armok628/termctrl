@@ -1,9 +1,9 @@
 #include "path.h"
 static int dists[ZONE_AREA];
-bool plan_path(char *area,int from,int to)
+bool plan_path(struct tile *z,int from,int to)
 {
 	for (int i=0;i<ZONE_AREA;i++)
-		dists[i]=area[i]=='%'?-2:-1;
+		dists[i]=is_wall(&z[i])?-2:-1;
 	dists[from]=-1;
 	dists[to]=0;
 	bool possible=true;
@@ -27,52 +27,22 @@ bool plan_path(char *area,int from,int to)
 	}
 	return possible;
 }
-//// Temporary
-void print_dists(void)
+char go_to(struct tile *z,int from,int to)
 {
-	for (int i=0;i<ZONE_AREA;i++) {
-		if (dists[i]==-2)
-			printf("\033[1;30m%%");
-		else if (dists[i]<0)
-			printf("\033[m ");
-		else {
-			printf("\033[1;%dm%d",31+(6+dists[i]/10)%7,dists[i]%10);
-		}
-		if (i%ZONE_WIDTH==ZONE_WIDTH-1)
-			putchar('\n');
+	if (!plan_path(z,from,to))
+		return '0';
+	int c[8],n_c=0,min=dists[from];
+	for (int dx=-1;dx<=1;dx++)
+	for (int dy=-1;dy<=1;dy++) {
+		int n=from+dx+dy*ZONE_WIDTH;
+		if (dists[n]<min) {
+			n_c=1;
+			min=dists[n];
+			c[0]=n;
+		} else if (dists[n]==min)
+			c[n_c++]=n;
 	}
-	printf("\033[m");
-}
-void show_path(char *area,int from,int to)
-{
-	plan_path(area,from,to);
-	if (!dists[from])
-		return;
-	area[from]='O';
-	int p=from;
-	while (p!=to) {
-		int mins[8],min=dists[p];
-		int n_mins=0;
-		for (int dx=-1;dx<=1;dx++)
-		for (int dy=-1;dy<=1;dy++) {
-			int n=p+dx+dy*ZONE_WIDTH;
-			int xd=n%ZONE_WIDTH-p%ZONE_WIDTH;
-			if (xd<-1||xd>1||n<0||n>=ZONE_AREA)
-				continue;
-			if (dists[n]<0)
-				continue;
-			if (dists[n]<min) {
-				min=dists[n];
-				n_mins=1;
-				mins[0]=n;
-			} else if (dists[n]==min) {
-				mins[n_mins++]=n;
-			}
-		}
-		if (!n_mins)
-			return;
-		p=mins[n_mins/2];//mins[rand()%n_mins];
-		area[p]='*';
-	}
-	area[to]='X';
+	if (!n_c)
+		return '0';
+	return c[n_c>>1];//c[rand()%n_c];
 }

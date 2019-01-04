@@ -6,6 +6,7 @@
 #include "sort.h"
 #include "zone.h"
 
+bool is_wall(struct tile *);
 void make_room(struct tile *,int,int,int,int);
 void partition_room(struct tile *,int,int,int,int);
 void place_doors(struct tile *);

@@ -12,8 +12,11 @@
 #endif
 #define ZONE_AREA (ZONE_WIDTH*ZONE_HEIGHT)
 struct task {
-	enum {ATTACK,DEFEND,CAPTURE} type;
-	struct entity *target;
+	enum {ATTACK,DEFEND,FOLLOW,CAPTURE,GO_TO} type;
+	union {
+		int coords;
+		struct entity *ptr;
+	} target;
 	int duration;
 	struct task *next_task;
 };
