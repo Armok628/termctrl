@@ -34,14 +34,15 @@ int main()//(int argc,char **argv)
 	while (z[t].bg!='#')
 		t=rand()%ZONE_AREA;
 	while (!exit_req) {
-		char c=go_to(z,pc,t);
+		char c=key();
 		int o=input_offset(c,ZONE_WIDTH);
+		if (o)
+			t=target(z,pc);
+		c=go_to(z,pc,t);
+		o=input_offset(c,ZONE_WIDTH);
 		pc=move_entity(z,pc,pc+o);
 		scroll_zone(pc);
 		draw_zone(z);
-		if (key()=='T')
-			t=target(z,pc);
-		clear_reports();
 	}
 	set_canon(true);
 	set_cursor_visible(true);
