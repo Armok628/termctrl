@@ -91,12 +91,10 @@ void open_map(struct worldtile *w)
 		clear_reports();
 		draw_world_pos(w,world_pos);
 		int to=world_pos+input_offset(c,WORLD_WIDTH);
-		if (to!=world_pos&&legal_world_move(world_pos,to)) {
+		if (to!=world_pos&&legal_world_move(world_pos,to))
 			world_pos=to;
 			if (SCROLL)
 				scroll_map(world_pos);
-			draw_world(w);
-		}
 		/**/
 		if (c=='\n') { // Add new faction at position
 			struct faction *f=w[world_pos].faction;
@@ -142,6 +140,7 @@ void open_map(struct worldtile *w)
 			f->size++;
 			draw_world_pos(w,i);
 		}
+		draw_world(w);
 		/**/
 	}
 }

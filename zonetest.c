@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "src/input.h"
+#include "src/room.h"
 #include "src/zone.h"
 struct creature player={
 	.name="Player",
@@ -13,11 +14,13 @@ struct entity player_ent={
 	.ptr={.c=&player},
 	.next_entity=NULL,
 };
-int main(int argc,char **argv)
+int main()//(int argc,char **argv)
 {
 	srand(time(NULL));
 	struct tile *z=new_zone();
 	clear_screen();
+	random_room(z);
+	place_doors(z);
 	int pc=spawn(z,&player_ent);
 	scroll_zone(pc);
 	draw_zone(z);

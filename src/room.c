@@ -1,30 +1,51 @@
 #include "room.h"
-void make_room(char *area,int x,int y,int w,int h)
+void make_wall(struct tile *t)
+{
+	t->fg='%';
+	t->fg_c=DARK_GRAY;
+	t->bg='%';
+	t->bg_c=DARK_GRAY;
+}
+void make_floor(struct tile *t)
+{
+	t->fg='#';
+	t->fg_c=LIGHT_GRAY;
+	t->bg='#';
+	t->bg_c=LIGHT_GRAY;
+}
+void make_door(struct tile *t)
+{
+	t->fg='+';
+	t->fg_c=BROWN;
+	t->bg='-';
+	t->bg_c=BROWN;
+}
+void make_room(struct tile *area,int x,int y,int w,int h)
 {
 	// Make floors
 	for (int i=x;i<x+w;i++)
 		for (int j=y;j<y+h;j++)
-			area[i+j*ZONE_WIDTH]='#';
+			make_floor(&area[i+j*ZONE_WIDTH]);
 	// North and South walls
 	for (int i=x;i<x+w;i++) {
-		area[i+y*ZONE_WIDTH]='%';
-		area[i+(y+h-1)*ZONE_WIDTH]='%';
+		make_wall(&area[i+y*ZONE_WIDTH]);
+		make_wall(&area[i+(y+h-1)*ZONE_WIDTH]);
 	}
 	// West and East walls
 	for (int j=y;j<y+h;j++) {
-		area[x+j*ZONE_WIDTH]='%';
-		area[(x+w-1)+j*ZONE_WIDTH]='%';
+		make_wall(&area[x+j*ZONE_WIDTH]);
+		make_wall(&area[(x+w-1)+j*ZONE_WIDTH]);
 	}
 }
 #define RECURSE_LENGTH 8
 #define RECURSE_FACTOR 4
-void partition_room(char *area,int x,int y,int w,int h)
+void partition_room(struct tile *area,int x,int y,int w,int h)
 {
 	if (w>h) {
 		int b=x+2+rand()%(w-4); // Boundary x-coordinate
 		// Create vertical wall
 		for (int i=y+1;i<y+h-1;i++)
-			area[b+i*ZONE_WIDTH]='%';
+			make_wall(&area[b+i*ZONE_WIDTH]);
 		// If first half meets recursion criteria, recurse
 		if (b-x+1>=RECURSE_LENGTH&&b-x+1>=w/RECURSE_FACTOR)
 			partition_room(area,x,y,b-x+1,h);
@@ -35,7 +56,7 @@ void partition_room(char *area,int x,int y,int w,int h)
 		int b=y+2+rand()%(h-4); // Boundary y-coordinate
 		// Create horizontal wall
 		for (int i=x+1;i<x+w-1;i++)
-			area[i+b*ZONE_WIDTH]='%';
+			make_wall(&area[i+b*ZONE_WIDTH]);
 		// If first half meets recursion criteria, recurse
 		if (b-y+1>=RECURSE_LENGTH&&b-y+1>=h/RECURSE_FACTOR)
 			partition_room(area,x,y,w,b-y+1);
@@ -44,7 +65,15 @@ void partition_room(char *area,int x,int y,int w,int h)
 			partition_room(area,x,b,w,y+h-b);
 	}
 }
-void place_doors(char *area)
+bool is_wall(struct tile *t)
+{
+	return t->fg=='%';
+}
+bool is_door(struct tile *t)
+{
+	return t->fg=='+';
+}
+void place_doors(struct tile *area)
 {
 	int *reached=malloc(ZONE_AREA*sizeof(int));
 	int *in_doors=malloc(ZONE_AREA*sizeof(int));
@@ -53,7 +82,7 @@ void place_doors(char *area)
 	while (1) {
 		// Setup reachability matrix
 		for (int i=0;i<ZONE_AREA;i++)
-			reached[i]=area[i]=='%'?-1:0;
+			reached[i]=area[i].fg=='%'?-1:0;
 		reached[0]=1;
 		// Detect unreachable areas
 		bool done=false;
@@ -89,51 +118,21 @@ void place_doors(char *area)
 					||(reached[i+ZONE_WIDTH]==0&&reached[i-ZONE_WIDTH]>0)
 					||(reached[i+1]>0&&reached[i-1]==0)
 					||(reached[i+1]==0&&reached[i-1]>0)) {
-				if (area[i+ZONE_WIDTH]=='+'||area[i-ZONE_WIDTH]=='+'||
-						area[i-1]=='+'||area[i+1]=='+')
-					continue;
-				if (area[i+ZONE_WIDTH]==' '||area[i-ZONE_WIDTH]==' '||
-						area[i-1]==' '||area[i+1]==' ')
+				if (!area[i+ZONE_WIDTH].fg||!area[i-ZONE_WIDTH].fg||
+						!area[i-1].fg||!area[i+1].fg)
 					ex_doors[n_ex_doors++]=i;
 				else
 					in_doors[n_in_doors++]=i;
 			}
 			// ^ TODO: Refactor those disgusting conditions
 		}
-		/* Visualize reachability matrix (TEMPORARY) */
-		/*********************************************/
-		clear_screen();
-		move_cursor(0,0);
-		for (int i=0;i<ZONE_AREA;i++) {
-			switch (reached[i]) {
-			case -1:
-				printf("\033[1;30;40m");
-				putchar('#');
-				break;
-			case 0:
-				printf("\033[0;31;40m");
-				putchar('X');
-				break;
-			default:
-				printf("\033[0;40m");
-				putchar(' ');
-			}
-			if (i%ZONE_WIDTH==ZONE_WIDTH-1)
-				putchar('\n');
-		}
-		printf("Placing %d %s doors\n",
-				n_in_doors?1+n_in_doors/32:1+n_ex_doors/64,
-				n_in_doors?"inside":"outside");
-		clock_t t=clock();
-		while (clock()-t<CLOCKS_PER_SEC/4);
-		/*********************************************/
 		// Pick one or more at random and place a door
 		if (!n_in_doors&&n_ex_doors) {
 			for (int i=0;i<1+n_ex_doors/64;i++)
-				area[ex_doors[rand()%n_ex_doors]]='+';
+				make_door(&area[ex_doors[rand()%n_ex_doors]]);
 		} else if (n_in_doors) {
 			for (int i=0;i<1+n_in_doors/32;i++)
-				area[in_doors[rand()%n_in_doors]]='+';
+				make_door(&area[in_doors[rand()%n_in_doors]]);
 		} else
 			break;
 	}
@@ -141,7 +140,7 @@ void place_doors(char *area)
 	free(in_doors);
 	free(ex_doors);
 }
-void random_room(char *area)
+void random_room(struct tile *area)
 {
 	int w=10+rand()%(ZONE_WIDTH/4);
 	int h=10+rand()%(ZONE_HEIGHT/4);
@@ -150,37 +149,3 @@ void random_room(char *area)
 	make_room(area,x,y,w,h);
 	partition_room(area,x,y,w,h);
 }
-//// Temporary
-void print_area(char *area)
-{
-	for (int i=0;i<ZONE_AREA;i++) {
-		switch (area[i]) {
-		case '#':
-			printf("\033[0;37;40m");
-			break;
-		case '%':
-			printf("\033[1;30;40m");
-			break;
-		case '+':
-			printf("\033[0;33;40m");
-			break;
-		case 'X':
-			printf("\033[0;31;40m");
-			break;
-		case 'O':
-			printf("\033[0;34;40m");
-			break;
-		case '*':
-			printf("\033[1;33;40m");
-			break;
-		case ' ':
-			printf("\033[0;40m");
-			break;
-		}
-		putchar(area[i]);
-		if (i%ZONE_WIDTH==ZONE_WIDTH-1)
-			printf("\033[m\n");
-	}
-	printf("\033[m");
-}
-

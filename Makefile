@@ -4,9 +4,6 @@ CC=clang
 zone:
 	$(CC) $(CFLAGS) zonetest.c src/*.c
 
-path:
-	$(CC) $(CFLAGS) pathtest.c src/*.c
-
 world:
 	$(CC) $(CFLAGS) maptest.c src/*.c
 
