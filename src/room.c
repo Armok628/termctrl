@@ -125,22 +125,29 @@ void place_doors(struct tile *area)
 					||(reached[i+ZONE_WIDTH]==0&&reached[i-ZONE_WIDTH]>0)
 					||(reached[i+1]>0&&reached[i-1]==0)
 					||(reached[i+1]==0&&reached[i-1]>0)) {
-				if (!inside(&area[i+ZONE_WIDTH])||!inside(&area[i+ZONE_WIDTH])||
-						!inside(&area[i+1])||!inside(&area[i+1]))
+				if (is_door(&area[i+ZONE_WIDTH])
+						||is_door(&area[i-ZONE_WIDTH])
+						||is_door(&area[i+1])
+						||is_door(&area[i-1]))
+					continue;
+				if (!inside(&area[i+ZONE_WIDTH])
+						||!inside(&area[i-ZONE_WIDTH])
+						||!inside(&area[i+1])
+						||!inside(&area[i-1]))
 					ex_doors[n_ex_doors++]=i;
 				else
 					in_doors[n_in_doors++]=i;
 			}
-			// ^ TODO: Refactor those disgusting conditions
+			// ^ TODO: Refactor conditions if possible
 		}
 		// Pick one or more at random and place a door
-		if (!n_in_doors&&n_ex_doors) {
+		if (!n_in_doors&&n_ex_doors)
 			for (int i=0;i<1+n_ex_doors/64;i++)
 				make_door(&area[ex_doors[rand()%n_ex_doors]]);
-		} else if (n_in_doors) {
+		else if (n_in_doors)
 			for (int i=0;i<1+n_in_doors/32;i++)
 				make_door(&area[in_doors[rand()%n_in_doors]]);
-		} else
+		else
 			break;
 	}
 	free(reached);

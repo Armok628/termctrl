@@ -21,7 +21,7 @@ int main()//(int argc,char **argv)
 	srand(time(NULL));
 	struct tile *z=new_zone();
 	clear_screen();
-	for (int i=0;i<10;i++)
+	for (int i=0;i<5;i++)
 		random_room(z);
 	place_doors(z);
 	int pc=spawn(z,&player_ent);
