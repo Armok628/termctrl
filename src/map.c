@@ -22,7 +22,6 @@ void draw_world_pos(struct worldtile *w,int pos)
 }
 void draw_world(struct worldtile *w)
 {
-	attroff(A_BOLD);
 	for (int x=0;x<TERM_WIDTH;x++)
 	for (int y=0;y<TERM_HEIGHT;y++) {
 		int x2=x-world_xscroll,y2=y-world_yscroll;
@@ -47,9 +46,8 @@ do {\
 	for (int i=0;i<num_factions;i++) { \
 		next_report(); \
 		addch(' '|color(BLACK,factions[indices[i]]->color)); \
-		attron(color(WHITE,BLACK)); \
-		printf(" %s\t",factions[indices[i]]->name); \
-		printf("(%d)",factions[indices[i]]->memb); \
+		printw(" %s\t",factions[indices[i]]->name); \
+		printw("(%d)",factions[indices[i]]->memb); \
 	} \
 } while (0);
 bool uncivilized_town(struct worldtile *w,int p)
@@ -101,17 +99,17 @@ void open_map(struct worldtile *w)
 			report("Turn: %d",turn+=dt);
 			report("dt=%d, %fms",dt,1000.0*t/CLOCKS_PER_SEC);
 		} else if (c=='#') {
-			char s[1000];
 			move(report_height,0);
 			clrtoeol();
-			report_here("dt=");
 			noraw();
+			echo();
 			curs_set(true);
-			fgets(s,100,stdin);
-			sscanf(s,"%d",&dt);
+			printw("dt=");
+			scanw("%d",&dt);
 			if (dt<0)
 				dt=1;
 			curs_set(false);
+			noecho();
 			raw();
 		} else if (c=='A')
 			REPORT_SORTED_FACTIONS(descending_age,age)

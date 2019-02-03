@@ -13,7 +13,6 @@ enum color {
 	BOLD=1<<3,
 	BLACK=COLOR_BLACK,
 	DARK_GRAY=BOLD|COLOR_BLACK,
-	// ^ Doesn't seem to work for some reason
 	RED=COLOR_RED,
 	LIGHT_RED=BOLD|COLOR_RED,
 	GREEN=COLOR_GREEN,
