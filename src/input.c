@@ -1,9 +1,10 @@
 #include "input.h"
+#define KEY_EOF 4
 bool exit_req=false;
-char key(void)
+int key(void)
 {
-	char c=fgetc(stdin);
-	exit_req=c==4||c=='q';
+	char c=getch();
+	exit_req=c==KEY_EOF||c=='q';
 	return c;
 }
 int input_offset(char c,int w)

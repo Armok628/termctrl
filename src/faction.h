@@ -1,6 +1,6 @@
 #ifndef FACTION_H
 #define FACTION_H
-#include "color.h"
+#include "colors.h"
 #include "world.h"
 #include "map.h"
 #include "range.h"
@@ -9,7 +9,7 @@ struct faction {
 	char *name;
 	int size;
 	int age;
-	color_t color;
+	enum color color;
 	short stagnation;
 };
 #ifndef MAX_FACTIONS

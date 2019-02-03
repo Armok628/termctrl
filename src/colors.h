@@ -1,0 +1,35 @@
+#ifndef COLORS_H
+#define COLORS_H
+#include <curses.h>
+/*** Temporary ***/
+#ifndef TERM_WIDTH
+#define TERM_WIDTH 80
+#endif
+#ifndef TERM_HEIGHT
+#define TERM_HEIGHT 24
+#endif
+/*****************/
+enum color {
+	BOLD=1<<3,
+	BLACK=COLOR_BLACK,
+	DARK_GRAY=BOLD|COLOR_BLACK,
+	// ^ Doesn't seem to work for some reason
+	RED=COLOR_RED,
+	LIGHT_RED=BOLD|COLOR_RED,
+	GREEN=COLOR_GREEN,
+	LIGHT_GREEN=BOLD|COLOR_GREEN,
+	BROWN=COLOR_YELLOW,
+	YELLOW=BOLD|COLOR_YELLOW,
+	BLUE=COLOR_BLUE,
+	LIGHT_BLUE=BOLD|COLOR_BLUE,
+	PURPLE=COLOR_MAGENTA,
+	PINK=BOLD|COLOR_MAGENTA,
+	TEAL=COLOR_CYAN,
+	CYAN=BOLD|COLOR_CYAN,
+	LIGHT_GRAY=COLOR_WHITE,
+	WHITE=BOLD|COLOR_WHITE
+};
+
+int color(short,short);
+void init_rogue(void);
+#endif

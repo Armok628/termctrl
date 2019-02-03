@@ -19,16 +19,14 @@ struct entity player_ent={
 int main()//(int argc,char **argv)
 {
 	srand(time(NULL));
+	init_rogue();
 	struct tile *z=new_zone();
-	clear_screen();
 	for (int i=0;i<5;i++)
 		random_room(z);
 	place_doors(z);
 	int pc=spawn(z,&player_ent);
 	scroll_zone(pc);
 	draw_zone(z);
-	set_canon(false);
-	set_cursor_visible(false);
 	report_height=TERM_HEIGHT;
 	int t=rand()%ZONE_AREA;
 	while (z[t].bg!='#')
@@ -44,10 +42,7 @@ int main()//(int argc,char **argv)
 		scroll_zone(pc);
 		draw_zone(z);
 	}
-	set_canon(true);
-	set_cursor_visible(true);
-	sgr(RESET);
-	putchar('\n');
 	free(z);
+	endwin();
 	return 0;
 }

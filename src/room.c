@@ -2,15 +2,15 @@
 void make_wall(struct tile *t)
 {
 	t->fg='%';
-	t->fg_c=DARK_GRAY;
+	t->fg_c=LIGHT_GRAY;
 	t->bg='%';
-	t->bg_c=DARK_GRAY;
+	t->bg_c=LIGHT_GRAY;
 }
 void make_floor(struct tile *t)
 {
 	t->fg='\0';
 	t->bg='#';
-	t->bg_c=LIGHT_GRAY;
+	t->bg_c=WHITE;
 }
 void make_door(struct tile *t)
 {

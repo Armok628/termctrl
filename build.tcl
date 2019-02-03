@@ -80,7 +80,7 @@ proc gencmd {} {
 	lassign [regexp -all -inline {\d+} $::zdims] z_w z_h
 	lassign [regexp -all -inline {\d+} $::tdims] t_w t_h
 	# Output command
-	set cflags ""
+	set cflags "-lncurses"
 	if {$w_w ne "" && $w_h ne ""} {append cflags " -DWORLD_WIDTH=$w_w -DWORLD_HEIGHT=$w_h"}
 	if {$z_w ne "" && $z_h ne ""} {append cflags " -DZONE_WIDTH=$w_w -DZONE_HEIGHT=$w_h"}
 	if {$t_w ne "" && $t_h ne ""} {append cflags " -DTERM_WIDTH=$t_w -DTERM_HEIGHT=$t_h"}

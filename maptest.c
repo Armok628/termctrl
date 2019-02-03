@@ -3,7 +3,7 @@
 #include <time.h>
 #include <string.h>
 #include "src/map.h"
-#include "src/terminal.h"
+#include "src/colors.h"
 #ifndef DEF_AGE
 #define DEF_AGE 4
 #endif
@@ -33,22 +33,16 @@ int main(int argc,char **argv)
 		sscanf(argv[i],"t_f=%f",&t_f);
 	}
 	srand(seed);
-	clear_screen();
-	move_cursor(0,0);
+	init_rogue();
 	struct worldtile *world=worldgen(age,e_o,t_o,e_f,t_f);
 	world_pos=rand_loc(world,&is_land);
 	scroll_map(world_pos);
-	set_canon(false);
-	set_cursor_visible(false);
 	open_map(world);
-	set_canon(true);
-	set_cursor_visible(true);
 	free(world);
 	for (int i=0;i<num_factions;i++) {
 		free(factions[i]->name);
 		free(factions[i]);
 	}
-	sgr(RESET);
-	move_cursor(0,report_height);
+	endwin();
 	return 0;
 }

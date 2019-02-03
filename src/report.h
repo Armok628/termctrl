@@ -2,7 +2,7 @@
 #define REPORT_H
 #include <stdio.h>
 #include <stdarg.h>
-#include "terminal.h"
+#include "colors.h"
 extern int report_height;
 
 void next_report(void);

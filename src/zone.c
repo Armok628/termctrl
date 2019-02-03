@@ -13,28 +13,28 @@ void draw_entity(struct entity *e)
 	struct item *i=e->ptr.i;
 	switch (e->type) {
 	case CREATURE:
-		draw(c->sym,c->color,/**/BLACK/**/);
+		addch(c->sym|color(c->color,/**/BLACK/**/));
 		break;
 	case ITEM:
-		draw(i->sym,i->color,BLACK);
+		addch(i->sym|color(i->color,BLACK));
 		break;
 	}
 }
 void draw_tile(struct tile *t)
 {
 	if (t->fg)
-		draw(t->fg,t->fg_c,BLACK);
+		addch(t->fg|color(t->fg_c,BLACK));
 	else if (t->next_entity)
 		draw_entity(t->next_entity);
 	else
-		draw(t->bg,t->bg_c,BLACK);
+		addch(t->bg|color(t->bg_c,BLACK));
 }
 void draw_zone_pos(struct tile *z,int p)
 {
 	int x=p%ZONE_WIDTH+zone_xscroll;
 	int y=p/ZONE_WIDTH+zone_yscroll;
 	if (0<=x&&x<ZONE_WIDTH&&0<=y&&y<ZONE_HEIGHT) {
-		next_draw(x,y);
+		move(y,x);
 		draw_tile(&z[p]);
 	}
 }
@@ -43,9 +43,9 @@ void draw_zone(struct tile *z)
 	for (int x=0;x<TERM_WIDTH;x++)
 	for (int y=0;y<TERM_HEIGHT;y++) {
 		int x2=x-zone_xscroll,y2=y-zone_yscroll;
-		next_draw(x,y);
+		move(y,x);
 		if (0>x2||x2>=ZONE_WIDTH||0>y2||y2>=ZONE_HEIGHT)
-			draw(' ',RESET,RESET);
+			addch(' '|color(BLACK,BLACK));
 		else
 			draw_tile(&z[x2+y2*ZONE_WIDTH]);
 	}
@@ -113,8 +113,8 @@ int target(struct tile *z,int start)
 		draw_zone(z);
 		int x=i%ZONE_WIDTH+zone_xscroll;
 		int y=i/ZONE_WIDTH+zone_yscroll;
-		next_draw(x,y);
-		draw('X',RED,BLACK);
+		move(y,x);
+		addch('X'|color(RED,BLACK));
 		c=key();
 		int o=input_offset(c,ZONE_WIDTH);
 		if (o&&in_bounds(i,i+o))

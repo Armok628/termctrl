@@ -16,21 +16,23 @@ void draw_world_pos(struct worldtile *w,int pos)
 	y+=world_yscroll;
 	if (x>=0&&x<TERM_WIDTH&&y>=0&&y<TERM_HEIGHT) {
 		// ^ If x,y is on-screen
-		next_draw(x,y);
+		move(y,x);
 		draw_worldtile(&w[pos]);
 	}
 }
 void draw_world(struct worldtile *w)
 {
+	attroff(A_BOLD);
 	for (int x=0;x<TERM_WIDTH;x++)
 	for (int y=0;y<TERM_HEIGHT;y++) {
 		int x2=x-world_xscroll,y2=y-world_yscroll;
-		next_draw(x,y);
+		move(y,x);
 		if (x2<0||x2>=WORLD_WIDTH||y2<0||y2>=WORLD_HEIGHT)
-			draw(' ',RESET,RESET);
+			addch(' '|color(BLACK,BLACK));
 		else
 			draw_worldtile(&w[x2+y2*WORLD_WIDTH]);
 	}
+	refresh();
 }
 bool legal_world_move(int from,int to)
 {
@@ -45,9 +47,8 @@ do {\
 	insertion_sort(indices,num_factions,&f); \
 	for (int i=0;i<num_factions;i++) { \
 		next_report(); \
-		set_bg(factions[indices[i]]->color); \
-		putchar(' '); \
-		sgr(RESET); \
+		addch(' '|color(BLACK,factions[indices[i]]->color)); \
+		attron(color(WHITE,BLACK)); \
 		printf(" %s\t",factions[indices[i]]->name); \
 		printf("(%d)",factions[indices[i]]->memb); \
 	} \
@@ -58,28 +59,29 @@ bool uncivilized_town(struct worldtile *w,int p)
 }
 void open_map(struct worldtile *w)
 {
-	clear_screen();
+	erase();
 	report_height=WORLD_HEIGHT>TERM_HEIGHT?TERM_HEIGHT:WORLD_HEIGHT;
 	draw_world(w);
 	int dt=1;
 	while (/**/!exit_req/**/) {
-		move_cursor(0,report_height);
+		move(report_height,0);
 		if (w[world_pos].faction) {
 			struct faction *f=w[world_pos].faction;
 			report_here("%s (Size: %d, Stagnation: %d, Age: %d)",
 					f->name,f->size,f->stagnation,f->age);
 		} else
 			report_here("Unoccupied territory");
-		color_t fc=w[world_pos].faction?w[world_pos].faction->color:BLACK;
+		enum color fc=w[world_pos].faction?w[world_pos].faction->color:BLACK;
 		int x=world_pos%WORLD_WIDTH+world_xscroll;
 		int y=world_pos/WORLD_WIDTH+world_yscroll;
-		next_draw(x,y);
-		draw('@',LIGHT_RED,fc);
-		char c=key();
+		move(y,x);
+		addch('@'|color(LIGHT_RED,fc));
+		refresh();
+		int c=key();
 		clear_reports();
 		draw_world_pos(w,world_pos);
 		int to=world_pos+input_offset(c,WORLD_WIDTH);
-		if (to!=world_pos&&legal_world_move(world_pos,to)) {
+		if (to!=world_pos&&legal_world_move(to,world_pos)) {
 			world_pos=to;
 			scroll_map(world_pos);
 		}
@@ -102,19 +104,19 @@ void open_map(struct worldtile *w)
 			report("dt=%d, %fms",dt,1000.0*t/CLOCKS_PER_SEC);
 		} else if (c=='#') {
 			char s[1000];
-			move_cursor(0,report_height);
-			clear_line();
+			move(report_height,0);
+			clrtoeol();
 			report_here("dt=");
-			set_canon(true);
-			set_cursor_visible(true);
+			noraw();
+			curs_set(true);
 			fgets(s,100,stdin);
 			sscanf(s,"%d",&dt);
 			if (dt<0)
 				dt=1;
-			set_cursor_visible(false);
-			set_canon(false);
+			curs_set(false);
+			raw();
 		} else if (c=='R')
-			redraw();
+			refresh();
 		else if (c=='A')
 			REPORT_SORTED_FACTIONS(descending_age,age)
 		else if (c=='S')

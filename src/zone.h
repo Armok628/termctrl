@@ -2,8 +2,7 @@
 #define ZONE_H
 #include <stdlib.h>
 #include <stdbool.h>
-#include "color.h"
-#include "diffdraw.h"
+#include "colors.h"
 #include "input.h"
 #ifndef ZONE_WIDTH
 #define ZONE_WIDTH 80
@@ -31,7 +30,7 @@ struct creature {
 	char *name;
 	struct task *next_task;
 	char sym;
-	color_t color;
+	enum color color;
 	//struct faction *faction;
 	// TODO: Stats
 	// TODO: Effects
@@ -40,7 +39,7 @@ struct item {
 	char *name;
 	unsigned int value;
 	char sym;
-	color_t color;
+	enum color color;
 	void (*use)(void);
 	bool unique;
 	// TODO: Stats
@@ -55,7 +54,7 @@ struct entity {
 };
 struct tile {
 	char fg,bg;
-	color_t fg_c,bg_c;
+	enum color fg_c,bg_c;
 	// TODO: Entities
 	struct entity *next_entity;
 	// TODO: Effects

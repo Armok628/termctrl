@@ -1,14 +1,14 @@
 #include "faction.h"
-static color_t faction_colors[]={RED,GREEN,BROWN,BLUE,PURPLE,TEAL,LIGHT_GRAY};
+static enum color faction_colors[]={RED,GREEN,BROWN,BLUE,PURPLE,TEAL,LIGHT_GRAY};
 static int n_faction_colors=7;
-color_t choose_color(void)
+enum color choose_color(void)
 {
 	static range_t faction_color_range={RED,LIGHT_GRAY};
 	if (MAX_FACTIONS<=7) {
 		// If factions are only as numerous as their possible colors,
 		// make sure colors don't repeat.
 		int n=rand()%n_faction_colors;
-		color_t c=faction_colors[n];
+		enum color c=faction_colors[n];
 		faction_colors[n]=faction_colors[--n_faction_colors];
 		return c;
 	} else {
@@ -16,7 +16,7 @@ color_t choose_color(void)
 		return rrand(faction_color_range);
 	}
 }
-void release_color(color_t c)
+void release_color(enum color c)
 {
 	if (MAX_FACTIONS<=7) {
 		faction_colors[n_faction_colors++]=c;
