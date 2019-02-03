@@ -4,7 +4,6 @@ static int next_line=1;
 void vreport(char *fmt,va_list args)
 {
 	char *str;
-	attron(color(WHITE,BLACK));
 	for (char *s=fmt;*s;s++) {
 		if (*s!='%') {
 			addch(*s);

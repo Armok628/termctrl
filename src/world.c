@@ -61,7 +61,7 @@ struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)
 	for (int x=0;x<WORLD_WIDTH;x++)
 		w[x+(WORLD_HEIGHT-1)*WORLD_WIDTH].temp=1000;
 #endif
-	puts("Generating noisemaps");
+	printw("Generating noisemaps");
 	for (int x=1;x<WORLD_WIDTH-1;x++)
 		for (int y=1;y<WORLD_HEIGHT-1;y++) {
 			// Generate values

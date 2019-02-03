@@ -32,7 +32,6 @@ void draw_world(struct worldtile *w)
 		else
 			draw_worldtile(&w[x2+y2*WORLD_WIDTH]);
 	}
-	refresh();
 }
 bool legal_world_move(int from,int to)
 {
@@ -76,7 +75,6 @@ void open_map(struct worldtile *w)
 		int y=world_pos/WORLD_WIDTH+world_yscroll;
 		move(y,x);
 		addch('@'|color(LIGHT_RED,fc));
-		refresh();
 		int c=key();
 		clear_reports();
 		draw_world_pos(w,world_pos);
@@ -115,9 +113,7 @@ void open_map(struct worldtile *w)
 				dt=1;
 			curs_set(false);
 			raw();
-		} else if (c=='R')
-			refresh();
-		else if (c=='A')
+		} else if (c=='A')
 			REPORT_SORTED_FACTIONS(descending_age,age)
 		else if (c=='S')
 			REPORT_SORTED_FACTIONS(descending_size,size)
