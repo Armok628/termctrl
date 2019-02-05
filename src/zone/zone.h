@@ -2,8 +2,8 @@
 #define ZONE_H
 #include <stdlib.h>
 #include <stdbool.h>
-#include "colors.h"
-#include "input.h"
+#include "../util/colors.h"
+#include "../util/input.h"
 #ifndef ZONE_WIDTH
 #define ZONE_WIDTH 80
 #endif

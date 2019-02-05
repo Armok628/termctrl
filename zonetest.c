@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "src/input.h"
-#include "src/path.h"
-#include "src/report.h"
-#include "src/room.h"
-#include "src/zone.h"
+#include "src/util/input.h"
+#include "src/util/report.h"
+#include "src/zone/path.h"
+#include "src/zone/room.h"
+#include "src/zone/zone.h"
 struct creature player={
 	.name="Player",
 	.sym='@',

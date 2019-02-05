@@ -2,8 +2,8 @@
 #define WORLD_H
 #include <stdlib.h>
 #include <stdbool.h>
-#include "colors.h"
-#include "input.h"
+#include "../util/colors.h"
+#include "../util/input.h"
 #ifndef WORLD_WIDTH
 #define WORLD_WIDTH 80
 #endif

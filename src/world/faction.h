@@ -1,10 +1,10 @@
 #ifndef FACTION_H
 #define FACTION_H
-#include "colors.h"
+#include "../util/range.h"
+#include "../util/randword.h"
+#include "../util/colors.h"
 #include "world.h"
 #include "map.h"
-#include "range.h"
-#include "randword.h"
 struct faction {
 	char *name;
 	int size;

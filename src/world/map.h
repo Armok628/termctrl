@@ -1,10 +1,10 @@
 #ifndef MAP_H
 #define MAP_H
 #include <time.h>
-#include "colors.h"
+#include "../util/colors.h"
+#include "../util/report.h"
+#include "../util/sort.h"
 #include "world.h"
-#include "report.h"
-#include "sort.h"
 extern int world_pos;
 
 void scroll_map(int);

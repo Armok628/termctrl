@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h> // Temporary
-#include "sort.h"
+#include "../util/sort.h"
 #include "zone.h"
 
 bool is_wall(struct tile *);

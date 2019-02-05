@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include "src/map.h"
-#include "src/colors.h"
+#include "src/world/map.h"
+#include "src/util/colors.h"
 #ifndef DEF_AGE
 #define DEF_AGE 4
 #endif
