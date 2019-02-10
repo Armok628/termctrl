@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "../util/colors.h"
 #include "../util/input.h"
+#include "../util/erode.h"
 #ifndef WORLD_WIDTH
 #define WORLD_WIDTH 80
 #endif

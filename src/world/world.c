@@ -1,28 +1,24 @@
 #include "world.h"
-short avg_around(short *elevs,int pos)
-{
-	int sum=0;
-	for (int dx=-1;dx<=1;dx++)
-		for (int dy=-1;dy<=1;dy++)
-			sum+=elevs[pos+dx+dy*WORLD_WIDTH];
-	return sum/9;
-}
-void erode(struct worldtile *w)
+void erode_world(struct worldtile *w,int n)
 {
 	short elevs[WORLD_AREA];
 	short temps[WORLD_AREA];
 	for (int x=0;x<WORLD_WIDTH;x++)
-		for (int y=0;y<WORLD_HEIGHT;y++) {
-			int i=x+y*WORLD_WIDTH;
-			elevs[i]=w[i].elev;
-			temps[i]=w[i].temp;
-		}
-	for (int x=1;x<WORLD_WIDTH-1;x++)
-		for (int y=1;y<WORLD_HEIGHT-1;y++) {
-			int i=x+y*WORLD_WIDTH;
-			w[i].elev=avg_around(elevs,i);
-			w[i].temp=avg_around(temps,i);
-		}
+	for (int y=0;y<WORLD_HEIGHT;y++) {
+		int i=x+y*WORLD_WIDTH;
+		elevs[i]=w[i].elev;
+		temps[i]=w[i].temp;
+	}
+	while (n-->0) {
+		erode(elevs,WORLD_WIDTH,WORLD_HEIGHT);
+		erode(temps,WORLD_WIDTH,WORLD_HEIGHT);
+	}
+	for (int x=0;x<WORLD_WIDTH;x++)
+	for (int y=0;y<WORLD_HEIGHT;y++) {
+		int i=x+y*WORLD_WIDTH;
+		w[i].elev=elevs[i];
+		w[i].temp=temps[i];
+	}
 }
 char descend(struct worldtile *w,int pos)
 { // Returns '1'-'9'
@@ -83,8 +79,7 @@ struct worldtile *worldgen(int age,int e_o,int t_o,float e_f,float t_f)
 			w[i].temp=t;
 		}
 	puts("Simulating erosion");
-	for (int i=0;i<age;i++)
-		erode(w);
+	erode_world(w,age);
 	if (e_f!=1.0) {
 		puts("Applying elevation factor");
 		for (int i=0;i<WORLD_AREA;i++)
@@ -250,41 +245,25 @@ void draw_terrain(enum terrain t,enum color bg)
 		break;
 	}
 }
-char river_char(enum dir d)
-{
-	switch (d) {
-	case SOUTHWEST:
-	case NORTHEAST:
-		return '/';
-	case SOUTH:
-	case NORTH:
-		return '|';
-	case SOUTHEAST:
-	case NORTHWEST:
-		return '\\';
-	case WEST:
-	case EAST:
-		return '-';
-	default:
-		return '*';
-	}
-}
 void draw_worldtile(struct worldtile *w)
 {
+	static char river_chars[10]="*/|\\-*-\\|/";
 	enum color bg=w->faction?w->faction->color:BLACK;
 	if (w->town) {
+		char c;
 		if (w->pop<1)
-			addch('_'|color(LIGHT_RED,bg));
+			c='_';
 		else if (w->pop<TOWN_POP_CAP/4)
-			addch('.'|color(LIGHT_RED,bg));
+			c='.';
 		else if (w->pop<TOWN_POP_CAP/2)
-			addch(':'|color(LIGHT_RED,bg));
+			c=':';
 		else if (w->pop<TOWN_POP_CAP*3/4)
-			addch('*'|color(LIGHT_RED,bg));
+			c='*';
 		else
-			addch('#'|color(LIGHT_RED,bg));
+			c='#';
+		addch(c|color(LIGHT_RED,bg));
 	} else if (w->river) {
-		addch(river_char(w->river)|color(w->temp<400?CYAN:LIGHT_BLUE,bg));
+		addch(river_chars[w->river]|color(w->temp<400?CYAN:LIGHT_BLUE,bg));
 	} else
 		draw_terrain(terrain_type(w),bg);
 }
